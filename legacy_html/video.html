@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Video — CuplikCom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['DM Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            green: '#008a24',
+                            greenHover: '#006f1c',
+                            black: '#111111',
+                            footer: '#0e1711',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body data-page="video" class="bg-white dark:bg-[#121212] text-[#111111] dark:text-[#f3f4f6]">
+    <div id="app"></div>
+    <script src="assets/data.js"></script>
+    <script src="assets/app.js"></script>
+</body>
+
+</html>
