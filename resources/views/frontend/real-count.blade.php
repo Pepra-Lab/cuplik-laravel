@@ -6,7 +6,7 @@
 <div class="space-y-8">
     
     <!-- Real Count Header -->
-    <div class="bg-gradient-to-r from-emerald-950 via-zinc-900 to-black text-white rounded-2xl p-6 sm:p-8 border border-zinc-800 shadow-xl">
+    <div class="bg-zinc-900 text-white rounded-2xl p-6 sm:p-8 border border-zinc-800 shadow-xl">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
                 <span class="bg-[#008a24] text-white px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider mb-2 inline-block">
@@ -99,7 +99,7 @@
     <!-- Breakdown per Kecamatan Table -->
     <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-4">
         <h3 class="text-base font-black uppercase tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
-            <span>📊</span> Rekapitulasi Perolehan Suara per Kecamatan
+            Rekapitulasi Perolehan Suara per Kecamatan
         </h3>
         
         <div class="overflow-x-auto">

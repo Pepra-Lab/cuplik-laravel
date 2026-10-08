@@ -60,4 +60,37 @@ class SearchController extends Controller
             'iklanSidebar'
         ));
     }
+
+    public function liveSearch(Request $request)
+    {
+        $q = trim($request->query('q', ''));
+        if (strlen($q) < 2) {
+            return response()->json([]);
+        }
+
+        $articles = Article::where('status', 'Terbit')
+            ->where(function ($sub) use ($q) {
+                $sub->where('judul', 'ilike', "%{$q}%")
+                    ->orWhere('lead', 'ilike', "%{$q}%");
+            })
+            ->with('category:id,nama,slug')
+            ->latest('tanggal')
+            ->take(8)
+            ->get();
+
+        $results = $articles->map(function ($art) {
+            return [
+                'id' => $art->id,
+                'judul' => $art->judul,
+                'slug' => $art->slug,
+                'foto' => $art->foto,
+                'kategori' => $art->category ? $art->category->nama : 'Berita',
+                'tanggal' => $art->formatted_date,
+                'time_ago' => $art->time_ago,
+                'url' => route('article.show', $art->slug),
+            ];
+        });
+
+        return response()->json($results);
+    }
 }

@@ -9,8 +9,7 @@
     <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <form method="GET" action="{{ route('admin.curhats.index') }}" class="flex flex-wrap items-center gap-3 flex-1">
             <div class="relative flex-1 min-w-[200px]">
-                <input type="text" name="q" value="{{ $q }}" placeholder="Cari pesan, nama pengirim, atau lokasi..." class="w-full pl-9 pr-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
-                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" name="q" value="{{ $q }}" placeholder="Cari pesan, nama pengirim, atau lokasi..." class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
             </div>
 
             <select name="status" class="text-xs px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
@@ -45,11 +44,11 @@
                         <div>
                             <h4 class="text-xs font-bold text-gray-900 dark:text-white">{{ $c->pengirim }}</h4>
                             <div class="text-[10px] text-gray-400 flex items-center gap-2">
-                                <span>📍 {{ $c->lokasi ?: 'Indramayu' }}</span>
+                                <span>Lokasi: {{ $c->lokasi ?: 'Indramayu' }}</span>
                                 @if($c->kontak)
-                                    <span>· 📞 {{ $c->kontak }}</span>
+                                    <span>· Kontak: {{ $c->kontak }}</span>
                                 @endif
-                                <span>· 🕒 {{ $c->created_at ? $c->created_at->diffForHumans() : '-' }}</span>
+                                <span>· {{ $c->created_at ? $c->created_at->diffForHumans() : '-' }}</span>
                             </div>
                         </div>
                     </div>
@@ -100,8 +99,7 @@
                     <form action="{{ route('admin.curhats.destroy', $c) }}" method="POST" onsubmit="return confirm('Hapus keluhan aspirasi ini?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-xs text-red-500 hover:text-red-700 font-semibold flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        <button type="submit" class="text-xs text-red-500 hover:text-red-700 font-semibold">
                             Hapus
                         </button>
                     </form>

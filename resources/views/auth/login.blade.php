@@ -26,7 +26,7 @@
             @csrf
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Alamat Email</label>
-                <input type="email" name="email" value="{{ old('email', 'admin@cuplik.com') }}" required placeholder="email@cuplik.com" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                <input type="email" name="email" value="{{ old('email', 'admin@cuplik.com') }}" required placeholder="email@cuplik.com" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
             <div>
@@ -34,7 +34,7 @@
                     <label class="text-xs font-semibold text-gray-700 dark:text-gray-300">Kata Sandi</label>
                     <a href="{{ route('password.request') }}" class="text-xs text-[#008a24] hover:underline font-medium">Lupa sandi?</a>
                 </div>
-                <input type="password" name="password" value="password" required placeholder="••••••••" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                <input type="password" name="password" value="password" required placeholder="••••••••" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
             <div class="flex items-center gap-2">

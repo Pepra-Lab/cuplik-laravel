@@ -135,8 +135,8 @@
                                         <input type="hidden" name="dpt_id" value="{{ $d->id }}">
                                         <input type="hidden" name="paslon_id" value="{{ $p->id }}">
                                         <input type="number" name="suara" value="{{ $val }}" min="0" class="w-20 px-2 py-1 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded text-center text-xs font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#008a24]">
-                                        <button type="submit" class="p-1 bg-[#008a24] hover:bg-[#006f1c] text-white rounded text-[10px]" title="Simpan Suara">
-                                            ✓
+                                        <button type="submit" class="px-2 py-1 bg-[#008a24] hover:bg-[#006f1c] text-white rounded text-[10px] font-bold" title="Simpan Suara">
+                                            Simpan
                                         </button>
                                     </form>
                                 </td>

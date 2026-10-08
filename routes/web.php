@@ -46,6 +46,7 @@ Route::get('/video', [VideoController::class, 'index'])->name('video.index');
 Route::get('/video/{slug}', [VideoController::class, 'show'])->name('video.show');
 
 Route::get('/cari', [SearchController::class, 'index'])->name('search');
+Route::get('/api/search-live', [SearchController::class, 'liveSearch'])->name('api.search.live');
 
 Route::get('/polling', [PollController::class, 'index'])->name('poll.index');
 Route::post('/polling/vote', [PollController::class, 'vote'])->name('poll.vote');

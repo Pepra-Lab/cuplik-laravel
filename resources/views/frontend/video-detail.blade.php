@@ -18,8 +18,8 @@
                 {{ $video->judul }}
             </h1>
             <div class="flex flex-wrap items-center justify-between text-xs text-gray-500 dark:text-gray-400 gap-2">
-                <span>📅 Dipublikasikan: {{ $video->formatted_date }}</span>
-                <span>👁️ {{ number_format($video->dibaca) }} kali ditonton</span>
+                <span>Dipublikasikan: {{ $video->formatted_date }}</span>
+                <span>{{ number_format($video->dibaca) }} kali ditonton</span>
             </div>
         </div>
 
@@ -35,11 +35,6 @@
                                     @if($relVid->youtube_id)
                                         <img src="https://img.youtube.com/vi/{{ $relVid->youtube_id }}/mqdefault.jpg" alt="{{ $relVid->judul }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                                     @endif
-                                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                                        <div class="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-[10px] pl-0.5">
-                                            ▶
-                                        </div>
-                                    </div>
                                 </div>
                                 <h4 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-red-500 transition-colors">
                                     {{ $relVid->judul }}
@@ -59,7 +54,7 @@
         <!-- Trending Topics -->
         <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5">
             <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white border-b-2 border-[#008a24] pb-2 mb-4 flex items-center gap-2">
-                <span>🔥</span> Topik Hangat
+                Topik Hangat
             </h3>
             <div class="flex flex-wrap gap-2">
                 @foreach($trendingTags as $tt)
@@ -73,7 +68,7 @@
         <!-- Berita Terpopuler -->
         <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5">
             <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white border-b-2 border-[#008a24] pb-2 mb-4 flex items-center gap-2">
-                <span>📈</span> Berita Terpopuler
+                Berita Terpopuler
             </h3>
             <div class="divide-y divide-gray-200 dark:divide-zinc-800">
                 @foreach($popularArticles as $rank => $pop)

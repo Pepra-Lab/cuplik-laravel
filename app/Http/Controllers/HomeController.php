@@ -22,18 +22,18 @@ class HomeController extends Controller
         $banners = Banner::where('tampil', 'Ya')->orderBy('urutan')->get();
         $breakingNews = Article::where('status', 'Terbit')->latest('tanggal')->take(5)->get();
 
-        // 2. Headline Articles
-        $headlineMain = Article::where('status', 'Terbit')->latest('tanggal')->first();
-        $headlineSub = Article::where('status', 'Terbit')
-            ->where('id', '!=', $headlineMain?->id)
+        // 2. Berita Pilihan (3 items for the green container below banner)
+        $curatedNews = Article::where('status', 'Terbit')
             ->latest('tanggal')
-            ->take(4)
+            ->take(3)
+            ->with('category')
             ->get();
 
         // 3. Terpopuler (Most Read)
         $popularArticles = Article::where('status', 'Terbit')
             ->orderByDesc('dibaca')
             ->take(5)
+            ->with('category')
             ->get();
 
         // 4. Trending Tags
@@ -47,7 +47,7 @@ class HomeController extends Controller
             ->where('slug', '!=', 'video')
             ->orderBy('urutan')
             ->with(['articles' => function ($q) {
-                $q->where('status', 'Terbit')->latest('tanggal')->take(4);
+                $q->where('status', 'Terbit')->latest('tanggal')->take(4)->with('category');
             }])
             ->get();
 
@@ -69,13 +69,13 @@ class HomeController extends Controller
         // 9. Advertisements
         $iklanHeader = IklanGambar::where('posisi', 'like', '%Header%')->where('status', 'Tayang')->first();
         $iklanSidebar = IklanGambar::where('posisi', 'like', '%Sidebar%')->where('status', 'Tayang')->first();
+        $iklanBetweenCategory = IklanGambar::where('posisi', 'like', '%Article%')->orWhere('posisi', 'like', '%Header%')->where('status', 'Tayang')->first();
         $iklanBaris = IklanBaris::where('status', 'Disetujui')->latest('tanggal')->take(6)->get();
 
         return view('frontend.home', compact(
             'banners',
             'breakingNews',
-            'headlineMain',
-            'headlineSub',
+            'curatedNews',
             'popularArticles',
             'trendingTags',
             'categories',
@@ -84,6 +84,7 @@ class HomeController extends Controller
             'videos',
             'iklanHeader',
             'iklanSidebar',
+            'iklanBetweenCategory',
             'iklanBaris'
         ));
     }

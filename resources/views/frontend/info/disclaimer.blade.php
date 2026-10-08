@@ -30,7 +30,7 @@
     <aside class="lg:col-span-4 space-y-8">
         <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5">
             <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white border-b-2 border-[#008a24] pb-2 mb-4 flex items-center gap-2">
-                <span>📈</span> Berita Terpopuler
+                Berita Terpopuler
             </h3>
             <div class="divide-y divide-gray-200 dark:divide-zinc-800">
                 @foreach($popularArticles as $rank => $pop)

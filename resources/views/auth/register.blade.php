@@ -26,22 +26,22 @@
             @csrf
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Nama Lengkap</label>
-                <input type="text" name="name" value="{{ old('name') }}" required placeholder="Nama Lengkap Anda" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                <input type="text" name="name" value="{{ old('name') }}" required placeholder="Nama Lengkap Anda" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Alamat Email</label>
-                <input type="email" name="email" value="{{ old('email') }}" required placeholder="email@example.com" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                <input type="email" name="email" value="{{ old('email') }}" required placeholder="email@example.com" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Kata Sandi</label>
-                <input type="password" name="password" required placeholder="Minimal 6 karakter" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                <input type="password" name="password" required placeholder="Minimal 6 karakter" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Konfirmasi Kata Sandi</label>
-                <input type="password" name="password_confirmation" required placeholder="Ulangi kata sandi" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                <input type="password" name="password_confirmation" required placeholder="Ulangi kata sandi" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
             <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">

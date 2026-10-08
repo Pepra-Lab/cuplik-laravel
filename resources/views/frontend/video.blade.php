@@ -37,8 +37,8 @@
                     </a>
                 </h2>
                 <div class="text-xs text-gray-400 flex items-center gap-3">
-                    <span>📅 {{ $featuredVideo->formatted_date }}</span>
-                    <span>👁️ {{ number_format($featuredVideo->dibaca) }} tayang</span>
+                    <span>{{ $featuredVideo->formatted_date }}</span>
+                    <span>{{ number_format($featuredVideo->dibaca) }} tayang</span>
                 </div>
             </div>
         </div>
@@ -53,11 +53,6 @@
                         @if($vid->youtube_id)
                             <img src="https://img.youtube.com/vi/{{ $vid->youtube_id }}/mqdefault.jpg" alt="{{ $vid->judul }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         @endif
-                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                            <div class="w-9 h-9 rounded-full bg-red-600 text-white flex items-center justify-center text-xs pl-0.5 shadow-md group-hover:scale-110 transition-transform">
-                                ▶
-                            </div>
-                        </div>
                         @if($vid->durasi)
                             <span class="absolute bottom-1 right-1 bg-black/80 text-[10px] text-white px-1.5 py-0.5 rounded font-mono">{{ $vid->durasi }}</span>
                         @endif
