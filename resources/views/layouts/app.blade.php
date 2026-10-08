@@ -44,6 +44,7 @@
         body {
             font-family: 'DM Sans', sans-serif;
             background-color: #ffffff;
+            color: #111111;
         }
         [data-theme="dark"] body,
         .dark body {
@@ -65,28 +66,30 @@
         }
         .group:hover .img-zoom-wrap img,
         .img-zoom-wrap:hover img {
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
 
-        /* Badges */
+        /* Category Badges */
         .badge-cat-green {
             background-color: #008a24;
             color: #ffffff;
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.68rem;
+            font-weight: 800;
             padding: 0.15rem 0.5rem;
             border-radius: 0.25rem;
             text-transform: uppercase;
+            letter-spacing: 0.025em;
             display: inline-block;
         }
         .badge-cat-white {
             background-color: #ffffff;
             color: #008a24;
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.68rem;
+            font-weight: 800;
             padding: 0.15rem 0.5rem;
             border-radius: 0.25rem;
             text-transform: uppercase;
+            letter-spacing: 0.025em;
             display: inline-block;
         }
 
@@ -105,22 +108,39 @@
 
 <body class="bg-white dark:bg-[#121212] text-[#111111] dark:text-[#f3f4f6] min-h-screen flex flex-col transition-colors duration-200">
     
-    <!-- Top Bar Navigation Section -->
-    <header class="bg-white dark:bg-[#121212] sticky top-0 z-40">
+    <!-- Top Utility Bar (Real Newspaper Header Bar) -->
+    <div class="bg-gray-50 dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 text-[11px] text-gray-600 dark:text-gray-400 py-1.5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="font-bold text-gray-900 dark:text-white">
+                    {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                </span>
+                <span class="hidden sm:inline text-gray-300 dark:text-zinc-700">|</span>
+                <span class="hidden sm:inline font-medium">Edisi Pantura &amp; Nasional</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden md:inline text-gray-500">Legalitas SK Kemenkumham AHU-0039651.AH.01.01.2019</span>
+                <span class="text-xs font-extrabold text-[#008a24] uppercase">SMSI Terverifikasi</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Section -->
+    <header class="bg-white dark:bg-[#121212] sticky top-0 z-40 shadow-sm border-b border-gray-100 dark:border-zinc-800">
         
         <!-- Main Top Bar: Logo & Right Controls with space-between -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
             
             <!-- Left: Logo Cuplik -->
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0 group">
-                <div class="w-10 h-10 rounded-lg bg-[#008a24] text-white flex items-center justify-center font-black text-2xl shadow-sm">
+            <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0 group">
+                <div class="w-10 h-10 rounded-lg bg-[#008a24] text-white flex items-center justify-center font-black text-2xl shadow-sm tracking-tighter">
                     C
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-2xl font-black tracking-tight leading-none text-[#111111] dark:text-white">
+                    <span class="text-2xl sm:text-3xl font-black tracking-tight leading-none text-[#111111] dark:text-white">
                         Cuplik<span class="text-[#008a24]">.com</span>
                     </span>
-                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wide">
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-semibold tracking-wide">
                         Beritanya Unik &amp; Menggelitik
                     </span>
                 </div>
@@ -129,7 +149,7 @@
             <!-- Center Search Bar (Desktop) with Live Search Dropdown -->
             <div class="hidden md:flex flex-1 max-w-md mx-4 relative" id="searchContainerDesktop">
                 <form action="{{ route('search') }}" method="GET" class="w-full relative">
-                    <input type="text" id="liveSearchInput" name="q" value="{{ request('q') }}" autocomplete="off" placeholder="Cari berita terkini, topik, tokoh..." class="w-full bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg py-2 pl-9 pr-16 text-xs text-gray-900 dark:text-white input-search-hover">
+                    <input type="text" id="liveSearchInput" name="q" value="{{ request('q') }}" autocomplete="off" placeholder="Cari berita terkini, topik, tokoh..." class="w-full bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 rounded-lg py-2 pl-9 pr-16 text-xs text-gray-900 dark:text-white input-search-hover">
                     
                     <!-- Search Icon -->
                     <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
@@ -138,13 +158,13 @@
                         </svg>
                     </div>
 
-                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-[#008a24] hover:bg-[#006f1c] text-white text-[11px] font-bold rounded">
+                    <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-[#008a24] hover:bg-[#006f1c] text-white text-[11px] font-bold rounded">
                         Cari
                     </button>
                 </form>
 
                 <!-- Live Search Dropdown Results Container -->
-                <div id="liveSearchResults" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-xl max-h-80 overflow-y-auto z-50 divide-y divide-gray-100 dark:divide-zinc-800">
+                <div id="liveSearchResults" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-2xl max-h-80 overflow-y-auto z-50 divide-y divide-gray-100 dark:divide-zinc-800">
                     <!-- Populated dynamically via JS -->
                 </div>
             </div>
@@ -154,7 +174,7 @@
                 
                 <!-- 1. Localization Bahasa (Default: Indonesia) -->
                 <div class="relative hidden sm:block">
-                    <select id="langSelect" class="bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#008a24] cursor-pointer">
+                    <select id="langSelect" class="bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#008a24] cursor-pointer">
                         <option value="id" selected>🇮🇩 ID</option>
                         <option value="en">🇬🇧 EN</option>
                     </select>
@@ -204,33 +224,33 @@
 
         <!-- Horizontal Navigation List: Politik, Sosial, Hukum, Ekonomi, Ragam, Luar Negeri, Iptek, Gaya Hidup, Bola, Video -->
         <nav class="bg-white dark:bg-[#121212] overflow-x-auto scrollbar-none">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-1 text-xs sm:text-sm font-bold tracking-tight whitespace-nowrap py-1">
-                <a href="{{ route('home') }}" class="py-2 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-800 dark:text-gray-200' }}">
-                    Home
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-1 text-xs sm:text-sm font-extrabold tracking-tight whitespace-nowrap py-1">
+                <a href="{{ route('home') }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
+                    HOME
                 </a>
                 
                 @php
                     $mainNavCategories = [
-                        ['nama' => 'Politik', 'slug' => 'politik'],
-                        ['nama' => 'Sosial', 'slug' => 'sosial'],
-                        ['nama' => 'Hukum', 'slug' => 'hukum'],
-                        ['nama' => 'Ekonomi', 'slug' => 'ekonomi'],
-                        ['nama' => 'Ragam', 'slug' => 'ragam'],
-                        ['nama' => 'Luar Negeri', 'slug' => 'luar-negeri'],
-                        ['nama' => 'Iptek', 'slug' => 'iptek'],
-                        ['nama' => 'Gaya Hidup', 'slug' => 'gaya-hidup'],
-                        ['nama' => 'Bola', 'slug' => 'bola'],
+                        ['nama' => 'POLITIK', 'slug' => 'politik'],
+                        ['nama' => 'SOSIAL', 'slug' => 'sosial'],
+                        ['nama' => 'HUKUM', 'slug' => 'hukum'],
+                        ['nama' => 'EKONOMI', 'slug' => 'ekonomi'],
+                        ['nama' => 'RAGAM', 'slug' => 'ragam'],
+                        ['nama' => 'LUAR NEGERI', 'slug' => 'luar-negeri'],
+                        ['nama' => 'IPTEK', 'slug' => 'iptek'],
+                        ['nama' => 'GAYA HIDUP', 'slug' => 'gaya-hidup'],
+                        ['nama' => 'BOLA', 'slug' => 'bola'],
                     ];
                 @endphp
 
                 @foreach($mainNavCategories as $cat)
-                    <a href="{{ route('category.show', $cat['slug']) }}" class="py-2 px-3 hover:text-[#008a24] transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-800 dark:text-gray-200' }}">
+                    <a href="{{ route('category.show', $cat['slug']) }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
                         {{ $cat['nama'] }}
                     </a>
                 @endforeach
                 
-                <a href="{{ route('video.index') }}" class="py-2 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-800 dark:text-gray-200' }}">
-                    Video
+                <a href="{{ route('video.index') }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
+                    VIDEO
                 </a>
             </div>
         </nav>
@@ -280,7 +300,7 @@
                             <a href="{{ route('category.show', $cat['slug']) }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">{{ $cat['nama'] }}</a>
                         @endforeach
                         <a href="{{ route('video.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Video</a>
-                        <a href="{{ route('curhat.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Curhat</a>
+                        <a href="{{ route('curhat.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Curhat Rakyat</a>
                         <a href="{{ route('poll.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Polling</a>
                         <a href="{{ route('realcount.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Real Count</a>
                     </div>
@@ -334,7 +354,7 @@
     </main>
 
     <!-- Footer: Black with slight green tint (#0e1711), 3 cols on row 1, 1 col on row 2, No Gradients -->
-    <footer class="bg-[#0e1711] text-gray-300 border-t border-zinc-800 mt-12 pt-12 pb-8">
+    <footer class="bg-[#0e1711] text-gray-300 border-t border-zinc-800 mt-14 pt-12 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Row 1: 3 Grid Columns (Col 1: Logo, Col 2: Navigation menus, Col 3: Additional / Langganan) -->
@@ -342,7 +362,7 @@
                 
                 <!-- Col 1: Logo Cuplik & Description -->
                 <div class="space-y-3">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded bg-[#008a24] text-white font-extrabold text-xl flex items-center justify-center">
                             C
                         </div>
