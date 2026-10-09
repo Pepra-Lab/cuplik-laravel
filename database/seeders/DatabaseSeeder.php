@@ -16,8 +16,6 @@ use App\Models\PollOption;
 use App\Models\Curhat;
 use App\Models\IklanGambar;
 use App\Models\IklanBaris;
-use App\Models\Banner;
-use App\Models\NewsletterSubscriber;
 use App\Models\Pilbup;
 use App\Models\Paslon;
 use App\Models\Dpt;
@@ -88,13 +86,6 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $u) {
             User::updateOrCreate(['email' => $u['email']], $u);
         }
-
-        User::updateOrCreate(['email' => 'member@cuplik.com'], [
-            'name' => 'Member Cuplik',
-            'password' => Hash::make('password'),
-            'role' => 'Member',
-            'status' => 'Aktif',
-        ]);
 
         $userIds = User::pluck('id', 'name');
 
@@ -863,6 +854,14 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        // Akun demo Member dibuat setelah berita agar seeding tidak mengirim email notifikasi.
+        User::updateOrCreate(['email' => 'member@cuplik.com'], [
+            'name' => 'Member Cuplik',
+            'password' => Hash::make('password'),
+            'role' => 'Member',
+            'status' => 'Aktif',
+        ]);
+
         // 8. Curhat Rakyat / Keluh Kesah Warga
         $curhatsData = [
             [
@@ -904,42 +903,6 @@ class DatabaseSeeder extends Seeder
 
         foreach ($curhatsData as $cd) {
             Curhat::create($cd);
-        }
-
-        // 9. Banners with Real Editorial News Photos
-        $bannersData = [
-            [
-                'judul' => 'Kritik Muktamar Diancam Sanksi, Kang Eep: Jangan Sampai Partai Jadi Alat Membungkam Nurani Warga NU',
-                'gambar' => 'https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=1600&q=80',
-                'tautan' => '/artikel/kritik-muktamar-diancam-sanksi-kang-eep-jangan-sampai-partai-jadi-alat-membungkam-nurani-warga-nu',
-                'urutan' => 1,
-                'tampil' => 'Ya',
-            ],
-            [
-                'judul' => 'Ada 17 Kursi Kepala Dinas Masih Kosong, Lucky Hakim-Syaefudin Siapkan Lelang Jabatan Terbuka',
-                'gambar' => 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=1600&q=80',
-                'tautan' => '/artikel/ada-17-kursi-kepala-dinas-masih-kosong-lucky-hakim-syaefudin-siapkan-lelang-jabatan-terbuka',
-                'urutan' => 2,
-                'tampil' => 'Ya',
-            ],
-            [
-                'judul' => 'Dosen Polindra Ciptakan Alat Smart Farming IoT Bertenaga Surya untuk Optimalkan Irigasi Mangga',
-                'gambar' => 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1600&q=80',
-                'tautan' => '/artikel/dosen-polindra-ciptakan-alat-smart-farming-iot-bertenaga-surya-untuk-optimalkan-irigasi-mangga',
-                'urutan' => 3,
-                'tampil' => 'Ya',
-            ],
-            [
-                'judul' => 'Shin Tae-yong Siapkan Formasi Kejutan, Timnas Indonesia Bidik Kemenangan Krusial Kualifikasi Piala Dunia',
-                'gambar' => 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1600&q=80',
-                'tautan' => '/artikel/shin-tae-yong-siapkan-formasi-kejutan-timnas-indonesia-bidik-kemenangan-krusial-kualifikasi-piala-dunia',
-                'urutan' => 4,
-                'tampil' => 'Ya',
-            ],
-        ];
-
-        foreach ($bannersData as $bd) {
-            Banner::updateOrCreate(['judul' => $bd['judul']], $bd);
         }
 
         // 10. Real Count Pilbup Indramayu
@@ -1013,12 +976,6 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // 11. Newsletter Subscribers
-        $newsletterEmails = ['wongdermayu@gmail.com', 'kabar.cirebon@yahoo.com', 'pembaca.setia@gmail.com'];
-        foreach ($newsletterEmails as $em) {
-            NewsletterSubscriber::updateOrCreate(['email' => $em], ['tanggal' => '2026-10-01']);
-        }
-
         // 12. Posisi Iklan (master data slot iklan gambar)
         $posisiData = [
             ['nama' => 'Header Top', 'ukuran' => '728x90', 'keterangan' => 'Slot di bagian atas header'],
@@ -1032,7 +989,7 @@ class DatabaseSeeder extends Seeder
             IklanPosisi::updateOrCreate(['nama' => $pos['nama']], $pos);
         }
 
-        // 13. Pengaturan Situs (Profil, Banner, Newsletter)
+        // 13. Pengaturan Situs (Profil Situs)
         Setting::updateOrCreate(['id' => 1], [
             'site_name' => 'Cuplik.com',
             'tagline' => 'Kabar Terkini Wong Pantura',
@@ -1041,9 +998,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'redaksi@cuplik.com',
             'telepon' => '0234-123456',
             'footer_text' => '&copy; ' . date('Y') . ' Cuplik.com. Seluruh hak cipta dilindungi.',
-            'banner_jeda' => 10,
-            'newsletter_aktif' => true,
-            'newsletter_subjek_default' => 'Update Terbaru dari Cuplik.com',
         ]);
     }
 }

@@ -6,22 +6,18 @@
 <div class="space-y-10">
 
     <!-- ========================================================================= -->
-    <!-- 1. HERO CONTAINER / HEADER: BANNER                                        -->
+    <!-- 1. HERO CONTAINER: SLIDER BERITA TERPOPULER                              -->
     <!-- ========================================================================= -->
     <section class="w-full space-y-2.5">
         
-        <!-- Full-width Banner Box Container -->
-        <div id="heroBannerContainer" class="relative w-full aspect-[21/9] sm:aspect-[24/9] md:aspect-[28/9] min-h-[240px] sm:min-h-[320px] md:min-h-[390px] rounded-xl overflow-hidden bg-zinc-950 group shadow-md">
+        <!-- Full-width Hero Slider Container -->
+        <div id="heroSlider" class="relative w-full aspect-[21/9] sm:aspect-[24/9] md:aspect-[28/9] min-h-[240px] sm:min-h-[320px] md:min-h-[390px] rounded-xl overflow-hidden bg-zinc-950 group shadow-md">
             
-            @php
-                $slides = $banners->count() > 0 ? $banners : $popularArticles;
-            @endphp
-
-            @foreach($slides as $index => $slide)
+            @foreach($popularArticles as $index => $slide)
                 @php
-                    $slideTitle = $slide->judul ?? 'Berita Terkini CuplikCom';
-                    $slideLink = $slide->tautan ?? ($slide->slug ? route('article.show', $slide->slug) : '#');
-                    $slideImage = $slide->gambar ?? ($slide->foto ?? null);
+                    $slideTitle = $slide->judul;
+                    $slideLink = route('article.show', $slide->slug);
+                    $slideImage = $slide->foto;
                     $slideCat = $slide->category->nama ?? 'Headline';
                 @endphp
 
@@ -40,7 +36,7 @@
                         <!-- Low-opacity Solid Black Overlay (NO GRADIENT) -->
                         <div class="absolute inset-0 bg-black/55"></div>
 
-                        <!-- Banner Text Overlay (DM Sans Font) -->
+                        <!-- Slide Text Overlay (DM Sans Font) -->
                         <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 z-20 text-white space-y-2.5 max-w-4xl">
                             <span class="px-2.5 py-1 rounded text-[10px] sm:text-xs font-black uppercase tracking-wider bg-[#008a24] text-white inline-block shadow">
                                 {{ $slideCat }}
@@ -55,10 +51,10 @@
 
         </div>
 
-        <!-- Banner Indicator Nodes/Dots (Bottom Right, outside box container) -->
+        <!-- Slide Indicator Dots (Bottom Right, outside box container) -->
         <div class="flex items-center justify-end gap-2 pr-1 pt-1">
-            @foreach($slides as $index => $slide)
-                <button type="button" onclick="goToSlide({{ $index }})" class="banner-dot w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-[#008a24] scale-125' : 'bg-gray-300 dark:bg-zinc-700 hover:bg-gray-400' }}" aria-label="Slide {{ $index + 1 }}"></button>
+            @foreach($popularArticles as $index => $slide)
+                <button type="button" onclick="goToSlide({{ $index }})" class="hero-dot w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-[#008a24] scale-125' : 'bg-gray-300 dark:bg-zinc-700 hover:bg-gray-400' }}" aria-label="Slide {{ $index + 1 }}"></button>
             @endforeach
         </div>
 
@@ -272,34 +268,7 @@
                     </section>
                 @endif
 
-                <!-- Interleaved 1: Between Hukum and Ekonomi -> Box Container Newsletter -->
-                @if(strtolower($cat->nama) === 'hukum')
-                    <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6 shadow-sm my-8">
-                        <div class="w-full md:w-1/3 max-w-[220px] aspect-[4/3] rounded-lg overflow-hidden shrink-0 bg-zinc-100 dark:bg-zinc-800 shadow">
-                            <img src="{{ asset('assets/newsletter.png') }}" alt="Newsletter CuplikCom" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1 space-y-3 text-left">
-                            <span class="px-2.5 py-1 rounded text-[10px] font-bold uppercase bg-[#008a24] text-white inline-block">
-                                Ruang Langganan Eksklusif
-                            </span>
-                            <h3 class="text-lg sm:text-xl font-black text-gray-900 dark:text-white leading-tight">
-                                Dapatkan Rangkuman Berita Harian &amp; Analisis Kritis
-                            </h3>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                                Jangan lewatkan isu-isu krusial Pantura, politik, dan suara warga langsung di email Anda setiap pagi tanpa spam.
-                            </p>
-                            <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md pt-1">
-                                @csrf
-                                <input type="email" name="email" required placeholder="Masukkan alamat email Anda..." class="flex-1 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
-                                <button type="submit" class="px-5 py-2 bg-[#008a24] hover:bg-[#006f1c] text-white text-xs font-bold rounded-lg transition-colors shrink-0">
-                                    Langganan
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Interleaved 2: Between Ekonomi and Ragam -> Box Container Space Iklan -->
+                <!-- Interleaved: Between Ekonomi and Ragam -> Box Container Space Iklan -->
                 @if(strtolower($cat->nama) === 'ekonomi')
                     <div class="my-8 rounded-xl overflow-hidden border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900 p-4 text-center">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-2">
@@ -482,13 +451,14 @@
 
 </div>
 
-<!-- Banner Carousel Script: 10 Seconds Auto-Slide with Dot Switching -->
+<!-- Hero Slider Script: 10 Seconds Auto-Slide with Dot Switching -->
 <script>
     let currentSlide = 0;
     const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.banner-dot');
+    const dots = document.querySelectorAll('.hero-dot');
     const totalSlides = slides.length;
-    let bannerInterval = null;
+    const slideDelay = 10000;
+    let slideInterval = null;
 
     function showSlide(index) {
         if (totalSlides === 0) return;
@@ -528,13 +498,13 @@
     }
 
     function resetInterval() {
-        clearInterval(bannerInterval);
-        bannerInterval = setInterval(nextSlide, {{ ($siteSetting ?? \App\Models\Setting::current())->banner_jeda * 1000 }});
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, slideDelay);
     }
 
     // Initialize 10s auto rotation
     if (totalSlides > 1) {
-        bannerInterval = setInterval(nextSlide, {{ ($siteSetting ?? \App\Models\Setting::current())->banner_jeda * 1000 }});
+        slideInterval = setInterval(nextSlide, slideDelay);
     }
 </script>
 @endsection

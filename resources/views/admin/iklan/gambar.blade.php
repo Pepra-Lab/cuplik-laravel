@@ -66,6 +66,8 @@
                     <option value="Tayang">Tayang</option>
                     <option value="Berakhir">Berakhir</option>
                     <option value="Nonaktif">Nonaktif</option>
+                    <option value="Menunggu">Menunggu</option>
+                    <option value="Ditolak">Ditolak</option>
                 </select>
             </div>
 
@@ -109,6 +111,9 @@
                             </td>
                             <td class="px-4 py-3 font-bold text-gray-900 dark:text-white">
                                 {{ $ik->judul }}
+                                @if($ik->user)
+                                    <div class="text-[10px] text-gray-400 font-normal">oleh {{ $ik->user->name }}</div>
+                                @endif
                                 @if($ik->link)
                                     <div class="text-[10px] font-mono text-blue-500 font-normal truncate max-w-xs">{{ $ik->link }}</div>
                                 @endif
@@ -124,6 +129,10 @@
                                     <span class="badge-status-ok">Tayang</span>
                                 @elseif($ik->status === 'Berakhir')
                                     <span class="badge-status-wt">Berakhir</span>
+                                @elseif($ik->status === 'Menunggu')
+                                    <span class="badge-status-wt">Menunggu</span>
+                                @elseif($ik->status === 'Ditolak')
+                                    <span class="badge-status-no">Ditolak</span>
                                 @else
                                     <span class="badge-status-no">Nonaktif</span>
                                 @endif
@@ -134,6 +143,20 @@
                             </td>
                             <td class="px-4 py-3 text-right">
                                 <div class="flex items-center justify-end gap-1.5">
+                                    @if(in_array($ik->status, ['Menunggu', 'Ditolak']))
+                                        <form action="{{ route('admin.iklan-gambar.updateStatus', $ik) }}" method="POST">
+                                            @csrf @method('PATCH')
+                                            <input type="hidden" name="status" value="Tayang">
+                                            <button type="submit" class="px-2 py-1 text-xs font-semibold text-[#008a24] bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700">Setujui</button>
+                                        </form>
+                                    @endif
+                                    @if($ik->status === 'Menunggu')
+                                        <form action="{{ route('admin.iklan-gambar.updateStatus', $ik) }}" method="POST">
+                                            @csrf @method('PATCH')
+                                            <input type="hidden" name="status" value="Ditolak">
+                                            <button type="submit" class="px-2 py-1 text-xs font-semibold text-amber-600 bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700">Tolak</button>
+                                        </form>
+                                    @endif
                                     <button type="button" onclick="openEditIklanGambarModal({{ $ik->id }}, '{{ addslashes($ik->judul) }}', '{{ $ik->posisi }}', '{{ $ik->ukuran }}', '{{ addslashes($ik->link) }}', '{{ addslashes($ik->gambar) }}', '{{ $ik->mulai ? $ik->mulai->format('Y-m-d') : '' }}', '{{ $ik->selesai ? $ik->selesai->format('Y-m-d') : '' }}', '{{ $ik->status }}')" class="px-2 py-1 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:text-[#008a24] bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700" title="Edit Iklan">
                                         Edit
                                     </button>
@@ -224,6 +247,8 @@
                     <option value="Tayang">Tayang</option>
                     <option value="Berakhir">Berakhir</option>
                     <option value="Nonaktif">Nonaktif</option>
+                    <option value="Menunggu">Menunggu</option>
+                    <option value="Ditolak">Ditolak</option>
                 </select>
             </div>
 

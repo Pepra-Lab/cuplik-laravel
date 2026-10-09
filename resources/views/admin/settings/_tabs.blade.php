@@ -1,8 +1,6 @@
 @php
     $tabs = [
         ['admin.settings.profil', 'Profil Situs'],
-        ['admin.banners.index', 'Banner Beranda'],
-        ['admin.newsletter.index', 'Newsletter'],
         ['admin.iklan-posisi.index', 'Posisi Iklan'],
     ];
 @endphp

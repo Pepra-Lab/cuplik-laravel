@@ -37,12 +37,6 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
                         <tr>
-                            <td class="p-3 font-bold">Headline Utama Hero</td>
-                            <td class="p-3">Banner Slider Beranda</td>
-                            <td class="p-3">Per Bulan</td>
-                            <td class="p-3 text-right font-bold text-[#008a24]">Rp 2.500.000</td>
-                        </tr>
-                        <tr>
                             <td class="p-3 font-bold">Banner Header 728×90</td>
                             <td class="p-3">Semua Halaman (Header)</td>
                             <td class="p-3">Per Bulan</td>

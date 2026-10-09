@@ -37,6 +37,7 @@ class CurhatController extends Controller
         ]);
 
         Curhat::create([
+            'user_id' => $request->user()->id,
             'pengirim' => $request->pengirim ?: 'Anonim',
             'lokasi' => $request->lokasi ?: 'Indramayu',
             'pesan' => $request->pesan,

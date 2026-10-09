@@ -20,14 +20,6 @@ class Setting extends Model
         'instagram',
         'youtube',
         'footer_text',
-        'banner_jeda',
-        'newsletter_aktif',
-        'newsletter_subjek_default',
-    ];
-
-    protected $casts = [
-        'banner_jeda' => 'integer',
-        'newsletter_aktif' => 'boolean',
     ];
 
     /**

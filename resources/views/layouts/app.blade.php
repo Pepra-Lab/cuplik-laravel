@@ -322,9 +322,11 @@
                     </a>
                 @endauth
 
-                <a href="#newsletterSection" onclick="document.getElementById('mobileSidebarDrawer').classList.add('hidden')" class="w-full py-2.5 border border-[#008a24] text-[#008a24] rounded-lg text-xs font-bold text-center block">
-                    Langganan Berita
-                </a>
+                @guest
+                    <a href="{{ route('register') }}" class="w-full py-2.5 border border-[#008a24] text-[#008a24] rounded-lg text-xs font-bold text-center block">
+                        Daftar Member
+                    </a>
+                @endguest
             </div>
 
         </div>
@@ -420,25 +422,19 @@
                     </div>
                 </div>
 
-                <!-- Col 3: Additional (Button Langganan / Form Newsletter) -->
-                <div id="newsletterSection" class="space-y-3">
+                <!-- Col 3: Ajakan menjadi Member -->
+                <div class="space-y-3">
                     <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3.5 border-b border-zinc-800 pb-1.5">
-                        Langganan Berita
+                        Ayo Jadi Member Cuplik.com
                     </h4>
-                    @if($siteSetting->newsletter_aktif ?? true)
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            Dapatkan kurasi berita terkini dan investigasi eksklusif setiap pagi langsung di kotak masuk email Anda.
-                        </p>
-                        <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-2">
-                            @csrf
-                            <input type="email" name="email" required placeholder="Alamat email Anda..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#008a24]">
-                            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2 rounded-lg text-xs font-bold transition-colors">
-                                Langganan Sekarang
-                            </button>
-                        </form>
-                    @else
-                        <p class="text-xs text-gray-500 leading-relaxed">Form langganan newsletter sedang tidak aktif.</p>
-                    @endif
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Manfaat menjadi <b>Member</b> di Cuplik.com yaitu : <br> 1. Mendapat email setiap ada berita terbaru <br> 2. Bisa berkomentar <br> 3. Mengirim curhat rakyat <br> 4. Memasang iklan
+                    </p>
+                    @guest
+                        <a href="{{ route('register') }}" class="block w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2 rounded-lg text-xs font-bold text-center transition-colors">
+                            Daftar Sekarang
+                        </a>
+                    @endguest
                 </div>
 
             </div>

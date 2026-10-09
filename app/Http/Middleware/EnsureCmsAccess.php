@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureCmsAccess
 {
     /**
-     * Pemakaian: `cms` untuk semua peran CMS, `cms:admin` khusus Admin dan Super Admin.
+     * Pemakaian: `cms` untuk semua peran CMS, `cms:admin` khusus Admin dan Super Admin,
+     * `cms:member` khusus Member.
      */
     public function handle(Request $request, Closure $next, ?string $level = null): Response
     {
@@ -29,7 +30,11 @@ class EnsureCmsAccess
             return redirect()->route('login')->with('error', 'Akun Anda tidak aktif.');
         }
 
-        $allowed = $level === 'admin' ? $user->isAdmin() : $user->canAccessCms();
+        $allowed = match ($level) {
+            'admin' => $user->isAdmin(),
+            'member' => $user->isMember(),
+            default => $user->canAccessCms(),
+        };
 
         if (! $allowed) {
             $fallback = $user->canAccessCms() ? 'admin.articles.index' : 'home';

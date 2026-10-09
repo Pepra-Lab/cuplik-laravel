@@ -29,26 +29,36 @@
                 </h3>
             </div>
 
-            <form action="{{ route('curhat.store') }}" method="POST" class="space-y-3.5">
-                @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                        <label class="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">Nama / Inisial (Boleh Anonim)</label>
-                        <input type="text" name="pengirim" placeholder="mis. Guru Honorer / Petani Anjatan..." class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white input-search-hover">
+            @auth
+                <form action="{{ route('curhat.store') }}" method="POST" class="space-y-3.5">
+                    @csrf
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">Nama / Inisial (Boleh Anonim)</label>
+                            <input type="text" name="pengirim" placeholder="mis. Guru Honorer / Petani Anjatan..." class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white input-search-hover">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">Desa / Kecamatan / Kota *</label>
+                            <input type="text" name="lokasi" required placeholder="mis. Bongas, Indramayu" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white input-search-hover">
+                        </div>
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">Desa / Kecamatan / Kota *</label>
-                        <input type="text" name="lokasi" required placeholder="mis. Bongas, Indramayu" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white input-search-hover">
+                        <label class="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">Isi Pesan Keluhan &amp; Fakta Lapangan *</label>
+                        <textarea name="pesan" rows="4" required placeholder="Ceritakan permasalahan fasilitas publik, jalan rusak, pupuk subsidi, pelayanan birokrasi yang Anda alami..." class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg p-3 text-xs text-gray-900 dark:text-white input-search-hover leading-relaxed"></textarea>
                     </div>
+                    <button type="submit" class="bg-[#008a24] hover:bg-[#006f1c] text-white px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow-sm">
+                        Kirimkan Aspirasi Saya
+                    </button>
+                </form>
+            @else
+                <div class="text-xs text-gray-600 dark:text-gray-400 flex flex-wrap items-center justify-between gap-3">
+                    <span>Masuk atau daftar sebagai Member untuk mengirim curhat.</span>
+                    <span class="flex gap-2">
+                        <a href="{{ route('login') }}" class="px-4 py-2 bg-[#008a24] hover:bg-[#006f1c] text-white rounded-lg font-bold">Masuk</a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 border border-[#008a24] text-[#008a24] rounded-lg font-bold">Daftar</a>
+                    </span>
                 </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">Isi Pesan Keluhan &amp; Fakta Lapangan *</label>
-                    <textarea name="pesan" rows="4" required placeholder="Ceritakan permasalahan fasilitas publik, jalan rusak, pupuk subsidi, pelayanan birokrasi yang Anda alami..." class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg p-3 text-xs text-gray-900 dark:text-white input-search-hover leading-relaxed"></textarea>
-                </div>
-                <button type="submit" class="bg-[#008a24] hover:bg-[#006f1c] text-white px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow-sm">
-                    Kirimkan Aspirasi Saya
-                </button>
-            </form>
+            @endauth
         </div>
 
         <!-- Curhats Feed -->

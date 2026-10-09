@@ -11,7 +11,7 @@
                 C
             </div>
             <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Masuk ke CuplikCom</h1>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Masuk untuk mengelola berita di CMS CuplikCom</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Halo! Selamat datang di CuplikCom.</p>
         </div>
 
         @if(session('status'))

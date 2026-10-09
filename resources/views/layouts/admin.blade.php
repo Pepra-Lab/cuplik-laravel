@@ -126,14 +126,13 @@
                     ['admin.realcount.index', 'admin.realcount.*', 'Real Count Pilbup', $isAdmin],
                 ]],
                 ['title' => 'Iklan & Tampilan', 'items' => [
-                    ['admin.banners.index', 'admin.banners.*', 'Banner Beranda', $isAdmin],
                     ['admin.iklan-gambar.index', 'admin.iklan-gambar.*', 'Iklan Gambar', $isAdmin],
                     ['admin.iklan-baris.index', 'admin.iklan-baris.*', 'Iklan Baris', $isAdmin],
+                    ['admin.iklan-saya.index', 'admin.iklan-saya.*', 'Iklan Saya', $authUser->isMember()],
                 ]],
                 ['title' => 'Pengaturan', 'items' => [
                     ['admin.users.index', 'admin.users.*', 'Pengguna', $isAdmin],
                     ['admin.settings.profil', 'admin.settings.profil', 'Profil Situs', $isAdmin],
-                    ['admin.newsletter.index', 'admin.newsletter.*', 'Newsletter', $isAdmin],
                     ['admin.iklan-posisi.index', 'admin.iklan-posisi.*', 'Posisi Iklan', $isAdmin],
                 ]],
             ];
@@ -149,8 +148,8 @@
                         @if($visible)
                             <a href="{{ route($routeName) }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs($pattern) ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
                                 {{ $label }}
-                                @if($routeName === 'admin.users.index' && $pendingUsers > 0)
-                                    <span class="bg-red-600 text-white text-[10px] rounded-full px-1.5 py-0.5">{{ $pendingUsers }}</span>
+                                @if(($pendingCounts[$routeName] ?? 0) > 0)
+                                    <span class="bg-red-600 text-white text-[10px] rounded-full px-1.5 py-0.5">{{ $pendingCounts[$routeName] }}</span>
                                 @endif
                             </a>
                         @endif

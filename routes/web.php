@@ -24,12 +24,11 @@ use App\Http\Controllers\Admin\AdminPollController;
 use App\Http\Controllers\Admin\AdminCurhatController;
 use App\Http\Controllers\Admin\AdminIklanGambarController;
 use App\Http\Controllers\Admin\AdminIklanBarisController;
-use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\Admin\AdminRealCountController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminIklanPosisiController;
-use App\Http\Controllers\Admin\AdminNewsletterController;
+use App\Http\Controllers\Admin\MemberIklanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,10 +37,9 @@ use App\Http\Controllers\Admin\AdminNewsletterController;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/newsletter/subscribe', [HomeController::class, 'subscribeNewsletter'])->name('newsletter.subscribe');
 
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
-Route::post('/artikel/{slug}/komentar', [ArticleController::class, 'storeComment'])->name('article.comment.store');
+Route::post('/artikel/{slug}/komentar', [ArticleController::class, 'storeComment'])->middleware('auth')->name('article.comment.store');
 
 Route::get('/kanal/{slug}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/tag/{slug}', [TagController::class, 'show'])->name('tag.show');
@@ -56,7 +54,7 @@ Route::get('/polling', [PollController::class, 'index'])->name('poll.index');
 Route::post('/polling/vote', [PollController::class, 'vote'])->name('poll.vote');
 
 Route::get('/curhat', [CurhatController::class, 'index'])->name('curhat.index');
-Route::post('/curhat', [CurhatController::class, 'store'])->name('curhat.store');
+Route::post('/curhat', [CurhatController::class, 'store'])->middleware('auth')->name('curhat.store');
 
 Route::get('/real-count', [RealCountController::class, 'index'])->name('realcount.index');
 
@@ -92,6 +90,15 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
     Route::resource('articles', AdminArticleController::class)->except(['show']);
     Route::resource('videos', AdminVideoController::class)->except(['show', 'create', 'edit']);
 
+    // Khusus Member: iklan yang dikirim harus divalidasi admin
+    Route::middleware('cms:member')->prefix('iklan-saya')->name('iklan-saya.')->group(function () {
+        Route::get('/', [MemberIklanController::class, 'index'])->name('index');
+        Route::post('gambar', [MemberIklanController::class, 'storeGambar'])->name('gambar.store');
+        Route::post('baris', [MemberIklanController::class, 'storeBaris'])->name('baris.store');
+        Route::delete('gambar/{iklanGambar}', [MemberIklanController::class, 'destroyGambar'])->name('gambar.destroy');
+        Route::delete('baris/{iklanBari}', [MemberIklanController::class, 'destroyBaris'])->name('baris.destroy');
+    });
+
     // Khusus Admin dan Super Admin
     Route::middleware('cms:admin')->group(function () {
         Route::resource('categories', AdminCategoryController::class)->except(['show', 'create', 'edit']);
@@ -105,12 +112,10 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
 
         // Advertisements
         Route::resource('iklan-gambar', AdminIklanGambarController::class)->except(['show', 'create', 'edit']);
+        Route::patch('iklan-gambar/{iklanGambar}/status', [AdminIklanGambarController::class, 'updateStatus'])->name('iklan-gambar.updateStatus');
         Route::get('iklan-baris', [AdminIklanBarisController::class, 'index'])->name('iklan-baris.index');
         Route::patch('iklan-baris/{iklanBari}/status', [AdminIklanBarisController::class, 'updateStatus'])->name('iklan-baris.updateStatus');
         Route::delete('iklan-baris/{iklanBari}', [AdminIklanBarisController::class, 'destroy'])->name('iklan-baris.destroy');
-
-        // Banners
-        Route::resource('banners', AdminBannerController::class)->except(['show', 'create', 'edit']);
 
         // Real Count
         Route::get('real-count', [AdminRealCountController::class, 'index'])->name('realcount.index');
@@ -121,18 +126,13 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
         Route::patch('users/{user}/approve', [AdminUserController::class, 'approve'])->name('users.approve');
         Route::patch('users/{user}/reject', [AdminUserController::class, 'reject'])->name('users.reject');
 
-        // Pengaturan: Profil Situs, Banner Jeda, Newsletter, Posisi Iklan
+        // Pengaturan: Profil Situs dan Posisi Iklan
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('profil', [AdminSettingController::class, 'profil'])->name('profil');
             Route::put('profil', [AdminSettingController::class, 'updateProfil'])->name('profil.update');
-            Route::put('banner-jeda', [AdminSettingController::class, 'updateBannerJeda'])->name('banner-jeda.update');
-            Route::put('newsletter', [AdminSettingController::class, 'updateNewsletterConfig'])->name('newsletter.update');
         });
 
         Route::resource('iklan-posisi', AdminIklanPosisiController::class)->except(['show', 'create', 'edit']);
 
-        Route::get('newsletter', [AdminNewsletterController::class, 'index'])->name('newsletter.index');
-        Route::get('newsletter/export', [AdminNewsletterController::class, 'export'])->name('newsletter.export');
-        Route::delete('newsletter/{newsletter}', [AdminNewsletterController::class, 'destroy'])->name('newsletter.destroy');
     });
 });
