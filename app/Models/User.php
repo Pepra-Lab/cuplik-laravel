@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,11 +12,20 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    public const ROLE_SUPER_ADMIN = 'Super Admin';
+    public const ROLE_ADMIN = 'Admin';
+    public const ROLE_REDAKTUR = 'Redaktur';
+    public const ROLE_MEMBER = 'Member';
+
+    public const ROLES = [self::ROLE_SUPER_ADMIN, self::ROLE_ADMIN, self::ROLE_REDAKTUR, self::ROLE_MEMBER];
+    public const MANAGER_ROLES = [self::ROLE_SUPER_ADMIN, self::ROLE_ADMIN];
+    public const CONTRIBUTOR_ROLES = [self::ROLE_REDAKTUR, self::ROLE_MEMBER];
+
+    public const STATUS_ACTIVE = 'Aktif';
+    public const STATUS_PENDING = 'Menunggu';
+    public const STATUS_REJECTED = 'Ditolak';
+    public const ACCOUNT_STATUSES = ['Aktif', 'Nonaktif', 'Diblokir'];
+
     protected $fillable = [
         'name',
         'email',
@@ -25,21 +34,11 @@ class User extends Authenticatable
         'status',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -50,21 +49,44 @@ class User extends Authenticatable
 
     public function isSuperAdmin(): bool
     {
-        return $this->role === 'Super Admin';
+        return $this->role === self::ROLE_SUPER_ADMIN;
     }
 
     public function isAdmin(): bool
     {
-        return in_array($this->role, ['Admin', 'Super Admin']);
+        return in_array($this->role, self::MANAGER_ROLES, true);
     }
 
-    public function isEditorOrAbove(): bool
+    public function isRedaktur(): bool
     {
-        return in_array($this->role, ['Admin', 'Super Admin', 'Editor', 'Redaksi']);
+        return $this->role === self::ROLE_REDAKTUR;
     }
 
-    public function isStaff(): bool
+    public function isMember(): bool
     {
-        return in_array($this->role, ['Admin', 'Super Admin', 'Editor', 'Penulis', 'Reporter', 'Redaksi']);
+        return $this->role === self::ROLE_MEMBER;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function canAccessCms(): bool
+    {
+        return in_array($this->role, self::ROLES, true);
+    }
+
+    /**
+     * Akun Admin dan Super Admin hanya boleh diubah oleh Super Admin.
+     */
+    public function canBeManagedBy(User $actor): bool
+    {
+        return $actor->isSuperAdmin() || ! in_array($this->role, self::MANAGER_ROLES, true);
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

@@ -33,6 +33,13 @@ class DatabaseSeeder extends Seeder
         // 1. Users / Editorial Team
         $users = [
             [
+                'name' => 'Admin Cuplik',
+                'email' => 'admin@cuplik.com',
+                'password' => Hash::make('password'),
+                'role' => 'Admin',
+                'status' => 'Aktif',
+            ],
+            [
                 'name' => 'Ali Ma\'nawi',
                 'email' => 'redaksi@cuplik.com',
                 'password' => Hash::make('password'),
@@ -43,35 +50,35 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Farhan Maksudi',
                 'email' => 'farhan@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Editor',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Dalani',
                 'email' => 'dalani@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Editor',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Baebudin',
                 'email' => 'baebudin@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Reporter',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Daman',
                 'email' => 'daman@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Reporter',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Ato Susanto',
                 'email' => 'atosusanto@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Reporter',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
         ];
@@ -79,6 +86,15 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $u) {
             User::updateOrCreate(['email' => $u['email']], $u);
         }
+
+        User::updateOrCreate(['email' => 'member@cuplik.com'], [
+            'name' => 'Member Cuplik',
+            'password' => Hash::make('password'),
+            'role' => 'Member',
+            'status' => 'Aktif',
+        ]);
+
+        $userIds = User::pluck('id', 'name');
 
         // 2. Categories
         $categoriesData = [
@@ -698,6 +714,7 @@ class DatabaseSeeder extends Seeder
             if (!$cat) continue;
 
             $art = Article::updateOrCreate(['slug' => $ad['slug']], [
+                'user_id' => $userIds[$ad['penulis']] ?? null,
                 'judul' => $ad['judul'],
                 'category_id' => $cat->id,
                 'editor_nama' => $ad['editor'],

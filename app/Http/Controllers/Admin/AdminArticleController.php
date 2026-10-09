@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use App\Models\Article;
 use App\Models\Category;
@@ -18,7 +19,7 @@ class AdminArticleController extends Controller
         $categoryId = $request->query('kategori_id');
         $status = $request->query('status');
 
-        $query = Article::with('category', 'tags');
+        $query = Article::with('category', 'tags')->visibleTo($request->user());
 
         if ($q !== '') {
             $query->where(function ($sub) use ($q) {
@@ -46,28 +47,14 @@ class AdminArticleController extends Controller
     {
         $categories = Category::orderBy('nama')->get();
         $tags = Tag::orderBy('nama')->get();
-        $staff = User::whereIn('role', ['Admin', 'Super Admin', 'Editor', 'Penulis', 'Reporter', 'Redaksi'])->orderBy('name')->get();
+        $staff = User::whereIn('role', User::ROLES)->orderBy('name')->get();
 
         return view('admin.articles.create', compact('categories', 'tags', 'staff'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'editor_nama' => 'nullable|string|max:100',
-            'penulis_nama' => 'nullable|string|max:100',
-            'lokasi' => 'nullable|string|max:100',
-            'lead' => 'nullable|string',
-            'isi' => 'required|string',
-            'foto' => 'nullable|string',
-            'tone' => 'nullable|string|max:20',
-            'status' => 'required|in:Terbit,Review,Draft',
-            'tanggal' => 'required|date',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-        ]);
+        $validated = $request->validate($this->rules($request));
 
         $baseSlug = Str::slug($validated['judul']);
         $slug = $baseSlug;
@@ -79,6 +66,12 @@ class AdminArticleController extends Controller
 
         $validated['slug'] = $slug;
         $validated['tone'] = $validated['tone'] ?: '#eaf3ec';
+        $validated['user_id'] = $request->user()->id;
+
+        // Berita dari Member selalu menunggu review admin.
+        if ($request->user()->isMember()) {
+            $validated['status'] = 'Review';
+        }
 
         $article = Article::create($validated);
 
@@ -91,30 +84,20 @@ class AdminArticleController extends Controller
 
     public function edit(Article $article)
     {
+        Gate::authorize('update', $article);
+
         $categories = Category::orderBy('nama')->get();
         $tags = Tag::orderBy('nama')->get();
-        $staff = User::whereIn('role', ['Admin', 'Super Admin', 'Editor', 'Penulis', 'Reporter', 'Redaksi'])->orderBy('name')->get();
+        $staff = User::whereIn('role', User::ROLES)->orderBy('name')->get();
 
         return view('admin.articles.edit', compact('article', 'categories', 'tags', 'staff'));
     }
 
     public function update(Request $request, Article $article)
     {
-        $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'editor_nama' => 'nullable|string|max:100',
-            'penulis_nama' => 'nullable|string|max:100',
-            'lokasi' => 'nullable|string|max:100',
-            'lead' => 'nullable|string',
-            'isi' => 'required|string',
-            'foto' => 'nullable|string',
-            'tone' => 'nullable|string|max:20',
-            'status' => 'required|in:Terbit,Review,Draft',
-            'tanggal' => 'required|date',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-        ]);
+        Gate::authorize('update', $article);
+
+        $validated = $request->validate($this->rules($request));
 
         if ($article->judul !== $validated['judul']) {
             $baseSlug = Str::slug($validated['judul']);
@@ -140,7 +123,28 @@ class AdminArticleController extends Controller
 
     public function destroy(Article $article)
     {
+        Gate::authorize('delete', $article);
+
         $article->delete();
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil dihapus!');
+    }
+
+    private function rules(Request $request): array
+    {
+        return [
+            'judul' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'editor_nama' => 'nullable|string|max:100',
+            'penulis_nama' => 'nullable|string|max:100',
+            'lokasi' => 'nullable|string|max:100',
+            'lead' => 'nullable|string',
+            'isi' => 'required|string',
+            'foto' => 'nullable|string',
+            'tone' => 'nullable|string|max:20',
+            'status' => $request->user()->isMember() ? 'nullable' : 'required|in:Terbit,Review,Draft',
+            'tanggal' => 'required|date',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
+        ];
     }
 }

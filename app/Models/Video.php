@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class Video extends Model
 {
+    use BelongsToUser;
+
     protected $fillable = [
+        'user_id',
         'judul',
         'slug',
         'link',

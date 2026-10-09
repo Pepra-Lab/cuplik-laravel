@@ -72,14 +72,18 @@
                 <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm space-y-4">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100 dark:border-zinc-800 pb-2">Status Publikasi</h3>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Status Publikasi</label>
-                        <select name="status" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
-                            <option value="Terbit" {{ old('status') === 'Terbit' ? 'selected' : '' }}>Terbitkan Langsung</option>
-                            <option value="Review" {{ old('status') === 'Review' ? 'selected' : '' }}>Menunggu Review</option>
-                            <option value="Draft" {{ old('status') === 'Draft' ? 'selected' : '' }}>Simpan Sebagai Draft</option>
-                        </select>
-                    </div>
+                    @if(auth()->user()->isMember())
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Berita yang Anda kirim akan ditinjau admin sebelum diterbitkan.</p>
+                    @else
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Status Publikasi</label>
+                            <select name="status" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
+                                <option value="Terbit" {{ old('status') === 'Terbit' ? 'selected' : '' }}>Terbitkan Langsung</option>
+                                <option value="Review" {{ old('status') === 'Review' ? 'selected' : '' }}>Menunggu Review</option>
+                                <option value="Draft" {{ old('status') === 'Draft' ? 'selected' : '' }}>Simpan Sebagai Draft</option>
+                            </select>
+                        </div>
+                    @endif
 
                     <div>
                         <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Kategori Kanal <span class="text-red-500">*</span></label>

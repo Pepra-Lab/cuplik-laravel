@@ -188,7 +188,7 @@
                 <!-- 3. Button Masuk with Icon -->
                 @auth
                     <div class="flex items-center gap-2">
-                        @if(auth()->user()->isStaff())
+                        @if(auth()->user()->canAccessCms())
                             <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 bg-gray-900 dark:bg-zinc-700 hover:bg-black text-white rounded-lg text-xs font-bold transition-colors">
                                 CMS
                             </a>

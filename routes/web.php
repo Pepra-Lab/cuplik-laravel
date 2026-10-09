@@ -13,6 +13,7 @@ use App\Http\Controllers\CurhatController;
 use App\Http\Controllers\RealCountController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PasswordResetController;
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminArticleController;
@@ -66,12 +67,15 @@ Route::prefix('info')->name('info.')->group(function () {
 
 // Authentication
 Route::get('/masuk', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/masuk', [AuthController::class, 'login'])->name('login.post');
+Route::post('/masuk', [AuthController::class, 'login'])->middleware('throttle:10,1')->name('login.post');
 Route::get('/daftar', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/daftar', [AuthController::class, 'register'])->name('register.post');
-Route::get('/lupa-sandi', [AuthController::class, 'showForgotPassword'])->name('password.request');
-Route::post('/lupa-sandi', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::post('/daftar', [AuthController::class, 'register'])->middleware('throttle:10,1')->name('register.post');
 Route::post('/keluar', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/lupa-sandi', [PasswordResetController::class, 'create'])->name('password.request');
+Route::post('/lupa-sandi', [PasswordResetController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
+Route::get('/reset-sandi/{token}', [PasswordResetController::class, 'edit'])->name('password.reset');
+Route::post('/reset-sandi', [PasswordResetController::class, 'update'])->middleware('throttle:5,1')->name('password.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,33 +83,39 @@ Route::post('/keluar', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
+    // Semua peran CMS (Redaktur dan Member dibatasi lewat policy)
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-
     Route::resource('articles', AdminArticleController::class)->except(['show']);
-    Route::resource('categories', AdminCategoryController::class)->except(['show', 'create', 'edit']);
-    Route::resource('tags', AdminTagController::class)->except(['show', 'create', 'edit']);
     Route::resource('videos', AdminVideoController::class)->except(['show', 'create', 'edit']);
-    Route::resource('polls', AdminPollController::class)->except(['show', 'create', 'edit']);
 
-    // Curhat Rakyat
-    Route::get('curhats', [AdminCurhatController::class, 'index'])->name('curhats.index');
-    Route::patch('curhats/{curhat}/status', [AdminCurhatController::class, 'updateStatus'])->name('curhats.updateStatus');
-    Route::delete('curhats/{curhat}', [AdminCurhatController::class, 'destroy'])->name('curhats.destroy');
+    // Khusus Admin dan Super Admin
+    Route::middleware('cms:admin')->group(function () {
+        Route::resource('categories', AdminCategoryController::class)->except(['show', 'create', 'edit']);
+        Route::resource('tags', AdminTagController::class)->except(['show', 'create', 'edit']);
+        Route::resource('polls', AdminPollController::class)->except(['show', 'create', 'edit']);
 
-    // Advertisements
-    Route::resource('iklan-gambar', AdminIklanGambarController::class)->except(['show', 'create', 'edit']);
-    Route::get('iklan-baris', [AdminIklanBarisController::class, 'index'])->name('iklan-baris.index');
-    Route::patch('iklan-baris/{iklanBari}/status', [AdminIklanBarisController::class, 'updateStatus'])->name('iklan-baris.updateStatus');
-    Route::delete('iklan-baris/{iklanBari}', [AdminIklanBarisController::class, 'destroy'])->name('iklan-baris.destroy');
+        // Curhat Rakyat
+        Route::get('curhats', [AdminCurhatController::class, 'index'])->name('curhats.index');
+        Route::patch('curhats/{curhat}/status', [AdminCurhatController::class, 'updateStatus'])->name('curhats.updateStatus');
+        Route::delete('curhats/{curhat}', [AdminCurhatController::class, 'destroy'])->name('curhats.destroy');
 
-    // Banners
-    Route::resource('banners', AdminBannerController::class)->except(['show', 'create', 'edit']);
+        // Advertisements
+        Route::resource('iklan-gambar', AdminIklanGambarController::class)->except(['show', 'create', 'edit']);
+        Route::get('iklan-baris', [AdminIklanBarisController::class, 'index'])->name('iklan-baris.index');
+        Route::patch('iklan-baris/{iklanBari}/status', [AdminIklanBarisController::class, 'updateStatus'])->name('iklan-baris.updateStatus');
+        Route::delete('iklan-baris/{iklanBari}', [AdminIklanBarisController::class, 'destroy'])->name('iklan-baris.destroy');
 
-    // Real Count
-    Route::get('real-count', [AdminRealCountController::class, 'index'])->name('realcount.index');
-    Route::post('real-count/suara', [AdminRealCountController::class, 'updateSuara'])->name('realcount.updateSuara');
+        // Banners
+        Route::resource('banners', AdminBannerController::class)->except(['show', 'create', 'edit']);
 
-    // User Management
-    Route::resource('users', AdminUserController::class)->except(['show', 'create', 'edit']);
+        // Real Count
+        Route::get('real-count', [AdminRealCountController::class, 'index'])->name('realcount.index');
+        Route::post('real-count/suara', [AdminRealCountController::class, 'updateSuara'])->name('realcount.updateSuara');
+
+        // User Management
+        Route::resource('users', AdminUserController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::patch('users/{user}/approve', [AdminUserController::class, 'approve'])->name('users.approve');
+        Route::patch('users/{user}/reject', [AdminUserController::class, 'reject'])->name('users.reject');
+    });
 });

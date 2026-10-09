@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Models\User;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +23,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useTailwind();
+
+        View::composer('layouts.admin', function ($view) {
+            $user = auth()->user();
+
+            $view->with('pendingUsers', $user?->isAdmin()
+                ? User::where('status', User::STATUS_PENDING)->count()
+                : 0);
+        });
     }
 }

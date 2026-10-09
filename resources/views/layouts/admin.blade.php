@@ -106,62 +106,54 @@
         </div>
 
         <!-- Sidebar Navigation -->
+        @php
+            $authUser = auth()->user();
+            $isAdmin = $authUser->isAdmin();
+
+            $menu = [
+                ['title' => null, 'items' => [
+                    ['admin.dashboard', 'admin.dashboard', 'Dashboard', $isAdmin],
+                ]],
+                ['title' => 'Konten Portal', 'items' => [
+                    ['admin.articles.index', 'admin.articles.*', $authUser->isMember() ? 'Berita Saya' : 'Kelola Berita', true],
+                    ['admin.categories.index', 'admin.categories.*', 'Kategori Berita', $isAdmin],
+                    ['admin.tags.index', 'admin.tags.*', 'Tag & Submenu', $isAdmin],
+                    ['admin.videos.index', 'admin.videos.*', 'Kelola Video', $isAdmin || $authUser->isRedaktur()],
+                ]],
+                ['title' => 'Interaksi Publik', 'items' => [
+                    ['admin.polls.index', 'admin.polls.*', 'Kelola Polling', $isAdmin],
+                    ['admin.curhats.index', 'admin.curhats.*', 'Curhat Rakyat', $isAdmin],
+                    ['admin.realcount.index', 'admin.realcount.*', 'Real Count Pilbup', $isAdmin],
+                ]],
+                ['title' => 'Iklan & Tampilan', 'items' => [
+                    ['admin.banners.index', 'admin.banners.*', 'Banner Beranda', $isAdmin],
+                    ['admin.iklan-gambar.index', 'admin.iklan-gambar.*', 'Iklan Gambar', $isAdmin],
+                    ['admin.iklan-baris.index', 'admin.iklan-baris.*', 'Iklan Baris', $isAdmin],
+                ]],
+                ['title' => 'Pengaturan', 'items' => [
+                    ['admin.users.index', 'admin.users.*', 'Pengguna', $isAdmin],
+                ]],
+            ];
+        @endphp
         <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto text-xs font-semibold">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Dashboard
-            </a>
+            @foreach($menu as $section)
+                @if(collect($section['items'])->contains(fn ($item) => $item[3]))
+                    @if($section['title'])
+                        <div class="pt-3 pb-1 px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $section['title'] }}</div>
+                    @endif
 
-            <div class="pt-3 pb-1 px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Konten Portal</div>
-
-            <a href="{{ route('admin.articles.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.articles.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Kelola Berita
-            </a>
-
-            <a href="{{ route('admin.categories.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.categories.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Kategori Berita
-            </a>
-
-            <a href="{{ route('admin.tags.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.tags.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Tag & Submenu
-            </a>
-
-            <a href="{{ route('admin.videos.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.videos.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Kelola Video
-            </a>
-
-            <div class="pt-3 pb-1 px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Interaksi Publik</div>
-
-            <a href="{{ route('admin.polls.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.polls.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Kelola Polling
-            </a>
-
-            <a href="{{ route('admin.curhats.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.curhats.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Curhat Rakyat
-            </a>
-
-            <a href="{{ route('admin.realcount.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.realcount.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Real Count Pilbup
-            </a>
-
-            <div class="pt-3 pb-1 px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Iklan & Tampilan</div>
-
-            <a href="{{ route('admin.banners.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.banners.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Banner Beranda
-            </a>
-
-            <a href="{{ route('admin.iklan-gambar.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.iklan-gambar.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Iklan Gambar
-            </a>
-
-            <a href="{{ route('admin.iklan-baris.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.iklan-baris.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Iklan Baris
-            </a>
-
-            <div class="pt-3 pb-1 px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Pengaturan</div>
-
-            <a href="{{ route('admin.users.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.users.*') ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                Pengguna & Redaksi
-            </a>
+                    @foreach($section['items'] as [$routeName, $pattern, $label, $visible])
+                        @if($visible)
+                            <a href="{{ route($routeName) }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs($pattern) ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
+                                {{ $label }}
+                                @if($routeName === 'admin.users.index' && $pendingUsers > 0)
+                                    <span class="bg-red-600 text-white text-[10px] rounded-full px-1.5 py-0.5">{{ $pendingUsers }}</span>
+                                @endif
+                            </a>
+                        @endif
+                    @endforeach
+                @endif
+            @endforeach
 
             <a href="{{ route('home') }}" target="_blank" class="flex items-center px-3 py-2.5 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-zinc-800 transition-colors mt-4">
                 Lihat Portal Publik &rarr;
