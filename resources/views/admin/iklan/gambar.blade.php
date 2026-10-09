@@ -25,13 +25,13 @@
                 <div>
                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Posisi Slot <span class="text-red-500">*</span></label>
                     <select name="posisi" required class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#008a24]">
-                        <option value="Header Top">Header Top (728x90)</option>
-                        <option value="Sidebar Right">Sidebar Right (300x250)</option>
-                        <option value="Sidebar Sticky">Sidebar Sticky (300x600)</option>
-                        <option value="Article In-Read">Article In-Read (728x90)</option>
-                        <option value="Footer Banner">Footer Banner (970x90)</option>
-                        <option value="Popup Overlay">Popup Overlay</option>
+                        @forelse($posisis as $p)
+                            <option value="{{ $p->nama }}">{{ $p->nama }}{{ $p->ukuran ? ' ('.$p->ukuran.')' : '' }}</option>
+                        @empty
+                            <option value="" disabled selected>Belum ada data posisi</option>
+                        @endforelse
                     </select>
+                    <a href="{{ route('admin.iklan-posisi.index') }}" class="text-[10px] text-[#008a24] hover:underline font-semibold">+ Kelola Posisi Iklan</a>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Ukuran Banner</label>
@@ -186,12 +186,9 @@
                 <div>
                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Posisi Slot</label>
                     <select id="editIkPosisi" name="posisi" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none">
-                        <option value="Header Top">Header Top (728x90)</option>
-                        <option value="Sidebar Right">Sidebar Right (300x250)</option>
-                        <option value="Sidebar Sticky">Sidebar Sticky (300x600)</option>
-                        <option value="Article In-Read">Article In-Read (728x90)</option>
-                        <option value="Footer Banner">Footer Banner (970x90)</option>
-                        <option value="Popup Overlay">Popup Overlay</option>
+                        @foreach($posisis as $p)
+                            <option value="{{ $p->nama }}">{{ $p->nama }}{{ $p->ukuran ? ' ('.$p->ukuran.')' : '' }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>

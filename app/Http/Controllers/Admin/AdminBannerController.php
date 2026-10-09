@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banner;
+use App\Models\Setting;
 
 class AdminBannerController extends Controller
 {
     public function index()
     {
         $banners = Banner::orderBy('urutan')->get();
-        return view('admin.banners.index', compact('banners'));
+        $setting = Setting::current();
+        return view('admin.banners.index', compact('banners', 'setting'));
     }
 
     public function store(Request $request)

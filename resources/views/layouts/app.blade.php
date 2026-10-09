@@ -354,6 +354,7 @@
     </main>
 
     <!-- Footer: Black with slight green tint (#0e1711), 3 cols on row 1, 1 col on row 2, No Gradients -->
+    @php($siteSetting = \App\Models\Setting::current())
     <footer class="bg-[#0e1711] text-gray-300 border-t border-zinc-800 mt-14 pt-12 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -366,16 +367,40 @@
                         <div class="w-8 h-8 rounded bg-[#008a24] text-white font-extrabold text-xl flex items-center justify-center">
                             C
                         </div>
-                        <span class="text-xl font-bold text-white tracking-tight">Cuplik<span class="text-[#008a24]">.com</span></span>
+                        <span class="text-xl font-bold text-white tracking-tight">{{ $siteSetting->site_name ?? 'Cuplik.com' }}</span>
                     </div>
                     <p class="text-xs text-gray-400 leading-relaxed">
-                        PT. Cuplik Media Center (CMC)<br>
-                        Legalitas SK Kepmenkumham RI: <strong>AHU-0039651.AH.01.01.2019</strong><br>
-                        Anggota Resmi <strong>Serikat Media Siber Indonesia (SMSI)</strong>.
+                        {{ $siteSetting->deskripsi ?? 'PT. Cuplik Media Center (CMC), Anggota Resmi Serikat Media Siber Indonesia (SMSI).' }}
                     </p>
                     <div class="text-xs text-gray-400">
-                        <p>Jl. Samsu No. 42 Margadadi, Indramayu, Jawa Barat 45211</p>
-                        <p class="mt-1 font-medium text-gray-300">Hotline Redaksi: 087727030115</p>
+                        <p>{{ $siteSetting->alamat ?? 'Jl. Samsu No. 42 Margadadi, Indramayu, Jawa Barat 45211' }}</p>
+                        @if($siteSetting->telepon)
+                            <p class="mt-1 font-medium text-gray-300">Hotline Redaksi: {{ $siteSetting->telepon }}</p>
+                        @endif
+                        @if($siteSetting->facebook || $siteSetting->twitter || $siteSetting->instagram || $siteSetting->youtube)
+                            <div class="flex items-center gap-2.5 pt-3">
+                                @if($siteSetting->facebook)
+                                    <a href="{{ $siteSetting->facebook }}" target="_blank" rel="noopener" aria-label="Facebook" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M22 12.06C22 6.49 17.52 2 12 2S2 6.49 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg>
+                                    </a>
+                                @endif
+                                @if($siteSetting->twitter)
+                                    <a href="{{ $siteSetting->twitter }}" target="_blank" rel="noopener" aria-label="Twitter / X" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M18.9 2H22l-7.53 8.6L23.3 22h-6.93l-5.43-7.1L4.7 22H1.58l8.06-9.2L1 2h7.1l4.9 6.49L18.9 2Zm-1.22 18.17h1.7L6.4 3.73H4.57l13.11 16.44Z"/></svg>
+                                    </a>
+                                @endif
+                                @if($siteSetting->instagram)
+                                    <a href="{{ $siteSetting->instagram }}" target="_blank" rel="noopener" aria-label="Instagram" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.22.6 1.77 1.15.55.55.9 1.11 1.15 1.77.25.64.42 1.37.47 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.64.25-1.37.42-2.43.47-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.22 1.15-1.77A4.9 4.9 0 0 1 5.45.53C6.09.28 6.82.11 7.88.06 8.94.01 9.28 0 12 0Zm0 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm7.25-.75a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Z"/></svg>
+                                    </a>
+                                @endif
+                                @if($siteSetting->youtube)
+                                    <a href="{{ $siteSetting->youtube }}" target="_blank" rel="noopener" aria-label="YouTube" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.51 3.5 12 3.5 12 3.5s-7.51 0-9.38.55A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14C4.49 20.5 12 20.5 12 20.5s7.51 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81ZM9.6 15.5V8.5L15.8 12 9.6 15.5Z"/></svg>
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -400,23 +425,27 @@
                     <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3.5 border-b border-zinc-800 pb-1.5">
                         Langganan Berita
                     </h4>
-                    <p class="text-xs text-gray-400 leading-relaxed">
-                        Dapatkan kurasi berita terkini dan investigasi eksklusif setiap pagi langsung di kotak masuk email Anda.
-                    </p>
-                    <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-2">
-                        @csrf
-                        <input type="email" name="email" required placeholder="Alamat email Anda..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#008a24]">
-                        <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2 rounded-lg text-xs font-bold transition-colors">
-                            Langganan Sekarang
-                        </button>
-                    </form>
+                    @if($siteSetting->newsletter_aktif ?? true)
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Dapatkan kurasi berita terkini dan investigasi eksklusif setiap pagi langsung di kotak masuk email Anda.
+                        </p>
+                        <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-2">
+                            @csrf
+                            <input type="email" name="email" required placeholder="Alamat email Anda..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#008a24]">
+                            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2 rounded-lg text-xs font-bold transition-colors">
+                                Langganan Sekarang
+                            </button>
+                        </form>
+                    @else
+                        <p class="text-xs text-gray-500 leading-relaxed">Form langganan newsletter sedang tidak aktif.</p>
+                    @endif
                 </div>
 
             </div>
 
             <!-- Row 2: 1 Full-width Column (Privacy Policy, Pedoman, Disclaimer, Hak Cipta) -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-3">
-                <p>&copy; {{ date('Y') }} PT. Cuplik Media Center. Seluruh hak cipta dilindungi undang-undang.</p>
+                <p>{!! $siteSetting->footer_text ?? '&copy; '.date('Y').' PT. Cuplik Media Center. Seluruh hak cipta dilindungi undang-undang.' !!}</p>
                 <div class="flex flex-wrap items-center gap-4 text-xs">
                     <a href="{{ route('info.pedoman') }}" class="hover:text-white transition-colors">Pedoman Media Siber</a>
                     <span>·</span>

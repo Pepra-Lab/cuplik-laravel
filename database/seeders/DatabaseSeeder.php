@@ -22,6 +22,8 @@ use App\Models\Pilbup;
 use App\Models\Paslon;
 use App\Models\Dpt;
 use App\Models\SuaraPilbup;
+use App\Models\IklanPosisi;
+use App\Models\Setting;
 
 class DatabaseSeeder extends Seeder
 {
@@ -1016,5 +1018,32 @@ class DatabaseSeeder extends Seeder
         foreach ($newsletterEmails as $em) {
             NewsletterSubscriber::updateOrCreate(['email' => $em], ['tanggal' => '2026-10-01']);
         }
+
+        // 12. Posisi Iklan (master data slot iklan gambar)
+        $posisiData = [
+            ['nama' => 'Header Top', 'ukuran' => '728x90', 'keterangan' => 'Slot di bagian atas header'],
+            ['nama' => 'Sidebar Right', 'ukuran' => '300x250', 'keterangan' => 'Slot sidebar kanan konten'],
+            ['nama' => 'Sidebar Sticky', 'ukuran' => '300x600', 'keterangan' => 'Slot sidebar menempel saat scroll'],
+            ['nama' => 'Article In-Read', 'ukuran' => '728x90', 'keterangan' => 'Slot di tengah isi artikel'],
+            ['nama' => 'Footer Banner', 'ukuran' => '970x90', 'keterangan' => 'Slot banner bagian footer'],
+            ['nama' => 'Popup Overlay', 'ukuran' => null, 'keterangan' => 'Slot popup saat halaman dibuka'],
+        ];
+        foreach ($posisiData as $pos) {
+            IklanPosisi::updateOrCreate(['nama' => $pos['nama']], $pos);
+        }
+
+        // 13. Pengaturan Situs (Profil, Banner, Newsletter)
+        Setting::updateOrCreate(['id' => 1], [
+            'site_name' => 'Cuplik.com',
+            'tagline' => 'Kabar Terkini Wong Pantura',
+            'deskripsi' => 'Portal berita lokal Indramayu, Cirebon, dan sekitarnya.',
+            'alamat' => 'Jl. Pahlawan No. 1, Indramayu, Jawa Barat',
+            'email' => 'redaksi@cuplik.com',
+            'telepon' => '0234-123456',
+            'footer_text' => '&copy; ' . date('Y') . ' Cuplik.com. Seluruh hak cipta dilindungi.',
+            'banner_jeda' => 10,
+            'newsletter_aktif' => true,
+            'newsletter_subjek_default' => 'Update Terbaru dari Cuplik.com',
+        ]);
     }
 }

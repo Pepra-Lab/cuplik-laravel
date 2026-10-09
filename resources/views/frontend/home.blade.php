@@ -529,12 +529,12 @@
 
     function resetInterval() {
         clearInterval(bannerInterval);
-        bannerInterval = setInterval(nextSlide, 10000); // 10 Seconds auto slide
+        bannerInterval = setInterval(nextSlide, {{ ($siteSetting ?? \App\Models\Setting::current())->banner_jeda * 1000 }});
     }
 
     // Initialize 10s auto rotation
     if (totalSlides > 1) {
-        bannerInterval = setInterval(nextSlide, 10000);
+        bannerInterval = setInterval(nextSlide, {{ ($siteSetting ?? \App\Models\Setting::current())->banner_jeda * 1000 }});
     }
 </script>
 @endsection

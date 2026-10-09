@@ -27,6 +27,9 @@ use App\Http\Controllers\Admin\AdminIklanBarisController;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\Admin\AdminRealCountController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminSettingController;
+use App\Http\Controllers\Admin\AdminIklanPosisiController;
+use App\Http\Controllers\Admin\AdminNewsletterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,5 +120,19 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
         Route::resource('users', AdminUserController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::patch('users/{user}/approve', [AdminUserController::class, 'approve'])->name('users.approve');
         Route::patch('users/{user}/reject', [AdminUserController::class, 'reject'])->name('users.reject');
+
+        // Pengaturan: Profil Situs, Banner Jeda, Newsletter, Posisi Iklan
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::get('profil', [AdminSettingController::class, 'profil'])->name('profil');
+            Route::put('profil', [AdminSettingController::class, 'updateProfil'])->name('profil.update');
+            Route::put('banner-jeda', [AdminSettingController::class, 'updateBannerJeda'])->name('banner-jeda.update');
+            Route::put('newsletter', [AdminSettingController::class, 'updateNewsletterConfig'])->name('newsletter.update');
+        });
+
+        Route::resource('iklan-posisi', AdminIklanPosisiController::class)->except(['show', 'create', 'edit']);
+
+        Route::get('newsletter', [AdminNewsletterController::class, 'index'])->name('newsletter.index');
+        Route::get('newsletter/export', [AdminNewsletterController::class, 'export'])->name('newsletter.export');
+        Route::delete('newsletter/{newsletter}', [AdminNewsletterController::class, 'destroy'])->name('newsletter.destroy');
     });
 });

@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\IklanGambar;
+use App\Models\IklanPosisi;
 
 class AdminIklanGambarController extends Controller
 {
     public function index()
     {
         $iklans = IklanGambar::latest()->paginate(10);
-        return view('admin.iklan.gambar', compact('iklans'));
+        $posisis = IklanPosisi::orderBy('nama')->get();
+        return view('admin.iklan.gambar', compact('iklans', 'posisis'));
     }
 
     public function store(Request $request)

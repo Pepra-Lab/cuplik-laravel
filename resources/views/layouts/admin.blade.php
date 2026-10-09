@@ -132,6 +132,9 @@
                 ]],
                 ['title' => 'Pengaturan', 'items' => [
                     ['admin.users.index', 'admin.users.*', 'Pengguna', $isAdmin],
+                    ['admin.settings.profil', 'admin.settings.profil', 'Profil Situs', $isAdmin],
+                    ['admin.newsletter.index', 'admin.newsletter.*', 'Newsletter', $isAdmin],
+                    ['admin.iklan-posisi.index', 'admin.iklan-posisi.*', 'Posisi Iklan', $isAdmin],
                 ]],
             ];
         @endphp
