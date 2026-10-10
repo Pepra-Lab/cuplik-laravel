@@ -22,9 +22,26 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Pilihan Jawaban (1 Baris = 1 Opsi) <span class="text-red-500">*</span></label>
-                <textarea name="opsi" rows="4" required placeholder="Sangat Puas&#10;Cukup Puas&#10;Kurang Puas&#10;Tidak Tahu" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-[#008a24]"></textarea>
-                <span class="text-[10px] text-gray-400">Tuliskan tiap opsi jawaban pada baris baru.</span>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Pilihan Jawaban <span class="text-red-500">*</span></label>
+
+                <div id="pollOptionList" class="space-y-2">
+                    @php $oldOpsi = old('opsi', ['', '']); @endphp
+                    @foreach($oldOpsi as $i => $value)
+                        <div class="flex items-center gap-2 poll-option-row">
+                            <input type="text" name="opsi[]" value="{{ $value }}" placeholder="Pilihan jawaban {{ $i + 1 }}" class="flex-1 px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                            <button type="button" onclick="removePollOption(this)" class="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 dark:border-zinc-700 text-gray-400 hover:text-red-500 hover:border-red-300 transition-colors" title="Hapus pilihan">
+                                &minus;
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+
+                <button type="button" onclick="addPollOption()" class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-[#008a24] hover:text-[#006f1c]">
+                    <span class="w-5 h-5 flex items-center justify-center rounded-full border border-[#008a24] leading-none">+</span>
+                    Tambah Pilihan
+                </button>
+
+                <span class="text-[10px] text-gray-400 block mt-1">Minimal 2 pilihan jawaban.</span>
                 @error('opsi') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
             </div>
 
@@ -153,6 +170,34 @@
 
     function closeEditPollModal() {
         document.getElementById('editPollModal').classList.add('hidden');
+    }
+
+    function addPollOption() {
+        const list = document.getElementById('pollOptionList');
+        const count = list.querySelectorAll('.poll-option-row').length + 1;
+
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2 poll-option-row';
+        row.innerHTML = `
+            <input type="text" name="opsi[]" placeholder="Pilihan jawaban ${count}" class="flex-1 px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+            <button type="button" onclick="removePollOption(this)" class="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 dark:border-zinc-700 text-gray-400 hover:text-red-500 hover:border-red-300 transition-colors" title="Hapus pilihan">
+                &minus;
+            </button>
+        `;
+
+        list.appendChild(row);
+        row.querySelector('input').focus();
+    }
+
+    function removePollOption(button) {
+        const list = document.getElementById('pollOptionList');
+
+        // Minimal 2 baris input tetap tersedia di form.
+        if (list.querySelectorAll('.poll-option-row').length <= 2) {
+            return;
+        }
+
+        button.closest('.poll-option-row').remove();
     }
 </script>
 @endpush
