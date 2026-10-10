@@ -28,7 +28,9 @@ use App\Http\Controllers\Admin\AdminRealCountController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminIklanPosisiController;
+use App\Http\Controllers\Admin\AdminInfoPageController;
 use App\Http\Controllers\Admin\MemberIklanController;
+use App\Models\InfoPage;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,6 +135,13 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
         });
 
         Route::resource('iklan-posisi', AdminIklanPosisiController::class)->except(['show', 'create', 'edit']);
+
+        // Halaman Info: Disclaimer, Pedoman Media, Susunan Redaksi, Info Iklan
+        Route::prefix('halaman-info')->name('info-pages.')->group(function () {
+            Route::get('/', [AdminInfoPageController::class, 'index'])->name('index');
+            Route::get('{slug}', [AdminInfoPageController::class, 'edit'])->whereIn('slug', InfoPage::SLUGS)->name('edit');
+            Route::put('{slug}', [AdminInfoPageController::class, 'update'])->whereIn('slug', InfoPage::SLUGS)->name('update');
+        });
 
     });
 });

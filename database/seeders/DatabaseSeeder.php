@@ -22,6 +22,7 @@ use App\Models\Dpt;
 use App\Models\SuaraPilbup;
 use App\Models\IklanPosisi;
 use App\Models\Setting;
+use App\Models\InfoPage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -999,5 +1000,41 @@ class DatabaseSeeder extends Seeder
             'telepon' => '0234-123456',
             'footer_text' => '&copy; ' . date('Y') . ' Cuplik.com. Seluruh hak cipta dilindungi.',
         ]);
+
+        // 14. Halaman Info (Disclaimer, Pedoman Media, Susunan Redaksi, Info Iklan)
+        $infoPagesData = [
+            [
+                'slug' => 'redaksi',
+                'badge' => 'Informasi Redaksi',
+                'judul' => 'Susunan Redaksi & Manajemen CuplikCom',
+                'subjudul' => null,
+                'konten' => "<div><p><strong>PT. Cuplik Media Center (CMC)</strong><br>Berdiri sejak 2009 &middot; Legalitas SK Kepmenkumham RI Nomor: <strong>AHU-0039651.AH.01.01.Tahun 2019</strong><br>Anggota Resmi <strong>Serikat Media Siber Indonesia (SMSI)</strong></p></div><hr><div><p><strong>Pemimpin Redaksi / Penanggung Jawab:</strong> Ali Ma'nawi</p><p><strong>Dewan Redaksi:</strong> Khusni Mubarok, Farhan Maksudi, Dewo, Ade Lukman, Mundirun, Rando Gunter, Anan Felicio</p><p><strong>Reporter / Kontributor:</strong> Baebudin, Daman, Farhan Maksudi, Lina Maulidiyah, Bakrodin, Winanto, Maulana Yusuf Rismawan, Gustiawan, Dalani, Hasan Ayih, Ato Susanto, Karina JM, Haris Afandi, Papoh Gupron, Fitriyah Jewellery Farsi, Ahmad Hanafi</p></div><hr><table><thead><tr><th>Biro</th><th>Nama</th></tr></thead><tbody><tr><td>Indramayu</td><td>Daman, Baebudin, Dulhalil, Adeng Widayah, Marsan, Nurdi, Ato Tolok</td></tr><tr><td>Majalengka</td><td>Sunarto Aryodinoto, Fatkhul Amin</td></tr><tr><td>Cirebon Raya</td><td>Ade Hamdani</td></tr><tr><td>Bandung Raya & Sumedang</td><td>Tb Chep Zulfikar Natanegara</td></tr><tr><td>Jabodetabek</td><td>Ade Lukman, Muhamad Riko Indrianto, Fanny Nurul Hotimah, Deny Sardika, Nabila Ebivalia</td></tr><tr><td>Tegal Raya</td><td>Wurdiyanto</td></tr><tr><td>D.I. Yogyakarta</td><td>Abdan Ghifari Atsqo</td></tr><tr><td>Lampung</td><td>Ismail, M Ali Alnavian, Zul Halim</td></tr></tbody></table><hr><div><p><strong>Penasehat Hukum:</strong> Kantor Hukum Adi Iwan Mulyawan, SH. dan Rekan</p><p><strong>Programmer & Designer:</strong> A Lubis Ghozali, M Ali Fikri</p><p><strong>Iklan & Promosi:</strong> Pudin, Ahmad Hasan A</p><p><strong>Administrasi & Keuangan:</strong> Fitriyani, Desi Amaliani</p></div><div><p><strong>Alamat Kantor Redaksi & Tata Usaha</strong><br>Jl. Samsu No. 42 Kelurahan Margadadi, Kabupaten Indramayu, Jawa Barat 45211<br><strong>Telp:</strong> (0234) 7126806 &middot; <strong>WhatsApp:</strong> 087727030115<br><strong>Email Redaksi:</strong> cuplikcom@gmail.com | info@cuplik.com<br><strong>Situs Web Resmi:</strong> <a href=\"https://www.cuplik.com\" target=\"_blank\">www.cuplik.com</a> | <a href=\"https://www.cuplik.id\" target=\"_blank\">www.cuplik.id</a></p></div>",
+            ],
+            [
+                'slug' => 'pedoman',
+                'badge' => 'Kode Etik',
+                'judul' => 'Pedoman Pemberitaan Media Siber',
+                'subjudul' => null,
+                'konten' => '<p>Kemerdekaan berpendapat, kemerdekaan berekspresi, dan kemerdekaan pers adalah hak asasi manusia yang dilindungi Pancasila, Undang-Undang Dasar 1945, dan Deklarasi Universal Hak Asasi Manusia PBB. Keberadaan media siber di Indonesia juga merupakan bagian dari kemerdekaan berpendapat, berekspresi, dan pers.</p><p>Media siber memiliki karakter khusus sehingga memerlukan pedoman agar pengelolaannya dapat dilaksanakan secara profesional, memenuhi fungsi, hak, dan kewajibannya sesuai <strong>Undang-Undang Nomor 40 Tahun 1999 tentang Pers</strong> dan Kode Etik Jurnalistik. Untuk itu Dewan Pers bersama organisasi pers dan masyarakat menyusun Pedoman Pemberitaan Media Siber.</p><h3>1. Ruang Lingkup</h3><p>Media Siber adalah segala bentuk media yang menggunakan wahana internet dan melaksanakan kegiatan jurnalistik, serta memenuhi persyaratan Undang-Undang Pers dan Standar Perusahaan Pers yang ditetapkan Dewan Pers.</p><h3>2. Verifikasi dan Keberimbangan Berita</h3><p>Pada prinsipnya setiap berita harus melalui verifikasi. Berita yang dapat merugikan pihak lain memerlukan verifikasi pada berita yang sama untuk memenuhi prinsip akurasi dan keberimbangan.</p><h3>3. Ralat, Koreksi, dan Hak Jawab</h3><p>Ralat, koreksi, dan hak jawab mengacu pada Undang-Undang Pers, Kode Etik Jurnalistik, dan Pedoman Hak Jawab yang ditetapkan Dewan Pers.</p>',
+            ],
+            [
+                'slug' => 'disclaimer',
+                'badge' => 'Legalitas',
+                'judul' => 'Pasal Sanggahan (Disclaimer)',
+                'subjudul' => null,
+                'konten' => '<p>Seluruh layanan dan sajian informasi yang diberikan oleh <strong>cuplikcom</strong> mengikuti aturan main yang berlaku serta tunduk pada ketentuan hukum pers Republik Indonesia.</p><ul><li><strong>cuplikcom</strong> tidak bertanggung jawab atas tidak tersampaikannya data/informasi yang dikirimkan oleh pembaca melalui saluran komunikasi karena kendala teknis tak terduga.</li><li><strong>cuplikcom</strong> berhak untuk memuat, tidak memuat, mengedit, mengklarifikasi, dan/atau menghapus data maupun informasi yang disampaikan pembaca demi etika, hukum, dan akurasi jurnalistik.</li><li>Data dan/atau analisis yang disajikan di <strong>cuplikcom</strong> ditujukan sebagai rujukan informasi publik yang objektif dan edukatif, bukan merupakan nasehat investasi atau hukum langsung tanpa konfirmasi ahli.</li><li>Seluruh materi grafis, teks, dan foto berita yang diproduksi oleh tim redaksi dilindungi undang-undang hak cipta. Pengutipan diperkenankan dengan mencantumkan tautan aktif sumber berita cuplik.com.</li></ul>',
+            ],
+            [
+                'slug' => 'iklan',
+                'badge' => 'Kerjasama Media',
+                'judul' => 'Info Pemasangan Iklan & Advertorial',
+                'subjudul' => 'Jangkau ratusan ribu pembaca loyal, pengambil kebijakan, dan pelaku usaha di seluruh Indonesia.',
+                'konten' => '<p>CuplikCom (PT Cuplik Media Center) melayani kemitraan strategis periklanan digital, advertorial institusi pemerintah/swasta, publikasi siaran pers (press release), dan pemasangan banner promosi dengan penempatan strategis berkinerja tinggi.</p><h3>Tarif Publikasi Artikel & Banner</h3><table><thead><tr><th>Jenis Publikasi</th><th>Penempatan / Posisi</th><th>Periode</th><th>Tarif</th></tr></thead><tbody><tr><td>Banner Header 728&times;90</td><td>Semua Halaman (Header)</td><td>Per Bulan</td><td>Rp 2.000.000</td></tr><tr><td>Banner Sidebar 300&times;250</td><td>Kolom Kanan Beranda & Artikel</td><td>Per Bulan</td><td>Rp 1.500.000</td></tr><tr><td>Advertorial / Rilis Pers</td><td>Kanal Kategori & Terindeks Google</td><td>Selamanya (Tayang)</td><td>Rp 1.000.000</td></tr></tbody></table><p><strong>Kontak Hotline Pemasaran & Pengiriman Materi</strong><br><strong>WhatsApp / Hotline:</strong> 087727030115 (Bagian Iklan & Kerjasama)<br><strong>Email:</strong> cuplikcom@gmail.com / iklan@cuplik.com<br>Kantor Redaksi: Jl. Samsu No. 42 Kelurahan Margadadi, Kabupaten Indramayu 45211</p>',
+            ],
+        ];
+
+        foreach ($infoPagesData as $ip) {
+            InfoPage::updateOrCreate(['slug' => $ip['slug']], $ip);
+        }
     }
 }

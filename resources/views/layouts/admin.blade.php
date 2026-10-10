@@ -134,6 +134,7 @@
                     ['admin.users.index', 'admin.users.*', 'Pengguna', $isAdmin],
                     ['admin.settings.profil', 'admin.settings.profil', 'Profil Situs', $isAdmin],
                     ['admin.iklan-posisi.index', 'admin.iklan-posisi.*', 'Posisi Iklan', $isAdmin],
+                    ['admin.info-pages.index', 'admin.info-pages.*', 'Halaman Info', $isAdmin],
                 ]],
             ];
         @endphp

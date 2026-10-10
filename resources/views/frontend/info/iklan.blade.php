@@ -1,69 +1,27 @@
 @extends('layouts.app')
 
-@section('title', 'Info Pemasangan Iklan & Advertorial — CuplikCom')
+@section('title', $page->judul . ' — CuplikCom')
 
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
     
     <div class="lg:col-span-8 space-y-6">
         <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6">
-            <span class="badge-cat mb-2">Kerjasama Media</span>
+            @if($page->badge)
+                <span class="badge-cat mb-2">{{ $page->badge }}</span>
+            @endif
             <h1 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
-                Info Pemasangan Iklan & Advertorial
+                {{ $page->judul }}
             </h1>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Jangkau ratusan ribu pembaca loyal, pengambil kebijakan, dan pelaku usaha di seluruh Indonesia.
-            </p>
+            @if($page->subjudul)
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ $page->subjudul }}
+                </p>
+            @endif
         </div>
 
-        <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm space-y-6 text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
-            <p>
-                CuplikCom (PT Cuplik Media Center) melayani kemitraan strategis periklanan digital, advertorial institusi pemerintah/swasta, publikasi siaran pers (press release), dan pemasangan banner promosi dengan penempatan strategis berkinerja tinggi.
-            </p>
-
-            <h3 class="font-extrabold text-base text-[#008a24] uppercase tracking-wide">
-                Tarif Publikasi Artikel & Banner
-            </h3>
-
-            <div class="overflow-x-auto border border-gray-200 dark:border-zinc-700 rounded-lg">
-                <table class="w-full text-xs text-left">
-                    <thead class="bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 font-bold border-b border-gray-200 dark:border-zinc-700">
-                        <tr>
-                            <th class="p-3">Jenis Publikasi</th>
-                            <th class="p-3">Penempatan / Posisi</th>
-                            <th class="p-3">Periode</th>
-                            <th class="p-3 text-right">Tarif</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
-                        <tr>
-                            <td class="p-3 font-bold">Banner Header 728×90</td>
-                            <td class="p-3">Semua Halaman (Header)</td>
-                            <td class="p-3">Per Bulan</td>
-                            <td class="p-3 text-right font-bold text-[#008a24]">Rp 2.000.000</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-bold">Banner Sidebar 300×250</td>
-                            <td class="p-3">Kolom Kanan Beranda & Artikel</td>
-                            <td class="p-3">Per Bulan</td>
-                            <td class="p-3 text-right font-bold text-[#008a24]">Rp 1.500.000</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-bold">Advertorial / Rilis Pers</td>
-                            <td class="p-3">Kanal Kategori & Terindeks Google</td>
-                            <td class="p-3">Selamanya (Tayang)</td>
-                            <td class="p-3 text-right font-bold text-[#008a24]">Rp 1.000.000</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="p-5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-2">
-                <h4 class="font-bold text-[#008a24] text-sm">Kontak Hotline Pemasaran & Pengiriman Materi:</h4>
-                <p class="text-xs"><strong>WhatsApp / Hotline:</strong> 087727030115 (Bagian Iklan & Kerjasama)</p>
-                <p class="text-xs"><strong>Email:</strong> cuplikcom@gmail.com / iklan@cuplik.com</p>
-                <p class="text-xs text-gray-500">Kantor Redaksi: Jl. Samsu No. 42 Kelurahan Margadadi, Kabupaten Indramayu 45211</p>
-            </div>
+        <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm space-y-6 text-sm text-gray-800 dark:text-gray-200 leading-relaxed [&_table]:w-full [&_table]:text-xs [&_table]:text-left [&_th]:p-3 [&_td]:p-3 [&_thead]:bg-gray-100 dark:[&_thead]:bg-zinc-800 [&_thead]:font-bold [&_tbody]:divide-y [&_tbody]:divide-gray-100 dark:[&_tbody]:divide-zinc-800 [&_table]:border [&_table]:border-gray-200 dark:[&_table]:border-zinc-700 [&_table]:rounded-lg [&_table]:overflow-hidden">
+            {!! $page->konten !!}
         </div>
     </div>
 

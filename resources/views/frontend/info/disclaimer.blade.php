@@ -1,28 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Pasal Sanggahan (Disclaimer) — CuplikCom')
+@section('title', $page->judul . ' — CuplikCom')
 
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
     
     <div class="lg:col-span-8 space-y-6">
         <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6">
-            <span class="badge-cat mb-2">Legalitas</span>
+            @if($page->badge)
+                <span class="badge-cat mb-2">{{ $page->badge }}</span>
+            @endif
             <h1 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
-                Pasal Sanggahan (Disclaimer)
+                {{ $page->judul }}
             </h1>
+            @if($page->subjudul)
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $page->subjudul }}</p>
+            @endif
         </div>
 
         <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm space-y-4 text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
-            <p>
-                Seluruh layanan dan sajian informasi yang diberikan oleh <strong>cuplikcom</strong> mengikuti aturan main yang berlaku serta tunduk pada ketentuan hukum pers Republik Indonesia.
-            </p>
-            <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm">
-                <li><strong>cuplikcom</strong> tidak bertanggung jawab atas tidak tersampaikannya data/informasi yang dikirimkan oleh pembaca melalui saluran komunikasi karena kendala teknis tak terduga.</li>
-                <li><strong>cuplikcom</strong> berhak untuk memuat, tidak memuat, mengedit, mengklarifikasi, dan/atau menghapus data maupun informasi yang disampaikan pembaca demi etika, hukum, dan akurasi jurnalistik.</li>
-                <li>Data dan/atau analisis yang disajikan di <strong>cuplikcom</strong> ditujukan sebagai rujukan informasi publik yang objektif dan edukatif, bukan merupakan nasehat investasi atau hukum langsung tanpa konfirmasi ahli.</li>
-                <li>Seluruh materi grafis, teks, dan foto berita yang diproduksi oleh tim redaksi dilindungi undang-undang hak cipta. Pengutipan diperkenankan dengan mencantumkan tautan aktif sumber berita cuplik.com.</li>
-            </ul>
+            {!! $page->konten !!}
         </div>
     </div>
 
