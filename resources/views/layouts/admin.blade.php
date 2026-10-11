@@ -197,10 +197,6 @@
                 <button id="cmsThemeToggle" class="px-2.5 py-1.5 rounded-lg bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 hover:text-[#008a24] text-xs font-bold transition-colors" title="Toggle Tema">
                     <span id="cmsThemeText">Tema</span>
                 </button>
-
-                <div class="text-xs text-gray-500 bg-gray-100 dark:bg-zinc-800 px-3 py-1.5 rounded-lg font-mono">
-                    PostgreSQL · Laravel {{ app()->version() }}
-                </div>
             </div>
         </header>
 

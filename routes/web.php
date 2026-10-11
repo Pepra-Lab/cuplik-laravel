@@ -119,9 +119,28 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
         Route::patch('iklan-baris/{iklanBari}/status', [AdminIklanBarisController::class, 'updateStatus'])->name('iklan-baris.updateStatus');
         Route::delete('iklan-baris/{iklanBari}', [AdminIklanBarisController::class, 'destroy'])->name('iklan-baris.destroy');
 
-        // Real Count
-        Route::get('real-count', [AdminRealCountController::class, 'index'])->name('realcount.index');
-        Route::post('real-count/suara', [AdminRealCountController::class, 'updateSuara'])->name('realcount.updateSuara');
+        // Real Count Pilbup
+        Route::prefix('real-count')->name('realcount.')->group(function () {
+            Route::get('/', [AdminRealCountController::class, 'index'])->name('index');
+            Route::post('suara', [AdminRealCountController::class, 'updateSuara'])->name('updateSuara');
+
+            Route::get('calon', [AdminRealCountController::class, 'calon'])->name('calon');
+            Route::post('calon', [AdminRealCountController::class, 'storePaslon'])->name('calon.store');
+            Route::put('calon/{paslon}', [AdminRealCountController::class, 'updatePaslon'])->name('calon.update');
+            Route::delete('calon/{paslon}', [AdminRealCountController::class, 'destroyPaslon'])->name('calon.destroy');
+
+            Route::get('wilayah', [AdminRealCountController::class, 'wilayah'])->name('wilayah');
+            Route::post('wilayah', [AdminRealCountController::class, 'storeDpt'])->name('wilayah.store');
+            Route::put('wilayah/{dpt}', [AdminRealCountController::class, 'updateDpt'])->name('wilayah.update');
+            Route::delete('wilayah/{dpt}', [AdminRealCountController::class, 'destroyDpt'])->name('wilayah.destroy');
+
+            Route::get('pengaturan', [AdminRealCountController::class, 'pengaturan'])->name('pengaturan');
+            Route::post('pengaturan', [AdminRealCountController::class, 'storePilbup'])->name('pengaturan.store');
+            Route::put('pengaturan/{pilbup}', [AdminRealCountController::class, 'updatePilbup'])->name('pengaturan.update');
+            Route::delete('pengaturan/{pilbup}', [AdminRealCountController::class, 'destroyPilbup'])->name('pengaturan.destroy');
+
+            Route::get('rekapitulasi', [AdminRealCountController::class, 'rekap'])->name('rekap');
+        });
 
         // User Management
         Route::resource('users', AdminUserController::class)->only(['index', 'store', 'update', 'destroy']);
