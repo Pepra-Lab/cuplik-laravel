@@ -138,9 +138,9 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
 
         // Halaman Info: Disclaimer, Pedoman Media, Susunan Redaksi, Info Iklan
         Route::prefix('halaman-info')->name('info-pages.')->group(function () {
-            Route::get('/', [AdminInfoPageController::class, 'index'])->name('index');
-            Route::get('{slug}', [AdminInfoPageController::class, 'edit'])->whereIn('slug', InfoPage::SLUGS)->name('edit');
-            Route::put('{slug}', [AdminInfoPageController::class, 'update'])->whereIn('slug', InfoPage::SLUGS)->name('update');
+            Route::get('/', fn () => redirect()->route('admin.info-pages.edit', array_key_first(InfoPage::SLUGS)))->name('index');
+            Route::get('{slug}', [AdminInfoPageController::class, 'edit'])->whereIn('slug', array_keys(InfoPage::SLUGS))->name('edit');
+            Route::put('{slug}', [AdminInfoPageController::class, 'update'])->whereIn('slug', array_keys(InfoPage::SLUGS))->name('update');
         });
 
     });

@@ -1,17 +1,16 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Halaman Info')
+@section('title', 'Halaman Info — ' . $page->judul)
 
 @section('content')
 <div class="space-y-5">
 
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="text-sm font-extrabold text-gray-900 dark:text-white">Edit Halaman: {{ $page->judul }}</h2>
-            <p class="text-xs text-gray-400">Perubahan akan langsung tampil di halaman /info/{{ $page->slug }} pada kanal berita.</p>
-        </div>
-        <a href="{{ route('admin.info-pages.index') }}" class="text-xs font-semibold text-gray-500 hover:text-[#008a24]">&larr; Kembali</a>
+    <div>
+        <h2 class="text-sm font-extrabold text-gray-900 dark:text-white">Halaman Info</h2>
+        <p class="text-xs text-gray-400">Konten statis yang tampil di kanal berita. Perubahan di bawah langsung tersambung ke halaman /info/{{ $page->slug }}.</p>
     </div>
+
+    @include('admin.info-pages._tabs')
 
     <div class="bg-white dark:bg-[#121914] rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm max-w-4xl">
         <form id="editPageForm" action="{{ route('admin.info-pages.update', $page->slug) }}" method="POST" class="p-5 space-y-5">

@@ -10,16 +10,6 @@ use Illuminate\View\View;
 
 class AdminInfoPageController extends Controller
 {
-    /**
-     * Daftar 4 halaman statis portal yang kontennya terhubung ke kanal berita.
-     */
-    public function index(): View
-    {
-        $halaman = collect(InfoPage::SLUGS)->map(fn ($slug) => InfoPage::olehSlug($slug));
-
-        return view('admin.info-pages.index', compact('halaman'));
-    }
-
     public function edit(string $slug): View
     {
         $this->pastikanSlugValid($slug);
@@ -47,6 +37,6 @@ class AdminInfoPageController extends Controller
 
     private function pastikanSlugValid(string $slug): void
     {
-        abort_unless(in_array($slug, InfoPage::SLUGS, true), 404);
+        abort_unless(array_key_exists($slug, InfoPage::SLUGS), 404);
     }
 }

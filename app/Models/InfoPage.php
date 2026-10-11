@@ -15,10 +15,16 @@ class InfoPage extends Model
     ];
 
     /**
-     * Daftar halaman info yang tersedia untuk dikelola lewat CMS.
-     * Dipakai juga untuk validasi slug di route dan controller.
+     * Daftar halaman info yang tersedia untuk dikelola lewat CMS, berikut
+     * label tab-nya. Dipakai untuk validasi slug di route/controller dan
+     * untuk merender tab navigasi di halaman edit.
      */
-    public const SLUGS = ['redaksi', 'pedoman', 'disclaimer', 'iklan'];
+    public const SLUGS = [
+        'redaksi' => 'Susunan Redaksi',
+        'pedoman' => 'Pedoman Media',
+        'disclaimer' => 'Disclaimer',
+        'iklan' => 'Info Iklan',
+    ];
 
     /**
      * Ambil satu halaman berdasarkan slug. Dibuatkan baris kosong bila
