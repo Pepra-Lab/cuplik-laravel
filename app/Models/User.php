@@ -78,6 +78,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Admin, Super Admin, dan Redaktur mengelola konten portal (berita, video,
+     * dsb). Member tidak termasuk di sini — jatahnya cuma mengirim iklan sendiri.
+     */
+    public function isCmsStaff(): bool
+    {
+        return $this->isAdmin() || $this->isRedaktur();
+    }
+
+    /**
+     * Halaman CMS pertama yang dilihat sesuai perannya. Member diarahkan
+     * langsung ke Iklan Saya karena tidak punya akses ke menu lain.
+     */
+    public function cmsHomeRoute(): string
+    {
+        return $this->isMember() ? 'admin.iklan-saya.index' : 'admin.dashboard';
+    }
+
+    /**
      * Akun Admin dan Super Admin hanya boleh diubah oleh Super Admin.
      */
     public function canBeManagedBy(User $actor): bool

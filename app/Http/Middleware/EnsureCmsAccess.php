@@ -11,6 +11,7 @@ class EnsureCmsAccess
 {
     /**
      * Pemakaian: `cms` untuk semua peran CMS, `cms:admin` khusus Admin dan Super Admin,
+     * `cms:staff` khusus Admin/Super Admin/Redaktur (semua kecuali Member),
      * `cms:member` khusus Member.
      */
     public function handle(Request $request, Closure $next, ?string $level = null): Response
@@ -32,12 +33,17 @@ class EnsureCmsAccess
 
         $allowed = match ($level) {
             'admin' => $user->isAdmin(),
+            'staff' => $user->isCmsStaff(),
             'member' => $user->isMember(),
             default => $user->canAccessCms(),
         };
 
         if (! $allowed) {
-            $fallback = $user->canAccessCms() ? 'admin.articles.index' : 'home';
+            $fallback = match (true) {
+                $user->isMember() => 'admin.iklan-saya.index',
+                $user->canAccessCms() => 'admin.articles.index',
+                default => 'home',
+            };
 
             return redirect()->route($fallback)
                 ->with('error', 'Anda tidak memiliki hak akses ke halaman tersebut.');

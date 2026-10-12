@@ -97,7 +97,7 @@
         
         <!-- Sidebar Brand -->
         <div class="p-5 border-b border-gray-200 dark:border-zinc-800 flex items-center justify-between gap-2">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 min-w-0">
+            <a href="{{ route(auth()->user()->cmsHomeRoute()) }}" class="flex items-center gap-2 min-w-0">
                 <div class="w-8 h-8 rounded bg-[#008a24] text-white font-black text-xl flex items-center justify-center shrink-0">
                     C
                 </div>
@@ -117,6 +117,7 @@
         @php
             $authUser = auth()->user();
             $isAdmin = $authUser->isAdmin();
+            $isStaff = $authUser->isCmsStaff();
 
             // Item tautan tunggal di sidebar.
             $navLink = fn (string $route, string $pattern, string $label, bool $visible) => [
@@ -147,7 +148,7 @@
                     $navLink('admin.dashboard', 'admin.dashboard', 'Dashboard', $isAdmin),
                 ]],
                 ['title' => 'Konten Portal', 'items' => [
-                    $navLink('admin.articles.index', 'admin.articles.*', $authUser->isMember() ? 'Berita Saya' : 'Kelola Berita', true),
+                    $navLink('admin.articles.index', 'admin.articles.*', 'Kelola Berita', $isStaff),
                     $navLink('admin.categories.index', 'admin.categories.*', 'Kategori Berita', $isAdmin),
                     $navLink('admin.tags.index', 'admin.tags.*', 'Tag & Submenu', $isAdmin),
                     $navLink('admin.videos.index', 'admin.videos.*', 'Kelola Video', $isAdmin || $authUser->isRedaktur()),
