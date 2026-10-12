@@ -7,10 +7,10 @@
     <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-8 shadow-xl space-y-6">
         
         <div class="text-center space-y-2">
-            <div class="w-12 h-12 rounded-xl bg-[#008a24] text-white flex items-center justify-center text-2xl font-black mx-auto shadow-md">
+            <div class="w-12 h-12 rounded-xl bg-[#d60000] text-white flex items-center justify-center text-2xl font-black mx-auto shadow-md">
                 C
             </div>
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Daftar Akun CuplikCom</h1>
+            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Daftar Akun <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">Com</span></h1>
             <p class="text-xs text-gray-500 dark:text-gray-400">Dapatkan akses penuh ke diskusi pembaca dan kirim aspirasi daerah</p>
         </div>
 
@@ -44,13 +44,13 @@
                 <input type="password" name="password_confirmation" required placeholder="Ulangi kata sandi" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
-            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
+            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#d60000] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
                 Daftar Akun Baru
             </button>
         </form>
 
         <div class="text-center text-xs text-gray-500 pt-2 border-t border-gray-100 dark:border-zinc-800">
-            Sudah memiliki akun? <a href="{{ route('login') }}" class="text-[#008a24] font-bold hover:underline">Masuk di sini</a>
+            Sudah memiliki akun? <a href="{{ route('login') }}" class="text-[#d60000] hover:text-[#008a24] font-bold hover:underline">Masuk di sini</a>
         </div>
 
     </div>

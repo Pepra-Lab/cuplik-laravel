@@ -42,7 +42,7 @@
 
                         <!-- Banner Text Overlay (DM Sans Font) -->
                         <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 z-20 text-white space-y-2.5 max-w-4xl">
-                            <span class="px-2.5 py-1 rounded text-[10px] sm:text-xs font-black uppercase tracking-wider bg-[#008a24] text-white inline-block shadow">
+                            <span class="px-2.5 py-1 rounded text-[10px] sm:text-xs font-black uppercase tracking-wider bg-[#d60000] text-white inline-block shadow">
                                 {{ $slideCat }}
                             </span>
                             <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-md line-clamp-2">
@@ -58,7 +58,7 @@
         <!-- Banner Indicator Nodes/Dots (Bottom Right, outside box container) -->
         <div class="flex items-center justify-end gap-2 pr-1 pt-1">
             @foreach($slides as $index => $slide)
-                <button type="button" onclick="goToSlide({{ $index }})" class="banner-dot w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-[#008a24] scale-125' : 'bg-gray-300 dark:bg-zinc-700 hover:bg-gray-400' }}" aria-label="Slide {{ $index + 1 }}"></button>
+                <button type="button" onclick="goToSlide({{ $index }})" class="banner-dot w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-[#d60000] scale-125' : 'bg-gray-300 dark:bg-zinc-700 hover:bg-[#008a24]' }}" aria-label="Slide {{ $index + 1 }}"></button>
             @endforeach
         </div>
 
@@ -71,7 +71,7 @@
         
         <div class="flex items-center justify-between border-b border-white/20 pb-3">
             <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#d60000] ring-2 ring-white animate-pulse"></span>
                 <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white uppercase">
                     Berita Pilihan
                 </h2>
@@ -82,7 +82,7 @@
         <!-- 3 Columns Grid from Left to Right using Card Image 1 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($curatedNews->take(3) as $art)
-                <!-- Card Image 1 in Green Box (White Text & White Badge with Green Font) -->
+                <!-- Card Image 1 in Green Box (White Text & White Badge with Red Font) -->
                 <article class="group flex flex-col space-y-3">
                     
                     <!-- Image container with slight border radius and hover zoom -->
@@ -101,8 +101,8 @@
                     <!-- Top Metadata above title (Category & Date on left, Time ago on right) -->
                     <div class="flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2">
-                            <!-- White background badge with green font -->
-                            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-white text-[#008a24] uppercase">
+                            <!-- White background badge with red font -->
+                            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-white text-[#d60000] uppercase shadow-xs">
                                 {{ $art->category->nama ?? 'Pilihan' }}
                             </span>
                             <span class="text-white/90 text-[11px] font-medium">
@@ -164,7 +164,7 @@
                        id="btn-load-more-categories"
                        data-next-page="{{ $categories->currentPage() + 1 }}"
                        data-last-page="{{ $categories->lastPage() }}"
-                       class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-white dark:bg-zinc-900 border-2 border-[#008a24] text-[#008a24] hover:bg-[#008a24] hover:text-white font-black text-sm rounded-xl shadow-xs transition-all duration-300 group cursor-pointer">
+                       class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-white dark:bg-zinc-900 border-2 border-[#008a24] text-[#008a24] hover:bg-[#d60000] hover:border-[#d60000] hover:text-white font-black text-sm rounded-xl shadow-xs transition-all duration-300 group cursor-pointer">
                         <span id="load-more-text">Lihat Kategori Lainnya</span>
                         <svg id="load-more-icon" class="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
@@ -188,12 +188,15 @@
             <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4 shadow-sm">
                 <div class="border-b border-gray-100 dark:border-zinc-800 pb-2.5 flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-4 bg-[#008a24]"></div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                            <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                        </div>
                         <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
                             Video Terbaru
                         </h3>
                     </div>
-                    <a href="{{ route('video.index') }}" class="text-xs font-bold text-[#008a24] hover:underline flex items-center gap-1 group">
+                    <a href="{{ route('video.index') }}" class="text-xs font-bold text-[#008a24] hover:text-[#d60000] hover:underline flex items-center gap-1 group transition-colors">
                         <span>Lihat Semua</span>
                         <span class="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
                     </a>
@@ -215,7 +218,7 @@
                                         
                                         <!-- Mini Play Icon -->
                                         <div class="absolute inset-0 bg-black/20 group-hover:bg-black/35 transition-colors flex items-center justify-center">
-                                            <div class="w-6 h-6 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow">
+                                            <div class="w-6 h-6 rounded-full bg-[#d60000] text-white flex items-center justify-center shadow">
                                                 <svg class="w-3 h-3 fill-current ml-0.5" viewBox="0 0 24 24">
                                                     <path d="M8 5v14l11-7z"/>
                                                 </svg>
@@ -230,7 +233,7 @@
                                     </div>
 
                                     <div class="space-y-1 min-w-0 flex-1">
-                                        <h5 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#008a24] transition-colors">
+                                        <h5 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#d60000] transition-colors">
                                             {{ $vid->judul }}
                                         </h5>
                                         <div class="text-[10px] text-gray-400">
@@ -250,22 +253,25 @@
             <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4">
                 <div class="border-b border-gray-200 dark:border-zinc-800 pb-2.5 flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-4 bg-[#008a24]"></div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                            <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                        </div>
                         <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
                             Tagar Trending
                         </h3>
                     </div>
-                    <span class="text-[10px] font-bold text-[#008a24]">#TopikHangat</span>
+                    <span class="text-[10px] font-bold text-[#d60000]">#TopikHangat</span>
                 </div>
                 
                 <div class="space-y-2">
                     @forelse($trendingTags as $rank => $tt)
                         <a href="{{ route('tag.show', $tt->slug) }}" class="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-zinc-800/80 border border-gray-200/80 dark:border-zinc-700/80 hover:border-[#008a24] transition-colors group">
                             <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-black text-[#008a24]">
+                                <span class="text-xs font-black {{ $rank % 2 === 0 ? 'text-[#d60000]' : 'text-[#008a24]' }}">
                                     0{{ $rank + 1 }}
                                 </span>
-                                <span class="text-xs font-bold text-gray-800 dark:text-gray-200 group-hover:text-[#008a24] transition-colors">
+                                <span class="text-xs font-bold text-gray-800 dark:text-gray-200 group-hover:text-[#d60000] transition-colors">
                                     #{{ $tt->nama }}
                                 </span>
                             </div>
@@ -283,12 +289,15 @@
             <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4 shadow-sm">
                 <div class="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-2.5">
                     <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-4 bg-[#008a24]"></div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                            <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                        </div>
                         <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
                             Keluh Kesah Rakyat
                         </h3>
                     </div>
-                    <a href="{{ route('curhat.index') }}" class="text-xs font-bold text-[#008a24] hover:underline">
+                    <a href="{{ route('curhat.index') }}" class="text-xs font-bold text-[#008a24] hover:text-[#d60000] hover:underline transition-colors">
                         Lihat Semua &rarr;
                     </a>
                 </div>
@@ -298,7 +307,7 @@
                         <div class="p-3.5 bg-gray-50 dark:bg-zinc-800/50 rounded-lg border border-gray-100 dark:border-zinc-800 space-y-2">
                             <!-- Avatar Anonymous and Sender Info -->
                             <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-full bg-[#008a24] text-white flex items-center justify-center font-black text-xs shrink-0 shadow-sm">
+                                <div class="w-8 h-8 rounded-full {{ $loop->iteration % 2 === 1 ? 'bg-[#d60000]' : 'bg-[#008a24]' }} text-white flex items-center justify-center font-black text-xs shrink-0 shadow-sm">
                                     {{ substr($c->pengirim, 0, 1) }}
                                 </div>
                                 <div class="min-w-0 flex-1">
@@ -321,7 +330,7 @@
                 </div>
 
                 <!-- Fast Post Link -->
-                <a href="{{ route('curhat.index') }}" class="block w-full py-2.5 bg-[#008a24] hover:bg-[#006f1c] text-white text-center text-xs font-bold rounded-lg transition-colors">
+                <a href="{{ route('curhat.index') }}" class="block w-full py-2.5 bg-[#008a24] hover:bg-[#d60000] text-white text-center text-xs font-bold rounded-lg transition-colors">
                     Kirim Aspirasi Saya
                 </a>
             </div>
@@ -347,7 +356,10 @@
             <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4 shadow-sm">
                 <div class="border-b border-gray-100 dark:border-zinc-800 pb-2.5 flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-4 bg-[#008a24]"></div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                            <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                        </div>
                         <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
                             Berita Terpopuler
                         </h3>
@@ -358,16 +370,16 @@
                 <div class="divide-y divide-gray-100 dark:divide-zinc-800">
                     @foreach($popularArticles as $rank => $pop)
                         <article class="py-3 first:pt-0 last:pb-0 flex items-start gap-3.5 group">
-                            <span class="text-2xl font-black text-gray-300 dark:text-zinc-700 group-hover:text-[#008a24] transition-colors leading-none shrink-0 w-7">
+                            <span class="text-2xl font-black text-gray-300 dark:text-zinc-700 {{ $rank % 2 === 0 ? 'group-hover:text-[#d60000]' : 'group-hover:text-[#008a24]' }} transition-colors leading-none shrink-0 w-7">
                                 0{{ $rank + 1 }}
                             </span>
                             <div class="space-y-1 min-w-0">
                                 <div class="flex items-center gap-1.5 text-[10px] text-gray-400">
-                                    <span class="font-extrabold text-[#008a24] uppercase">{{ $pop->category->nama ?? 'Berita' }}</span>
+                                    <span class="font-extrabold {{ $rank % 2 === 0 ? 'text-[#d60000]' : 'text-[#008a24]' }} uppercase">{{ $pop->category->nama ?? 'Berita' }}</span>
                                     <span>·</span>
                                     <span>{{ number_format($pop->dibaca) }} dibaca</span>
                                 </div>
-                                <h4 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#008a24] transition-colors">
+                                <h4 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#d60000] transition-colors">
                                     <a href="{{ route('article.show', $pop->slug) }}">
                                         {{ $pop->judul }}
                                     </a>
@@ -381,14 +393,17 @@
             <!-- 5. Tag Cloud Widget -->
             <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-3">
                 <div class="flex items-center gap-2 border-b border-gray-200 dark:border-zinc-800 pb-2">
-                    <div class="w-1.5 h-4 bg-[#008a24]"></div>
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                        <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                    </div>
                     <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
                         Katalog Topik &amp; Tag
                     </h3>
                 </div>
                 <div class="flex flex-wrap gap-1.5 pt-1">
                     @foreach($trendingTags as $tagItem)
-                        <a href="{{ route('tag.show', $tagItem->slug) }}" class="px-2.5 py-1 rounded bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:border-[#008a24] text-[11px] font-semibold text-gray-700 dark:text-gray-300 transition-colors">
+                        <a href="{{ route('tag.show', $tagItem->slug) }}" class="px-2.5 py-1 rounded bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:border-[#d60000] hover:text-[#d60000] text-[11px] font-semibold text-gray-700 dark:text-gray-300 transition-colors">
                             #{{ $tagItem->nama }}
                         </a>
                     @endforeach

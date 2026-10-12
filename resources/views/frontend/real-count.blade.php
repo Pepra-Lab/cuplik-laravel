@@ -9,9 +9,14 @@
     <div class="bg-zinc-900 text-white rounded-2xl p-6 sm:p-8 border border-zinc-800 shadow-xl">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <span class="bg-[#008a24] text-white px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider mb-2 inline-block">
-                    Live Quick Count & Real Count
-                </span>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-[#d60000] text-white px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider inline-block shadow-xs">
+                        Live Quick Count
+                    </span>
+                    <span class="bg-[#008a24] text-white px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider inline-block shadow-xs">
+                        Real Count
+                    </span>
+                </div>
                 <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white">
                     {{ $currentPilbup?->judul ?: 'Pemilihan Kepala Daerah' }}
                 </h1>
@@ -98,9 +103,15 @@
 
     <!-- Breakdown per Kecamatan Table -->
     <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-4">
-        <h3 class="text-base font-black uppercase tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
-            Rekapitulasi Perolehan Suara per Kecamatan
-        </h3>
+        <div class="flex items-center gap-2 border-b border-gray-100 dark:border-zinc-800 pb-2">
+            <div class="flex items-center gap-1">
+                <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+            </div>
+            <h3 class="text-base font-black uppercase tracking-tight text-gray-900 dark:text-white">
+                Rekapitulasi Perolehan Suara per Kecamatan
+            </h3>
+        </div>
         
         <div class="overflow-x-auto">
             <table class="w-full text-xs text-left border-collapse">

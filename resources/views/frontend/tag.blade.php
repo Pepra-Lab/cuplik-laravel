@@ -7,7 +7,7 @@
     
     <!-- Tag Header Box Container -->
     <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6">
-        <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#008a24] text-white uppercase inline-block mb-1.5">
+        <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#d60000] text-white uppercase inline-block mb-1.5 shadow-xs">
             Topik Tag
         </span>
         <h1 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
@@ -45,7 +45,7 @@
                             <!-- Top Metadata: Category & Date (Left), Time Ago (Right) above Title -->
                             <div class="flex items-center justify-between text-xs">
                                 <div class="flex items-center gap-2">
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#008a24] text-white">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-extrabold {{ $loop->iteration % 2 === 1 ? 'bg-[#d60000]' : 'bg-[#008a24]' }} text-white uppercase shadow-xs">
                                         {{ $art->category->nama ?? 'Umum' }}
                                     </span>
                                     <span class="text-gray-500 dark:text-gray-400 text-[11px]">
@@ -60,7 +60,7 @@
                             </div>
 
                             <!-- Title (Truncated to 2 lines) -->
-                            <h3 class="font-bold text-sm sm:text-base leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#008a24] transition-colors">
+                            <h3 class="font-bold text-sm sm:text-base leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#d60000] transition-colors">
                                 <a href="{{ route('article.show', $art->slug) }}">
                                     {{ $art->judul }}
                                 </a>
@@ -92,12 +92,18 @@
             
             <!-- Trending Topics -->
             <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-3">
-                <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white border-b-2 border-[#008a24] pb-2">
-                    Topik Populer
-                </h3>
+                <div class="flex items-center gap-2 border-b border-gray-200 dark:border-zinc-800 pb-2">
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                        <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                    </div>
+                    <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
+                        Topik Populer
+                    </h3>
+                </div>
                 <div class="flex flex-wrap gap-2">
                     @foreach($trendingTags as $tt)
-                        <a href="{{ route('tag.show', $tt->slug) }}" class="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:border-[#008a24] text-xs px-3 py-1.5 rounded-full text-gray-800 dark:text-gray-200 font-semibold transition-colors">
+                        <a href="{{ route('tag.show', $tt->slug) }}" class="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:border-[#d60000] hover:text-[#d60000] text-xs px-3 py-1.5 rounded-full text-gray-800 dark:text-gray-200 font-semibold transition-colors">
                             #{{ $tt->nama }}
                         </a>
                     @endforeach
@@ -105,20 +111,26 @@
             </div>
 
             <!-- Berita Terpopuler -->
-            <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4">
-                <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white border-b-2 border-[#008a24] pb-2">
-                    Berita Terpopuler
-                </h3>
+            <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4 shadow-sm">
+                <div class="flex items-center gap-2 border-b border-gray-100 dark:border-zinc-800 pb-2">
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                        <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                    </div>
+                    <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
+                        Berita Terpopuler
+                    </h3>
+                </div>
                 <div class="divide-y divide-gray-200 dark:divide-zinc-800">
                     @foreach($popularArticles as $rank => $pop)
                         <div class="py-3 first:pt-0 last:pb-0">
                             <a href="{{ route('article.show', $pop->slug) }}" class="flex gap-3 group items-start">
-                                <span class="text-2xl font-black text-gray-300 dark:text-zinc-700 group-hover:text-[#008a24] transition-colors leading-none shrink-0 w-7">
+                                <span class="text-2xl font-black text-gray-300 dark:text-zinc-700 {{ $rank % 2 === 0 ? 'group-hover:text-[#d60000]' : 'group-hover:text-[#008a24]' }} transition-colors leading-none shrink-0 w-7">
                                     0{{ $rank + 1 }}
                                 </span>
                                 <div class="min-w-0">
-                                    <div class="text-[10px] text-gray-400 mb-0.5">{{ $pop->category->nama ?? 'Berita' }} · {{ number_format($pop->dibaca) }} dibaca</div>
-                                    <h4 class="text-xs font-bold leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-[#008a24] transition-colors">
+                                    <div class="text-[10px] text-gray-400 mb-0.5"><span class="font-bold {{ $rank % 2 === 0 ? 'text-[#d60000]' : 'text-[#008a24]' }}">{{ $pop->category->nama ?? 'Berita' }}</span> · {{ number_format($pop->dibaca) }} dibaca</div>
+                                    <h4 class="text-xs font-bold leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-[#d60000] transition-colors">
                                         {{ $pop->judul }}
                                     </h4>
                                 </div>

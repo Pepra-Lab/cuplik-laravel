@@ -7,10 +7,10 @@
     <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-8 shadow-xl space-y-6">
         
         <div class="text-center space-y-2">
-            <div class="w-12 h-12 rounded-xl bg-[#008a24] text-white flex items-center justify-center text-2xl font-black mx-auto shadow-md">
+            <div class="w-12 h-12 rounded-xl bg-[#d60000] text-white flex items-center justify-center text-2xl font-black mx-auto shadow-md">
                 C
             </div>
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Masuk ke CuplikCom</h1>
+            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Masuk ke <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">Com</span></h1>
             <p class="text-xs text-gray-500 dark:text-gray-400">Masuk untuk mengakses CMS Redaksi atau akun pembaca</p>
         </div>
 
@@ -42,7 +42,7 @@
                 <label for="remember" class="text-xs text-gray-600 dark:text-gray-400">Ingat saya di perangkat ini</label>
             </div>
 
-            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
+            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#d60000] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
                 Masuk Sekarang
             </button>
         </form>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="text-center text-xs text-gray-500 pt-2 border-t border-gray-100 dark:border-zinc-800">
-            Belum punya akun? <a href="{{ route('register') }}" class="text-[#008a24] font-bold hover:underline">Daftar Sekarang</a>
+            Belum punya akun? <a href="{{ route('register') }}" class="text-[#d60000] hover:text-[#008a24] font-bold hover:underline">Daftar Sekarang</a>
         </div>
 
     </div>

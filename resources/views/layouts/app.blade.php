@@ -27,6 +27,8 @@
                         brand: {
                             green: '#008a24',
                             greenHover: '#006f1c',
+                            red: '#d60000',
+                            redHover: '#b50000',
                             black: '#111111',
                             footer: '#0e1711',
                         }
@@ -81,6 +83,17 @@
             letter-spacing: 0.025em;
             display: inline-block;
         }
+        .badge-cat-red {
+            background-color: #d60000;
+            color: #ffffff;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            display: inline-block;
+        }
         .badge-cat-white {
             background-color: #ffffff;
             color: #008a24;
@@ -108,6 +121,12 @@
 
 <body class="bg-white dark:bg-[#121212] text-[#111111] dark:text-[#f3f4f6] min-h-screen flex flex-col transition-colors duration-200">
     
+    <!-- Brand Dual Stripe Header (Red & Green) -->
+    <div class="h-1 flex w-full">
+        <div class="w-1/2 bg-[#d60000]"></div>
+        <div class="w-1/2 bg-[#008a24]"></div>
+    </div>
+
     <!-- Top Utility Bar (Real Newspaper Header Bar) -->
     <div class="bg-gray-50 dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 text-[11px] text-gray-600 dark:text-gray-400 py-1.5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -120,7 +139,10 @@
             </div>
             <div class="flex items-center gap-4">
                 <span class="hidden md:inline text-gray-500">Legalitas SK Kemenkumham AHU-0039651.AH.01.01.2019</span>
-                <span class="text-xs font-extrabold text-[#008a24] uppercase">SMSI Terverifikasi</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-[#d60000] animate-pulse"></span>
+                    <span class="text-xs font-extrabold text-[#008a24] uppercase">SMSI Terverifikasi</span>
+                </div>
             </div>
         </div>
     </div>
@@ -133,12 +155,12 @@
             
             <!-- Left: Logo Cuplik -->
             <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0 group">
-                <div class="w-10 h-10 rounded-lg bg-[#008a24] text-white flex items-center justify-center font-black text-2xl shadow-sm tracking-tighter">
+                <div class="w-10 h-10 rounded-lg bg-[#d60000] text-white flex items-center justify-center font-black text-2xl shadow-sm tracking-tighter">
                     C
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-2xl sm:text-3xl font-black tracking-tight leading-none text-[#111111] dark:text-white">
-                        Cuplik<span class="text-[#008a24]">.com</span>
+                    <span class="text-2xl sm:text-3xl font-black tracking-tight leading-none">
+                        <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">.com</span>
                     </span>
                     <span class="text-[10px] text-gray-500 dark:text-gray-400 font-semibold tracking-wide">
                         Beritanya Unik &amp; Menggelitik
@@ -158,7 +180,7 @@
                         </svg>
                     </div>
 
-                    <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-[#008a24] hover:bg-[#006f1c] text-white text-[11px] font-bold rounded">
+                    <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-[#008a24] hover:bg-[#d60000] text-white text-[11px] font-bold rounded transition-colors">
                         Cari
                     </button>
                 </form>
@@ -195,13 +217,13 @@
                         @endif
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-colors">
+                            <button type="submit" class="px-3 py-1.5 bg-[#d60000] hover:bg-[#b50000] text-white rounded-lg text-xs font-bold transition-colors">
                                 Keluar
                             </button>
                         </form>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="px-3.5 py-1.5 bg-[#008a24] hover:bg-[#006f1c] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm">
+                    <a href="{{ route('login') }}" class="px-3.5 py-1.5 bg-[#d60000] hover:bg-[#b50000] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm">
                         <!-- Login Icon -->
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
@@ -225,7 +247,7 @@
         <!-- Horizontal Navigation List: Politik, Sosial, Hukum, Ekonomi, Ragam, Luar Negeri, Iptek, Gaya Hidup, Bola, Video -->
         <nav class="bg-white dark:bg-[#121212] overflow-x-auto scrollbar-none">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-1 text-xs sm:text-sm font-extrabold tracking-tight whitespace-nowrap py-1">
-                <a href="{{ route('home') }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
+                <a href="{{ route('home') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                     HOME
                 </a>
                 
@@ -244,12 +266,12 @@
                 @endphp
 
                 @foreach($mainNavCategories as $cat)
-                    <a href="{{ route('category.show', $cat['slug']) }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
+                    <a href="{{ route('category.show', $cat['slug']) }}" class="py-2.5 px-3 transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                         {{ $cat['nama'] }}
                     </a>
                 @endforeach
                 
-                <a href="{{ route('video.index') }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
+                <a href="{{ route('video.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                     VIDEO
                 </a>
             </div>
@@ -269,11 +291,11 @@
                 <!-- Header with Logo and Close Button -->
                 <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-zinc-800">
                     <a href="{{ route('home') }}" class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded bg-[#008a24] text-white flex items-center justify-center font-black text-xl">
+                        <div class="w-8 h-8 rounded bg-[#d60000] text-white flex items-center justify-center font-black text-xl">
                             C
                         </div>
-                        <span class="text-xl font-black text-gray-900 dark:text-white">
-                            Cuplik<span class="text-[#008a24]">.com</span>
+                        <span class="text-xl font-black leading-none">
+                            <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">.com</span>
                         </span>
                     </a>
                     <button id="mobileSidebarCloseBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-white p-1 text-lg font-bold">
@@ -314,7 +336,7 @@
                         Buka Dashboard CMS
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="w-full py-2.5 bg-[#008a24] hover:bg-[#006f1c] text-white rounded-lg text-xs font-bold text-center flex items-center justify-center gap-2">
+                    <a href="{{ route('login') }}" class="w-full py-2.5 bg-[#d60000] hover:bg-[#b50000] text-white rounded-lg text-xs font-bold text-center flex items-center justify-center gap-2 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                         </svg>
@@ -322,7 +344,7 @@
                     </a>
                 @endauth
 
-                <a href="#newsletterSection" onclick="document.getElementById('mobileSidebarDrawer').classList.add('hidden')" class="w-full py-2.5 border border-[#008a24] text-[#008a24] rounded-lg text-xs font-bold text-center block">
+                <a href="#newsletterSection" onclick="document.getElementById('mobileSidebarDrawer').classList.add('hidden')" class="w-full py-2.5 border border-[#008a24] text-[#008a24] hover:bg-[#008a24] hover:text-white rounded-lg text-xs font-bold text-center block transition-colors">
                     Langganan Berita
                 </a>
             </div>
@@ -353,8 +375,14 @@
         @yield('content')
     </main>
 
+    <!-- Brand Dual Stripe Footer (Red & Green) -->
+    <div class="h-1 flex w-full">
+        <div class="w-1/2 bg-[#d60000]"></div>
+        <div class="w-1/2 bg-[#008a24]"></div>
+    </div>
+
     <!-- Footer: Black with slight green tint (#0e1711), 3 cols on row 1, 1 col on row 2, No Gradients -->
-    <footer class="bg-[#0e1711] text-gray-300 border-t border-zinc-800 mt-14 pt-12 pb-8">
+    <footer class="bg-[#0e1711] text-gray-300 border-t border-zinc-800 pt-12 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Row 1: 3 Grid Columns (Col 1: Logo, Col 2: Navigation menus, Col 3: Additional / Langganan) -->
@@ -363,10 +391,10 @@
                 <!-- Col 1: Logo Cuplik & Description -->
                 <div class="space-y-3">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded bg-[#008a24] text-white font-extrabold text-xl flex items-center justify-center">
+                        <div class="w-8 h-8 rounded bg-[#d60000] text-white font-extrabold text-xl flex items-center justify-center">
                             C
                         </div>
-                        <span class="text-xl font-bold text-white tracking-tight">Cuplik<span class="text-[#008a24]">.com</span></span>
+                        <span class="text-xl font-black tracking-tight leading-none"><span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">.com</span></span>
                     </div>
                     <p class="text-xs text-gray-400 leading-relaxed">
                         PT. Cuplik Media Center (CMC)<br>
@@ -385,13 +413,13 @@
                         Kanal Navigasi
                     </h4>
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                        <a href="{{ route('home') }}" class="hover:text-[#008a24] transition-colors">Home</a>
+                        <a href="{{ route('home') }}" class="hover:text-[#d60000] transition-colors">Home</a>
                         @foreach($mainNavCategories as $cat)
-                            <a href="{{ route('category.show', $cat['slug']) }}" class="hover:text-[#008a24] transition-colors">
+                            <a href="{{ route('category.show', $cat['slug']) }}" class="hover:text-[#d60000] transition-colors">
                                 {{ $cat['nama'] }}
                             </a>
                         @endforeach
-                        <a href="{{ route('video.index') }}" class="hover:text-[#008a24] transition-colors">Video</a>
+                        <a href="{{ route('video.index') }}" class="hover:text-[#d60000] transition-colors">Video</a>
                     </div>
                 </div>
 
@@ -406,7 +434,7 @@
                     <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-2">
                         @csrf
                         <input type="email" name="email" required placeholder="Alamat email Anda..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#008a24]">
-                        <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2 rounded-lg text-xs font-bold transition-colors">
+                        <button type="submit" class="w-full bg-[#008a24] hover:bg-[#d60000] text-white py-2 rounded-lg text-xs font-bold transition-colors">
                             Langganan Sekarang
                         </button>
                     </form>
@@ -508,11 +536,11 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-1.5 text-[10px] text-gray-400 mb-0.5">
-                                                <span class="text-[#008a24] font-bold">${item.kategori}</span>
+                                                <span class="text-[#d60000] font-bold">${item.kategori}</span>
                                                 <span>·</span>
                                                 <span>${item.time_ago}</span>
                                             </div>
-                                            <h4 class="text-xs font-bold text-gray-900 dark:text-white line-clamp-1">
+                                            <h4 class="text-xs font-bold text-gray-900 dark:text-white line-clamp-1 hover:text-[#008a24] transition-colors">
                                                 ${item.judul}
                                             </h4>
                                         </div>

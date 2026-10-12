@@ -9,8 +9,8 @@
     <div class="bg-zinc-950 text-white rounded-xl p-6 sm:p-8 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 mb-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
-                <span class="text-xs font-bold uppercase tracking-wider text-red-400">Saluran Multimedia</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#d60000] animate-pulse"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#008a24]">Saluran Multimedia</span>
             </div>
             <h1 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
                 Galeri Video Cuplik
@@ -30,8 +30,8 @@
                 </div>
             </div>
             <div class="lg:col-span-4 space-y-3">
-                <span class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Video Utama</span>
-                <h2 class="text-xl font-bold leading-snug text-white hover:text-red-400 transition-colors">
+                <span class="bg-[#d60000] text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Video Utama</span>
+                <h2 class="text-xl font-bold leading-snug text-white hover:text-[#008a24] transition-colors">
                     <a href="{{ route('video.show', $featuredVideo->slug) }}">
                         {{ $featuredVideo->judul }}
                     </a>
@@ -59,7 +59,7 @@
                         @endif
                     </div>
                     <div class="text-[11px] text-gray-400">{{ $vid->formatted_date }}</div>
-                    <h3 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-red-500 transition-colors">
+                    <h3 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-[#d60000] transition-colors">
                         {{ $vid->judul }}
                     </h3>
                 </a>

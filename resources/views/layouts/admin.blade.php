@@ -95,11 +95,11 @@
         <!-- Sidebar Brand -->
         <div class="p-5 border-b border-gray-200 dark:border-zinc-800 flex items-center justify-between">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded bg-[#008a24] text-white font-black text-xl flex items-center justify-center">
+                <div class="w-8 h-8 rounded bg-[#d60000] text-white font-black text-xl flex items-center justify-center">
                     C
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-extrabold text-lg text-gray-900 dark:text-white leading-none">Cuplik <span class="text-[#008a24]">CMS</span></span>
+                    <span class="font-extrabold text-lg leading-none"><span class="text-[#d60000]">Cuplik</span> <span class="text-[#008a24]">CMS</span></span>
                     <span class="text-[10px] text-gray-400">Content Management System</span>
                 </div>
             </a>

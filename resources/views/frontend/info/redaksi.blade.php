@@ -7,7 +7,7 @@
     
     <div class="lg:col-span-8 space-y-6">
         <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6">
-            <span class="badge-cat mb-2">Informasi Redaksi</span>
+            <span class="badge-cat-red mb-2">Informasi Redaksi</span>
             <h1 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
                 Susunan Redaksi & Manajemen CuplikCom
             </h1>
@@ -50,7 +50,7 @@
                 <p><strong>Administrasi & Keuangan:</strong> Fitriyani, Desi Amaliani</p>
             </div>
 
-            <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs space-y-1">
+            <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-l-[#d60000] border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs space-y-1">
                 <h4 class="font-bold text-[#008a24] text-sm mb-1">Alamat Kantor Redaksi & Tata Usaha</h4>
                 <p>Jl. Samsu No. 42 Kelurahan Margadadi, Kabupaten Indramayu, Jawa Barat 45211</p>
                 <p><strong>Telp:</strong> (0234) 7126806 · <strong>WhatsApp:</strong> 087727030115</p>
@@ -62,20 +62,32 @@
 
     <!-- Sidebar -->
     <aside class="lg:col-span-4 space-y-8">
-        <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5">
-            <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white border-b-2 border-[#008a24] pb-2 mb-4 flex items-center gap-2">
-                Berita Terpopuler
-            </h3>
+        <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-2 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-4 bg-[#d60000] rounded-xs"></div>
+                        <div class="w-1.5 h-4 bg-[#008a24] rounded-xs"></div>
+                    </div>
+                    <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
+                        Berita Terpopuler
+                    </h3>
+                </div>
+            </div>
             <div class="divide-y divide-gray-200 dark:divide-zinc-800">
                 @foreach($popularArticles as $rank => $pop)
                     <div class="py-3 first:pt-0 last:pb-0">
                         <a href="{{ route('article.show', $pop->slug) }}" class="flex gap-3 group">
-                            <span class="text-2xl font-black text-gray-300 dark:text-zinc-700 group-hover:text-[#008a24] transition-colors leading-none">
+                            <span class="text-2xl font-black text-gray-300 dark:text-zinc-700 group-hover:{{ $rank % 2 === 0 ? 'text-[#d60000]' : 'text-[#008a24]' }} transition-colors leading-none">
                                 0{{ $rank + 1 }}
                             </span>
                             <div>
-                                <div class="text-[11px] text-gray-400 mb-1">{{ $pop->category->nama ?? 'Berita' }} · {{ $pop->dibaca }} dibaca</div>
-                                <h4 class="text-xs font-bold leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-[#008a24] transition-colors">
+                                <div class="text-[11px] text-gray-400 mb-1">
+                                    <span class="font-extrabold {{ $rank % 2 === 0 ? 'text-[#d60000]' : 'text-[#008a24]' }} uppercase">{{ $pop->category->nama ?? 'Berita' }}</span>
+                                    <span>·</span>
+                                    <span>{{ number_format($pop->dibaca) }} dibaca</span>
+                                </div>
+                                <h4 class="text-xs font-bold leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-[#d60000] transition-colors">
                                     {{ $pop->judul }}
                                 </h4>
                             </div>

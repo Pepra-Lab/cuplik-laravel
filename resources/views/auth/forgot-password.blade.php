@@ -24,13 +24,13 @@
                 <input type="email" name="email" value="{{ old('email') }}" required placeholder="email@cuplik.com" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
-            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
+            <button type="submit" class="w-full bg-[#008a24] hover:bg-[#d60000] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
                 Kirim Tautan Reset
             </button>
         </form>
 
         <div class="text-center text-xs text-gray-500 pt-2 border-t border-gray-100 dark:border-zinc-800">
-            Kembali ke <a href="{{ route('login') }}" class="text-[#008a24] font-bold hover:underline">Halaman Masuk</a>
+            Kembali ke <a href="{{ route('login') }}" class="text-[#d60000] hover:text-[#008a24] font-bold hover:underline">Halaman Masuk</a>
         </div>
 
     </div>

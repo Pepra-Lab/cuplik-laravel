@@ -12,12 +12,15 @@
             <!-- Category Header: Title + Selengkapnya Link with Icon (Space Between) -->
             <div class="flex items-center justify-between border-b-2 border-gray-900 dark:border-zinc-700 pb-2">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-1.5 h-5 bg-[#008a24]"></div>
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-5 bg-[#d60000] rounded-xs"></div>
+                        <div class="w-1.5 h-5 bg-[#008a24] rounded-xs"></div>
+                    </div>
                     <h2 class="text-lg sm:text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
                         {{ $cat->nama }}
                     </h2>
                 </div>
-                <a href="{{ route('category.show', $cat->slug) }}" class="text-xs font-bold text-[#008a24] hover:underline flex items-center gap-1">
+                <a href="{{ route('category.show', $cat->slug) }}" class="text-xs font-bold text-[#008a24] hover:text-[#d60000] hover:underline flex items-center gap-1 transition-colors">
                     <span>Selengkapnya</span>
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -48,7 +51,7 @@
                         <!-- Top Metadata: Category & Date (Left), Time Ago (Right) above Title -->
                         <div class="flex items-center justify-between text-xs">
                             <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-[#008a24] text-white uppercase">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-[#d60000] text-white uppercase shadow-xs">
                                     {{ $cat->nama }}
                                 </span>
                                 <span class="text-gray-600 dark:text-gray-400 text-[11px] font-medium">
@@ -63,7 +66,7 @@
                         </div>
 
                         <!-- Headline Title (Truncated to 2 lines) -->
-                        <h3 class="font-black text-lg sm:text-xl leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#008a24] transition-colors">
+                        <h3 class="font-black text-lg sm:text-xl leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#d60000] transition-colors">
                             <a href="{{ route('article.show', $leadArticle->slug) }}">
                                 {{ $leadArticle->judul }}
                             </a>
@@ -138,7 +141,7 @@
                 <img src="{{ asset('assets/newsletter.png') }}" alt="Newsletter CuplikCom" class="w-full h-full object-cover">
             </div>
             <div class="flex-1 space-y-3 text-left">
-                <span class="px-2.5 py-1 rounded text-[10px] font-bold uppercase bg-[#008a24] text-white inline-block">
+                <span class="px-2.5 py-1 rounded text-[10px] font-bold uppercase bg-[#d60000] text-white inline-block">
                     Ruang Langganan Eksklusif
                 </span>
                 <h3 class="text-lg sm:text-xl font-black text-gray-900 dark:text-white leading-tight">
@@ -150,7 +153,7 @@
                 <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md pt-1">
                     @csrf
                     <input type="email" name="email" required placeholder="Masukkan alamat email Anda..." class="flex-1 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
-                    <button type="submit" class="px-5 py-2 bg-[#008a24] hover:bg-[#006f1c] text-white text-xs font-bold rounded-lg transition-colors shrink-0">
+                    <button type="submit" class="px-5 py-2 bg-[#008a24] hover:bg-[#d60000] text-white text-xs font-bold rounded-lg transition-colors shrink-0">
                         Langganan
                     </button>
                 </form>
@@ -170,7 +173,7 @@
                 </a>
             @else
                 <div class="h-24 sm:h-28 bg-emerald-50 dark:bg-emerald-950/30 border border-dashed border-[#008a24] rounded-lg flex flex-col items-center justify-center p-4">
-                    <span class="text-xs font-bold text-[#008a24] uppercase tracking-wider">Slot Iklan Display (728 × 90 px)</span>
+                    <span class="text-xs font-bold text-[#d60000] uppercase tracking-wider">Slot Iklan Display (728 × 90 px)</span>
                     <span class="text-[11px] text-gray-500 mt-1">Hubungi Redaksi CuplikCom untuk Pemasangan Iklan Sponsor</span>
                 </div>
             @endif
