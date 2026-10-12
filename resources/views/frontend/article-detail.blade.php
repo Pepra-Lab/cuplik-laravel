@@ -48,24 +48,51 @@
         </div>
 
         <!-- 3. Gambar Utama (Featured Image) with Hover Zoom & Border Radius -->
-        <div class="img-zoom-wrap aspect-[16/10] bg-gray-100 dark:bg-zinc-800 rounded-xl overflow-hidden shadow-sm">
-            @if($article->foto)
-                <img src="{{ $article->foto }}" alt="{{ $article->judul }}" class="w-full h-full object-cover">
-            @else
-                <div class="w-full h-full flex items-center justify-center text-gray-400 dark:text-zinc-700 font-black text-6xl">
-                    {{ substr($article->category->nama ?? 'C', 0, 1) }}
-                </div>
-            @endif
-        </div>
+        @php
+            $headerImg1 = ($article->foto && ($article->foto_posisi === 'header' || empty($article->foto_posisi))) ? $article->foto_url : null;
+            $headerImg2 = ($article->foto_2 && $article->foto_2_posisi === 'header') ? $article->foto_2_url : null;
+        @endphp
 
-        @if($article->caption_foto)
-            <p class="text-[11px] text-gray-500 italic text-center -mt-3">
-                {{ $article->caption_foto }}
-            </p>
-        @else
-            <p class="text-[11px] text-gray-400 italic text-center -mt-3">
-                Dokumentasi Liputan Khusus Redaksi Cuplik.com
-            </p>
+        @if($headerImg1)
+            <div class="space-y-2 max-w-2xl mx-auto">
+                <div class="img-zoom-wrap aspect-[16/9] max-h-[360px] bg-gray-100 dark:bg-zinc-800 rounded-none overflow-hidden shadow-sm">
+                    <img src="{{ $headerImg1 }}" alt="{{ $article->judul }}" class="w-full h-full object-cover">
+                </div>
+                @if($article->caption_foto)
+                    <p class="text-[11px] text-gray-500 italic text-center">
+                        {{ $article->caption_foto }}
+                    </p>
+                @else
+                    <p class="text-[11px] text-gray-400 italic text-center">
+                        Dokumentasi Liputan Khusus Redaksi Cuplik.com
+                    </p>
+                @endif
+            </div>
+        @elseif($headerImg2)
+            <div class="space-y-2 max-w-2xl mx-auto">
+                <div class="img-zoom-wrap aspect-[16/9] max-h-[360px] bg-gray-100 dark:bg-zinc-800 rounded-none overflow-hidden shadow-sm">
+                    <img src="{{ $headerImg2 }}" alt="{{ $article->judul }}" class="w-full h-full object-cover">
+                </div>
+                @if($article->caption_foto_2)
+                    <p class="text-[11px] text-gray-500 italic text-center">
+                        {{ $article->caption_foto_2 }}
+                    </p>
+                @endif
+            </div>
+        @endif
+
+        @if($headerImg1 && $headerImg2)
+            <!-- Secondary Header Image if both are set to Header -->
+            <div class="space-y-2 max-w-2xl mx-auto pt-1">
+                <div class="img-zoom-wrap aspect-[16/9] max-h-[300px] bg-gray-100 dark:bg-zinc-800 rounded-none overflow-hidden shadow-sm">
+                    <img src="{{ $headerImg2 }}" alt="{{ $article->judul }} - Gambar 2" class="w-full h-full object-cover">
+                </div>
+                @if($article->caption_foto_2)
+                    <p class="text-[11px] text-gray-500 italic text-center">
+                        {{ $article->caption_foto_2 }}
+                    </p>
+                @endif
+            </div>
         @endif
 
         <!-- Lead / Ringkasan -->
@@ -75,9 +102,9 @@
             </div>
         @endif
 
-        <!-- 4. Detail Teks Berita -->
+        <!-- 4. Detail Teks Berita (dengan gambar inline sesuai posisi penempatan) -->
         <div class="text-base leading-relaxed text-gray-800 dark:text-gray-200 space-y-4 pt-2">
-            {!! $article->isi !!}
+            {!! $article->renderContentWithImages() !!}
             <p class="text-xs text-gray-400 italic pt-2"><strong>(cpl/red)</strong></p>
         </div>
 

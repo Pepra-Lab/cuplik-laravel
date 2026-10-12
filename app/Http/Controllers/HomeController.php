@@ -16,7 +16,7 @@ use App\Models\NewsletterSubscriber;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // 1. Hero Banners & Breaking News
         $banners = Banner::where('tampil', 'Ya')->orderBy('urutan')->get();
@@ -42,14 +42,14 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        // 5. Category-wise News Feeds
+        // 5. Category-wise News Feeds (Paginate 4 categories per batch)
         $categories = Category::where('tampil', 'Ya')
             ->where('slug', '!=', 'video')
             ->orderBy('urutan')
             ->with(['articles' => function ($q) {
                 $q->where('status', 'Terbit')->latest('tanggal')->take(4)->with('category');
             }])
-            ->get();
+            ->paginate(4);
 
         // 6. Active Poll
         $activePoll = Poll::where('status', 'Aktif')->with('options')->first();
@@ -63,7 +63,7 @@ class HomeController extends Controller
         // 8. Videos
         $videos = Video::where('status', 'Tayang')
             ->latest('tanggal')
-            ->take(4)
+            ->take(5)
             ->get();
 
         // 9. Advertisements
@@ -71,6 +71,19 @@ class HomeController extends Controller
         $iklanSidebar = IklanGambar::where('posisi', 'like', '%Sidebar%')->where('status', 'Tayang')->first();
         $iklanBetweenCategory = IklanGambar::where('posisi', 'like', '%Article%')->orWhere('posisi', 'like', '%Header%')->where('status', 'Tayang')->first();
         $iklanBaris = IklanBaris::where('status', 'Disetujui')->latest('tanggal')->take(6)->get();
+
+        // Handle AJAX request for "Lihat Kategori Lainnya"
+        if ($request->ajax() || $request->wantsJson()) {
+            $html = view('frontend.partials.category-feed-items', compact('categories', 'iklanBetweenCategory'))->render();
+
+            return response()->json([
+                'html' => $html,
+                'hasMore' => $categories->hasMorePages(),
+                'nextUrl' => $categories->nextPageUrl(),
+                'currentPage' => $categories->currentPage(),
+                'lastPage' => $categories->lastPage(),
+            ]);
+        }
 
         return view('frontend.home', compact(
             'banners',

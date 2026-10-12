@@ -139,186 +139,43 @@
         <!-- ===================================================================== -->
         <div class="lg:col-span-8 space-y-12">
 
-            @foreach($categories as $cat)
-                @php
-                    $catArticles = $cat->articles;
-                    $leadArticle = $catArticles->first();
-                    $subArticles = $catArticles->slice(1, 3);
-                @endphp
+            <!-- Category Feeds Container -->
+            <div id="category-feeds-container" class="space-y-12">
+                @include('frontend.partials.category-feed-items', [
+                    'categories' => $categories, 
+                    'iklanBetweenCategory' => $iklanBetweenCategory
+                ])
+            </div>
 
-                @if($catArticles->count() > 0)
-                    <!-- Category Box Container Group -->
-                    <section class="space-y-4">
-                        
-                        <!-- Category Header: Title + Selengkapnya Link with Icon (Space Between) -->
-                        <div class="flex items-center justify-between border-b-2 border-gray-900 dark:border-zinc-700 pb-2">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-1.5 h-5 bg-[#008a24]"></div>
-                                <h2 class="text-lg sm:text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
-                                    {{ $cat->nama }}
-                                </h2>
-                            </div>
-                            <a href="{{ route('category.show', $cat->slug) }}" class="text-xs font-bold text-[#008a24] hover:underline flex items-center gap-1">
-                                <span>Selengkapnya</span>
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-
-                        <!-- 2 Rows of Content -->
-                        <div class="space-y-5">
-                            
-                            <!-- Row 1: Big Headline Latest Article using Card Image 1 (Vertical) -->
-                            @if($leadArticle)
-                                <article class="group flex flex-col space-y-2.5">
-                                    
-                                    <!-- Image Container with hover zoom -->
-                                    <div class="img-zoom-wrap aspect-[16/9] sm:aspect-[21/10] bg-gray-100 dark:bg-zinc-800 rounded-lg overflow-hidden">
-                                        <a href="{{ route('article.show', $leadArticle->slug) }}" class="block w-full h-full">
-                                            @if($leadArticle->foto)
-                                                <img src="{{ $leadArticle->foto }}" alt="{{ $leadArticle->judul }}" class="w-full h-full object-cover">
-                                            @else
-                                                <div class="w-full h-full flex items-center justify-center text-gray-300 dark:text-zinc-700 font-black text-4xl">
-                                                    {{ substr($cat->nama, 0, 1) }}
-                                                </div>
-                                            @endif
-                                        </a>
-                                    </div>
-
-                                    <!-- Top Metadata: Category & Date (Left), Time Ago (Right) above Title -->
-                                    <div class="flex items-center justify-between text-xs">
-                                        <div class="flex items-center gap-2">
-                                            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-[#008a24] text-white uppercase">
-                                                {{ $cat->nama }}
-                                            </span>
-                                            <span class="text-gray-600 dark:text-gray-400 text-[11px] font-medium">
-                                                {{ $leadArticle->formatted_date }}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <span class="text-gray-400 text-[11px]">
-                                                {{ $leadArticle->time_ago }}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Headline Title (Truncated to 2 lines) -->
-                                    <h3 class="font-black text-lg sm:text-xl leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#008a24] transition-colors">
-                                        <a href="{{ route('article.show', $leadArticle->slug) }}">
-                                            {{ $leadArticle->judul }}
-                                        </a>
-                                    </h3>
-
-                                    @if($leadArticle->lead)
-                                        <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
-                                            {{ $leadArticle->lead }}
-                                        </p>
-                                    @endif
-
-                                </article>
-                            @endif
-
-                            <!-- Row 2: 3 Items Arranged using Card Image 2 (Horizontal) -->
-                            @if($subArticles->count() > 0)
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-gray-100 dark:border-zinc-800">
-                                    @foreach($subArticles as $subArt)
-                                        <article class="group flex flex-row sm:flex-col gap-3 items-start">
-                                            
-                                            <!-- Thumbnail Container with Hover Zoom -->
-                                            <div class="img-zoom-wrap w-28 sm:w-full aspect-[16/10] shrink-0 bg-gray-100 dark:bg-zinc-800 rounded-lg overflow-hidden">
-                                                <a href="{{ route('article.show', $subArt->slug) }}" class="block w-full h-full">
-                                                    @if($subArt->foto)
-                                                        <img src="{{ $subArt->foto }}" alt="{{ $subArt->judul }}" class="w-full h-full object-cover">
-                                                    @else
-                                                        <div class="w-full h-full flex items-center justify-center text-gray-300 dark:text-zinc-700 font-bold text-sm">
-                                                            {{ substr($cat->nama, 0, 1) }}
-                                                        </div>
-                                                    @endif
-                                                </a>
-                                            </div>
-
-                                            <div class="flex-1 min-w-0 flex flex-col justify-between space-y-1">
-                                                <!-- Top Metadata: Category and Date above title -->
-                                                <div class="flex items-center gap-1.5 text-[10px]">
-                                                    <span class="px-1.5 py-0.5 rounded font-extrabold bg-[#008a24] text-white uppercase">
-                                                        {{ $cat->nama }}
-                                                    </span>
-                                                    <span class="text-gray-400">
-                                                        {{ $subArt->formatted_date }}
-                                                    </span>
-                                                </div>
-
-                                                <!-- Title (Truncated to 2 lines) -->
-                                                <h4 class="font-bold text-xs sm:text-sm leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#008a24] transition-colors">
-                                                    <a href="{{ route('article.show', $subArt->slug) }}">
-                                                        {{ $subArt->judul }}
-                                                    </a>
-                                                </h4>
-
-                                                <!-- Time Ago below title -->
-                                                <div class="text-[10px] text-gray-400">
-                                                    {{ $subArt->time_ago }}
-                                                </div>
-                                            </div>
-
-                                        </article>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                        </div>
-
-                    </section>
+            <!-- Tombol Lihat Kategori Lainnya (Pagination Kategori) -->
+            <div id="category-pagination-container" class="pt-2 pb-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                @if($categories->currentPage() > 1)
+                    <a href="{{ route('home') }}" 
+                       class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 font-bold text-xs rounded-xl transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        <span>Kembali ke Kategori Awal</span>
+                    </a>
                 @endif
 
-                <!-- Interleaved 1: Between Hukum and Ekonomi -> Box Container Newsletter -->
-                @if(strtolower($cat->nama) === 'hukum')
-                    <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6 shadow-sm my-8">
-                        <div class="w-full md:w-1/3 max-w-[220px] aspect-[4/3] rounded-lg overflow-hidden shrink-0 bg-zinc-100 dark:bg-zinc-800 shadow">
-                            <img src="{{ asset('assets/newsletter.png') }}" alt="Newsletter CuplikCom" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1 space-y-3 text-left">
-                            <span class="px-2.5 py-1 rounded text-[10px] font-bold uppercase bg-[#008a24] text-white inline-block">
-                                Ruang Langganan Eksklusif
-                            </span>
-                            <h3 class="text-lg sm:text-xl font-black text-gray-900 dark:text-white leading-tight">
-                                Dapatkan Rangkuman Berita Harian &amp; Analisis Kritis
-                            </h3>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                                Jangan lewatkan isu-isu krusial Pantura, politik, dan suara warga langsung di email Anda setiap pagi tanpa spam.
-                            </p>
-                            <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md pt-1">
-                                @csrf
-                                <input type="email" name="email" required placeholder="Masukkan alamat email Anda..." class="flex-1 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
-                                <button type="submit" class="px-5 py-2 bg-[#008a24] hover:bg-[#006f1c] text-white text-xs font-bold rounded-lg transition-colors shrink-0">
-                                    Langganan
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                @if($categories->hasMorePages())
+                    <a href="{{ $categories->nextPageUrl() }}" 
+                       id="btn-load-more-categories"
+                       data-next-page="{{ $categories->currentPage() + 1 }}"
+                       data-last-page="{{ $categories->lastPage() }}"
+                       class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-white dark:bg-zinc-900 border-2 border-[#008a24] text-[#008a24] hover:bg-[#008a24] hover:text-white font-black text-sm rounded-xl shadow-xs transition-all duration-300 group cursor-pointer">
+                        <span id="load-more-text">Lihat Kategori Lainnya</span>
+                        <svg id="load-more-icon" class="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                        <svg id="load-more-spinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                    </a>
                 @endif
-
-                <!-- Interleaved 2: Between Ekonomi and Ragam -> Box Container Space Iklan -->
-                @if(strtolower($cat->nama) === 'ekonomi')
-                    <div class="my-8 rounded-xl overflow-hidden border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900 p-4 text-center">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-2">
-                            Ruang Iklan Banner
-                        </span>
-                        @if($iklanBetweenCategory && $iklanBetweenCategory->gambar)
-                            <a href="{{ $iklanBetweenCategory->link ?: '#' }}" class="block max-w-2xl mx-auto">
-                                <img src="{{ asset($iklanBetweenCategory->gambar) }}" alt="{{ $iklanBetweenCategory->judul }}" class="w-full h-auto rounded-lg mx-auto">
-                            </a>
-                        @else
-                            <div class="h-24 sm:h-28 bg-emerald-50 dark:bg-emerald-950/30 border border-dashed border-[#008a24] rounded-lg flex flex-col items-center justify-center p-4">
-                                <span class="text-xs font-bold text-[#008a24] uppercase tracking-wider">Slot Iklan Display (728 × 90 px)</span>
-                                <span class="text-[11px] text-gray-500 mt-1">Hubungi Redaksi CuplikCom untuk Pemasangan Iklan Sponsor</span>
-                            </div>
-                        @endif
-                    </div>
-                @endif
-
-            @endforeach
+            </div>
 
         </div>
 
@@ -327,6 +184,68 @@
         <!-- ===================================================================== -->
         <aside class="lg:col-span-4 space-y-8">
             
+            <!-- 0. Video Terbaru (Latest Videos, Max 5) -->
+            <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4 shadow-sm">
+                <div class="border-b border-gray-100 dark:border-zinc-800 pb-2.5 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1.5 h-4 bg-[#008a24]"></div>
+                        <h3 class="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">
+                            Video Terbaru
+                        </h3>
+                    </div>
+                    <a href="{{ route('video.index') }}" class="text-xs font-bold text-[#008a24] hover:underline flex items-center gap-1 group">
+                        <span>Lihat Semua</span>
+                        <span class="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                    </a>
+                </div>
+
+                @if(isset($videos) && $videos->isNotEmpty())
+                    <div class="divide-y divide-gray-100 dark:divide-zinc-800">
+                        @foreach($videos->take(5) as $vid)
+                            <article class="py-2.5 first:pt-0 last:pb-0">
+                                <a href="{{ route('video.show', $vid->slug) }}" class="flex items-start gap-3 group">
+                                    <div class="relative w-28 aspect-video bg-zinc-900 rounded-lg overflow-hidden shrink-0">
+                                        @if($vid->youtube_id)
+                                            <img src="https://img.youtube.com/vi/{{ $vid->youtube_id }}/mqdefault.jpg" 
+                                                 alt="{{ $vid->judul }}" 
+                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        @else
+                                            <div class="w-full h-full bg-zinc-800 flex items-center justify-center text-zinc-500 text-[10px]">Video</div>
+                                        @endif
+                                        
+                                        <!-- Mini Play Icon -->
+                                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/35 transition-colors flex items-center justify-center">
+                                            <div class="w-6 h-6 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow">
+                                                <svg class="w-3 h-3 fill-current ml-0.5" viewBox="0 0 24 24">
+                                                    <path d="M8 5v14l11-7z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        @if($vid->durasi)
+                                            <span class="absolute bottom-1 right-1 bg-black/80 text-[9px] text-white px-1 py-0.5 rounded font-mono font-bold leading-none">
+                                                {{ $vid->durasi }}
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <div class="space-y-1 min-w-0 flex-1">
+                                        <h5 class="font-bold text-xs leading-snug line-clamp-2 text-gray-900 dark:text-white group-hover:text-[#008a24] transition-colors">
+                                            {{ $vid->judul }}
+                                        </h5>
+                                        <div class="text-[10px] text-gray-400">
+                                            {{ $vid->formatted_date }}
+                                        </div>
+                                    </div>
+                                </a>
+                            </article>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-xs text-gray-400 text-center py-2">Belum ada video terbaru.</p>
+                @endif
+            </div>
+
             <!-- 1. Tagar yang sedang trending (Trending Hashtags) in Box Container -->
             <div class="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 space-y-4">
                 <div class="border-b border-gray-200 dark:border-zinc-800 pb-2.5 flex items-center justify-between">
@@ -535,6 +454,68 @@
     // Initialize 10s auto rotation
     if (totalSlides > 1) {
         bannerInterval = setInterval(nextSlide, 10000);
+    }
+
+    // AJAX Load More Categories
+    const loadMoreBtn = document.getElementById('btn-load-more-categories');
+    const categoryContainer = document.getElementById('category-feeds-container');
+    const paginationContainer = document.getElementById('category-pagination-container');
+
+    if (loadMoreBtn && categoryContainer) {
+        loadMoreBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = loadMoreBtn.getAttribute('href');
+            if (!url) return;
+
+            const textSpan = document.getElementById('load-more-text');
+            const iconSvg = document.getElementById('load-more-icon');
+            const spinnerSvg = document.getElementById('load-more-spinner');
+
+            // Button loading state
+            loadMoreBtn.classList.add('pointer-events-none', 'opacity-70');
+            if (textSpan) textSpan.textContent = 'Memuat Kategori...';
+            if (iconSvg) iconSvg.classList.add('hidden');
+            if (spinnerSvg) spinnerSvg.classList.remove('hidden');
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Gagal memuat kategori');
+                return res.json();
+            })
+            .then(data => {
+                if (data.html) {
+                    const temp = document.createElement('div');
+                    temp.innerHTML = data.html;
+                    while (temp.firstChild) {
+                        categoryContainer.appendChild(temp.firstChild);
+                    }
+                }
+
+                if (data.hasMore && data.nextUrl) {
+                    loadMoreBtn.setAttribute('href', data.nextUrl);
+                    loadMoreBtn.classList.remove('pointer-events-none', 'opacity-70');
+                    if (textSpan) textSpan.textContent = 'Lihat Kategori Lainnya';
+                    if (iconSvg) iconSvg.classList.remove('hidden');
+                    if (spinnerSvg) spinnerSvg.classList.add('hidden');
+                } else {
+                    loadMoreBtn.remove();
+                    const finishBadge = document.createElement('div');
+                    finishBadge.className = 'py-3 px-5 rounded-xl bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-800 text-xs font-bold text-gray-500 dark:text-zinc-400 flex items-center gap-2';
+                    finishBadge.innerHTML = '<span class="text-[#008a24]">✓</span> Semua kategori telah ditampilkan';
+                    paginationContainer.appendChild(finishBadge);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                // Fallback to regular navigation
+                window.location.href = url;
+            });
+        });
     }
 </script>
 @endsection

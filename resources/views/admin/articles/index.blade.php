@@ -60,8 +60,8 @@
                         <tr class="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
                             <td class="px-4 py-3">
                                 <div class="w-12 h-10 rounded bg-gray-100 dark:bg-zinc-800 overflow-hidden shrink-0 border border-gray-200 dark:border-zinc-700">
-                                    @if($art->foto)
-                                        <img src="{{ asset($art->foto) }}" alt="" class="w-full h-full object-cover">
+                                    @if($art->foto_url || $art->foto_2_url)
+                                        <img src="{{ $art->foto_url ?: $art->foto_2_url }}" alt="" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-gray-400 text-[10px]">No Img</div>
                                     @endif
