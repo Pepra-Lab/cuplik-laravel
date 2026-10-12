@@ -87,22 +87,30 @@
     @stack('styles')
 </head>
 
-<body class="bg-[#f4f7f5] dark:bg-[#0d120e] text-[#111111] dark:text-[#e5e7eb] min-h-screen flex transition-colors duration-200">
-    
+<body class="bg-[#f4f7f5] dark:bg-[#0d120e] text-[#111111] dark:text-[#e5e7eb] min-h-screen transition-colors duration-200">
+
+    <!-- Backdrop (mobile only, shown while sidebar is open) -->
+    <div id="cmsSidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" aria-hidden="true"></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-white dark:bg-[#121914] border-r border-gray-200 dark:border-zinc-800 flex flex-col shrink-0 min-h-screen">
+    <aside id="cmsSidebar" class="fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] bg-white dark:bg-[#121914] border-r border-gray-200 dark:border-zinc-800 flex flex-col shrink-0 h-screen -translate-x-full transition-transform duration-300 ease-in-out">
         
         <!-- Sidebar Brand -->
-        <div class="p-5 border-b border-gray-200 dark:border-zinc-800 flex items-center justify-between">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded bg-[#008a24] text-white font-black text-xl flex items-center justify-center">
+        <div class="p-5 border-b border-gray-200 dark:border-zinc-800 flex items-center justify-between gap-2">
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 min-w-0">
+                <div class="w-8 h-8 rounded bg-[#008a24] text-white font-black text-xl flex items-center justify-center shrink-0">
                     C
                 </div>
-                <div class="flex flex-col">
-                    <span class="font-extrabold text-lg text-gray-900 dark:text-white leading-none">Cuplik <span class="text-[#008a24]">CMS</span></span>
-                    <span class="text-[10px] text-gray-400">Content Management System</span>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-extrabold text-lg text-gray-900 dark:text-white leading-none truncate">Cuplik <span class="text-[#008a24]">CMS</span></span>
+                    <span class="text-[10px] text-gray-400 truncate">Content Management System</span>
                 </div>
             </a>
+            <button id="cmsSidebarClose" type="button" class="md:hidden shrink-0 p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Tutup Menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
 
         <!-- Sidebar Navigation -->
@@ -110,47 +118,96 @@
             $authUser = auth()->user();
             $isAdmin = $authUser->isAdmin();
 
+            // Item tautan tunggal di sidebar.
+            $navLink = fn (string $route, string $pattern, string $label, bool $visible) => [
+                'type' => 'link',
+                'route' => $route,
+                'pattern' => $pattern,
+                'label' => $label,
+                'visible' => $visible,
+            ];
+
+            // Item submenu (grup) berisi beberapa tautan anak, menggantikan pola tabs.
+            $navGroup = fn (string $pattern, string $label, bool $visible, array $children) => [
+                'type' => 'group',
+                'pattern' => $pattern,
+                'label' => $label,
+                'visible' => $visible,
+                'children' => $children,
+            ];
+
+            // Tautan anak di dalam submenu.
+            $navChild = fn (string $route, string $label) => [
+                'route' => $route,
+                'label' => $label,
+            ];
+
             $menu = [
                 ['title' => null, 'items' => [
-                    ['admin.dashboard', 'admin.dashboard', 'Dashboard', $isAdmin],
+                    $navLink('admin.dashboard', 'admin.dashboard', 'Dashboard', $isAdmin),
                 ]],
                 ['title' => 'Konten Portal', 'items' => [
-                    ['admin.articles.index', 'admin.articles.*', $authUser->isMember() ? 'Berita Saya' : 'Kelola Berita', true],
-                    ['admin.categories.index', 'admin.categories.*', 'Kategori Berita', $isAdmin],
-                    ['admin.tags.index', 'admin.tags.*', 'Tag & Submenu', $isAdmin],
-                    ['admin.videos.index', 'admin.videos.*', 'Kelola Video', $isAdmin || $authUser->isRedaktur()],
+                    $navLink('admin.articles.index', 'admin.articles.*', $authUser->isMember() ? 'Berita Saya' : 'Kelola Berita', true),
+                    $navLink('admin.categories.index', 'admin.categories.*', 'Kategori Berita', $isAdmin),
+                    $navLink('admin.tags.index', 'admin.tags.*', 'Tag & Submenu', $isAdmin),
+                    $navLink('admin.videos.index', 'admin.videos.*', 'Kelola Video', $isAdmin || $authUser->isRedaktur()),
                 ]],
                 ['title' => 'Interaksi Publik', 'items' => [
-                    ['admin.polls.index', 'admin.polls.*', 'Kelola Polling', $isAdmin],
-                    ['admin.curhats.index', 'admin.curhats.*', 'Curhat Rakyat', $isAdmin],
-                    ['admin.realcount.index', 'admin.realcount.*', 'Real Count Pilbup', $isAdmin],
+                    $navLink('admin.polls.index', 'admin.polls.*', 'Kelola Polling', $isAdmin),
+                    $navLink('admin.curhats.index', 'admin.curhats.*', 'Curhat Rakyat', $isAdmin),
+                    $navGroup('admin.realcount.*', 'Real Count Pilbup', $isAdmin, [
+                        $navChild('admin.realcount.index', 'Tabulasi Suara'),
+                        $navChild('admin.realcount.calon', 'Pasangan Calon'),
+                        $navChild('admin.realcount.wilayah', 'Data Wilayah'),
+                        $navChild('admin.realcount.rekap', 'Rekapitulasi'),
+                        $navChild('admin.realcount.pengaturan', 'Pengaturan Pemilihan'),
+                    ]),
                 ]],
                 ['title' => 'Iklan & Tampilan', 'items' => [
-                    ['admin.iklan-gambar.index', 'admin.iklan-gambar.*', 'Iklan Gambar', $isAdmin],
-                    ['admin.iklan-baris.index', 'admin.iklan-baris.*', 'Iklan Baris', $isAdmin],
-                    ['admin.iklan-saya.index', 'admin.iklan-saya.*', 'Iklan Saya', $authUser->isMember()],
+                    $navLink('admin.iklan-gambar.index', 'admin.iklan-gambar.*', 'Iklan Gambar', $isAdmin),
+                    $navLink('admin.iklan-baris.index', 'admin.iklan-baris.*', 'Iklan Baris', $isAdmin),
+                    $navLink('admin.iklan-saya.index', 'admin.iklan-saya.*', 'Iklan Saya', $authUser->isMember()),
                 ]],
                 ['title' => 'Pengaturan', 'items' => [
-                    ['admin.users.index', 'admin.users.*', 'Pengguna', $isAdmin],
-                    ['admin.settings.profil', 'admin.settings.profil', 'Profil Situs', $isAdmin],
-                    ['admin.iklan-posisi.index', 'admin.iklan-posisi.*', 'Posisi Iklan', $isAdmin],
-                    ['admin.info-pages.index', 'admin.info-pages.*', 'Halaman Info', $isAdmin],
+                    $navLink('admin.users.index', 'admin.users.*', 'Pengguna', $isAdmin),
+                    $navLink('admin.settings.profil', 'admin.settings.profil', 'Profil Situs', $isAdmin),
+                    $navLink('admin.iklan-posisi.index', 'admin.iklan-posisi.*', 'Posisi Iklan', $isAdmin),
+                    $navLink('admin.info-pages.index', 'admin.info-pages.*', 'Halaman Info', $isAdmin),
                 ]],
             ];
         @endphp
         <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto text-xs font-semibold">
             @foreach($menu as $section)
-                @if(collect($section['items'])->contains(fn ($item) => $item[3]))
+                @if(collect($section['items'])->contains(fn ($item) => $item['visible']))
                     @if($section['title'])
                         <div class="pt-3 pb-1 px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $section['title'] }}</div>
                     @endif
 
-                    @foreach($section['items'] as [$routeName, $pattern, $label, $visible])
-                        @if($visible)
-                            <a href="{{ route($routeName) }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs($pattern) ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
-                                {{ $label }}
-                                @if(($pendingCounts[$routeName] ?? 0) > 0)
-                                    <span class="bg-red-600 text-white text-[10px] rounded-full px-1.5 py-0.5">{{ $pendingCounts[$routeName] }}</span>
+                    @foreach($section['items'] as $item)
+                        @continue(! $item['visible'])
+
+                        @if($item['type'] === 'group')
+                            @php($isGroupActive = request()->routeIs($item['pattern']))
+                            <details class="group" @if($isGroupActive) open @endif>
+                                <summary class="flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer list-none select-none transition-colors {{ $isGroupActive ? 'text-[#008a24]' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
+                                    <span>{{ $item['label'] }}</span>
+                                    <svg class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </summary>
+                                <div class="mt-1 ml-3 pl-3 border-l border-gray-200 dark:border-zinc-800 space-y-1">
+                                    @foreach($item['children'] as $child)
+                                        <a href="{{ route($child['route']) }}" class="block px-3 py-2 rounded-lg transition-colors {{ request()->routeIs($child['route']) ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
+                                            {{ $child['label'] }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </details>
+                        @else
+                            <a href="{{ route($item['route']) }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs($item['pattern']) ? 'bg-[#008a24] text-white shadow-sm' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
+                                {{ $item['label'] }}
+                                @if(($pendingCounts[$item['route']] ?? 0) > 0)
+                                    <span class="bg-red-600 text-white text-[10px] rounded-full px-1.5 py-0.5">{{ $pendingCounts[$item['route']] }}</span>
                                 @endif
                             </a>
                         @endif
@@ -184,16 +241,23 @@
     </aside>
 
     <!-- Main Content Container -->
-    <div class="flex-1 flex flex-col min-w-0">
+    <div id="cmsMainWrapper" class="flex flex-col min-h-screen min-w-0 transition-[margin-left] duration-300 ease-in-out">
         
         <!-- Topbar -->
-        <header class="h-16 bg-white dark:bg-[#121914] border-b border-gray-200 dark:border-zinc-800 px-6 flex items-center justify-between gap-4 sticky top-0 z-30">
-            <div>
-                <h1 class="text-base font-extrabold text-gray-900 dark:text-white">@yield('title', 'Dashboard')</h1>
-                <p class="text-xs text-gray-400">CuplikCom Administrative Control Center</p>
+        <header class="h-16 bg-white dark:bg-[#121914] border-b border-gray-200 dark:border-zinc-800 px-4 md:px-6 flex items-center justify-between gap-3 sticky top-0 z-30">
+            <div class="flex items-center gap-3 min-w-0">
+                <button id="cmsSidebarToggle" type="button" class="shrink-0 p-2 rounded-lg text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-[#008a24] transition-colors" title="Buka/Tutup Menu" aria-label="Buka/Tutup Menu" aria-controls="cmsSidebar" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div class="min-w-0">
+                    <h1 class="text-sm md:text-base font-extrabold text-gray-900 dark:text-white truncate">@yield('title', 'Dashboard')</h1>
+                    <p class="hidden sm:block text-xs text-gray-400 truncate">CuplikCom Administrative Control Center</p>
+                </div>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 md:gap-3 shrink-0">
                 <button id="cmsThemeToggle" class="px-2.5 py-1.5 rounded-lg bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 hover:text-[#008a24] text-xs font-bold transition-colors" title="Toggle Tema">
                     <span id="cmsThemeText">Tema</span>
                 </button>
@@ -202,28 +266,74 @@
 
         <!-- Flash Alert -->
         @if(session('success'))
-            <div class="px-6 pt-4">
-                <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 px-4 py-3 rounded-lg text-xs flex items-center justify-between">
+            <div class="px-4 md:px-6 pt-4">
+                <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 px-4 py-3 rounded-lg text-xs flex items-center justify-between gap-3">
                     <span>{{ session('success') }}</span>
-                    <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">&times;</button>
+                    <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 shrink-0">&times;</button>
                 </div>
             </div>
         @endif
         @if(session('error'))
-            <div class="px-6 pt-4">
-                <div class="bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-lg text-xs flex items-center justify-between">
+            <div class="px-4 md:px-6 pt-4">
+                <div class="bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-lg text-xs flex items-center justify-between gap-3">
                     <span>{{ session('error') }}</span>
-                    <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">&times;</button>
+                    <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700 shrink-0">&times;</button>
                 </div>
             </div>
         @endif
 
         <!-- Main Body -->
-        <main class="flex-1 p-6 overflow-y-auto">
+        <main class="flex-1 p-4 md:p-6 overflow-x-hidden overflow-y-auto">
             @yield('content')
         </main>
 
     </div>
+
+    <!-- Sidebar Toggle Script -->
+    <script>
+        const cmsSidebar = document.getElementById('cmsSidebar');
+        const cmsSidebarBackdrop = document.getElementById('cmsSidebarBackdrop');
+        const cmsMainWrapper = document.getElementById('cmsMainWrapper');
+        const cmsSidebarToggle = document.getElementById('cmsSidebarToggle');
+        const cmsSidebarClose = document.getElementById('cmsSidebarClose');
+
+        const isDesktopViewport = () => window.matchMedia('(min-width: 768px)').matches;
+
+        const setSidebarState = (isOpen, { persist = true } = {}) => {
+            cmsSidebar.classList.toggle('-translate-x-full', !isOpen);
+            cmsSidebarBackdrop.classList.toggle('hidden', !isOpen);
+            cmsMainWrapper.classList.toggle('md:ml-64', isOpen);
+            cmsSidebarToggle?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+            if (persist) {
+                localStorage.setItem('cuplik_sidebar', isOpen ? 'open' : 'closed');
+            }
+        };
+
+        const initCmsSidebar = () => {
+            const saved = localStorage.getItem('cuplik_sidebar');
+            const isOpen = saved ? saved === 'open' : isDesktopViewport();
+            setSidebarState(isOpen, { persist: false });
+        };
+        initCmsSidebar();
+
+        cmsSidebarToggle?.addEventListener('click', () => {
+            const isCurrentlyOpen = !cmsSidebar.classList.contains('-translate-x-full');
+            setSidebarState(!isCurrentlyOpen);
+        });
+
+        cmsSidebarClose?.addEventListener('click', () => setSidebarState(false));
+        cmsSidebarBackdrop?.addEventListener('click', () => setSidebarState(false));
+
+        // Tutup sidebar otomatis setelah memilih menu di layar kecil (mobile/tablet).
+        cmsSidebar.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                if (!isDesktopViewport()) {
+                    setSidebarState(false);
+                }
+            });
+        });
+    </script>
 
     <!-- Theme Switch Script -->
     <script>

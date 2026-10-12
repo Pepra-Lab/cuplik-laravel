@@ -6,7 +6,6 @@
 <div class="space-y-5">
 
     @include('admin.realcount._header')
-    @include('admin.realcount._tabs')
 
     @if(!$pilbup)
         <div class="bg-white dark:bg-[#121914] p-10 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm text-center text-sm text-gray-400">

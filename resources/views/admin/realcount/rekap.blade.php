@@ -7,7 +7,6 @@
 
     <div class="no-print">
         @include('admin.realcount._header')
-        @include('admin.realcount._tabs')
     </div>
 
     @if(!$pilbup)
@@ -51,6 +50,7 @@
 
             <!-- Tabel Perolehan Suara -->
             <div class="lg:col-span-3 bg-white dark:bg-[#121914] rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
                 <table class="w-full text-xs text-left">
                     <thead class="bg-gray-50 dark:bg-zinc-800/60 text-gray-500 font-bold border-b border-gray-200 dark:border-zinc-800 uppercase tracking-wider">
                         <tr>
@@ -79,6 +79,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 

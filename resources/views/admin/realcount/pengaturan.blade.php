@@ -6,7 +6,6 @@
 <div class="space-y-5">
 
     @include('admin.realcount._header')
-    @include('admin.realcount._tabs')
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
