@@ -75,9 +75,7 @@ class AdminArticleController extends Controller
 
         $article = Article::create($validated);
 
-        if (!empty($request->tags)) {
-            $article->tags()->sync($request->tags);
-        }
+        $article->tags()->sync($this->resolveTagIds($request));
 
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil ditambahkan!');
     }
@@ -112,11 +110,7 @@ class AdminArticleController extends Controller
 
         $article->update($validated);
 
-        if (isset($request->tags)) {
-            $article->tags()->sync($request->tags);
-        } else {
-            $article->tags()->detach();
-        }
+        $article->tags()->sync($this->resolveTagIds($request));
 
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil diperbarui!');
     }
@@ -145,6 +139,37 @@ class AdminArticleController extends Controller
             'tanggal' => 'required|date',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id',
+            'new_tags' => 'nullable|string|max:255',
         ];
+    }
+
+    /**
+     * Gabungkan tag yang dipilih dari daftar (checkbox) dengan tag baru yang
+     * diketik manual lewat kolom "Tambah Tag Baru". Hanya Admin, Super Admin,
+     * dan Redaktur (isCmsStaff) yang boleh membuat tag baru dari sini — Member
+     * tetap hanya bisa memilih dari tag yang sudah ada, kontennya pun masih
+     * harus lewat review admin sebelum tayang.
+     *
+     * Maksimal 5 tag baru per submit untuk mencegah satu artikel membanjiri
+     * daftar tag dengan entri yang sembarangan.
+     */
+    private function resolveTagIds(Request $request): array
+    {
+        $tagIds = array_map('intval', $request->input('tags', []));
+
+        $rawNewTags = (string) $request->input('new_tags', '');
+        if ($rawNewTags !== '' && $request->user()->isCmsStaff()) {
+            $names = collect(explode(',', $rawNewTags))
+                ->map(fn ($name) => trim($name))
+                ->filter()
+                ->unique(fn ($name) => Str::lower($name))
+                ->take(5);
+
+            foreach ($names as $name) {
+                $tagIds[] = Tag::findOrCreateByName($name)->id;
+            }
+        }
+
+        return array_values(array_unique($tagIds));
     }
 }

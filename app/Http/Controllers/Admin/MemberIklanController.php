@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\IklanBaris;
 use App\Models\IklanGambar;
+use App\Models\IklanKategori;
 use App\Models\IklanPosisi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -17,8 +18,6 @@ use Illuminate\View\View;
 
 class MemberIklanController extends Controller
 {
-    private const KATEGORI_TEKS = ['Jual Beli', 'Properti', 'Kendaraan', 'Lowongan'];
-
     public function index(Request $request): View
     {
         $tab = $request->query('tab') === 'teks' ? 'teks' : 'gambar';
@@ -28,7 +27,7 @@ class MemberIklanController extends Controller
             'tab' => $tab,
             'iklans' => $query->visibleTo($request->user())->latest()->paginate(10)->withQueryString(),
             'posisis' => IklanPosisi::orderBy('nama')->get(),
-            'kategoriTeks' => self::KATEGORI_TEKS,
+            'kategoriTeks' => IklanKategori::orderBy('nama')->pluck('nama'),
         ]);
     }
 
@@ -39,8 +38,6 @@ class MemberIklanController extends Controller
             'posisi' => 'required|exists:iklan_posisis,nama',
             'link' => 'nullable|url|max:255',
             'gambar' => 'required|image|max:2048',
-            'mulai' => 'required|date|after_or_equal:today',
-            'selesai' => 'required|date|after_or_equal:mulai',
         ]);
 
         IklanGambar::create([
@@ -48,6 +45,10 @@ class MemberIklanController extends Controller
             'user_id' => $request->user()->id,
             'ukuran' => IklanPosisi::where('nama', $data['posisi'])->value('ukuran'),
             'gambar' => 'storage/'.$request->file('gambar')->store('iklan', 'public'),
+            // Tanggal tampil dan validasi tayang/tidaknya iklan ditentukan oleh admin,
+            // bukan oleh member yang mengirim iklan.
+            'mulai' => null,
+            'selesai' => null,
             'status' => 'Menunggu',
         ]);
 
@@ -58,7 +59,7 @@ class MemberIklanController extends Controller
     public function storeBaris(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'kategori' => ['required', Rule::in(self::KATEGORI_TEKS)],
+            'kategori' => ['required', Rule::in(IklanKategori::pluck('nama'))],
             'isi' => 'required|string|min:10|max:500',
         ]);
 

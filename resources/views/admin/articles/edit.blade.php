@@ -60,8 +60,20 @@
                 </div>
 
                 <!-- Tags Selection -->
-                <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
-                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">Tagging & Topik Terkait</label>
+                <div data-tag-adder-wrapper class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Tagging & Topik Terkait</label>
+
+                        @if(auth()->user()->isCmsStaff())
+                            <button type="button" data-tag-adder-toggle class="flex items-center gap-1 text-[11px] font-bold text-[#008a24] hover:text-[#006f1c]">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Tambah Tag
+                            </button>
+                        @endif
+                    </div>
+
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 dark:bg-zinc-800/50 rounded-lg border border-gray-200 dark:border-zinc-700">
                         @php
                             $selectedTags = old('tags', $article->tags->pluck('id')->toArray());
@@ -73,6 +85,15 @@
                             </label>
                         @endforeach
                     </div>
+
+                    @if(auth()->user()->isCmsStaff())
+                        <div data-tag-adder-panel class="mt-3 {{ $errors->has('new_tags') ? '' : 'hidden' }}">
+                            <label class="block text-[11px] font-bold text-gray-700 dark:text-gray-300 mb-1">Tag Baru</label>
+                            <input type="text" name="new_tags" value="{{ old('new_tags') }}" placeholder="Contoh: Pilkada 2026, Banjir Indramayu" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                            <p class="text-[10px] text-gray-400 mt-1">Pisahkan dengan koma untuk beberapa tag. Cek dulu daftar di atas — jika tag serupa sudah ada, pakai itu saja agar tidak dobel. Tag baru akan langsung bisa dipakai, tapi baru tampil sebagai submenu publik setelah dikurasi Admin di menu Tag & Submenu.</p>
+                            @error('new_tags') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+                    @endif
                 </div>
 
             </div>

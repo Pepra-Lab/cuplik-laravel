@@ -28,8 +28,10 @@ use App\Http\Controllers\Admin\AdminRealCountController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminIklanPosisiController;
+use App\Http\Controllers\Admin\AdminIklanKategoriController;
 use App\Http\Controllers\Admin\AdminInfoPageController;
 use App\Http\Controllers\Admin\MemberIklanController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Models\InfoPage;
 
 /*
@@ -91,6 +93,12 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('articles', AdminArticleController::class)->except(['show']);
     Route::resource('videos', AdminVideoController::class)->except(['show', 'create', 'edit']);
+
+    // Profil akun sendiri: tersedia untuk semua peran CMS, termasuk Redaktur dan Member
+    Route::prefix('profil')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+    });
 
     // Khusus Member: iklan yang dikirim harus divalidasi admin
     Route::middleware('cms:member')->prefix('iklan-saya')->name('iklan-saya.')->group(function () {
@@ -154,6 +162,7 @@ Route::prefix('admin')->name('admin.')->middleware('cms')->group(function () {
         });
 
         Route::resource('iklan-posisi', AdminIklanPosisiController::class)->except(['show', 'create', 'edit']);
+        Route::resource('iklan-kategori', AdminIklanKategoriController::class)->except(['show', 'create', 'edit']);
 
         // Halaman Info: Disclaimer, Pedoman Media, Susunan Redaksi, Info Iklan
         Route::prefix('halaman-info')->name('info-pages.')->group(function () {

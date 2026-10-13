@@ -2,6 +2,7 @@
     $tabs = [
         ['admin.settings.profil', 'Profil Situs'],
         ['admin.iklan-posisi.index', 'Posisi Iklan'],
+        ['admin.iklan-kategori.index', 'Kategori Iklan Teks'],
     ];
 @endphp
 <div class="flex items-center gap-1.5 overflow-x-auto border-b border-gray-200 dark:border-zinc-800 pb-px">

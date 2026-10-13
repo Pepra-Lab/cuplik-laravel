@@ -76,16 +76,9 @@
                         <input type="url" name="link" value="{{ old('link') }}" placeholder="https://" class="{{ $inputClass }}">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="{{ $labelClass }}">Mulai</label>
-                            <input type="date" name="mulai" value="{{ old('mulai', now()->toDateString()) }}" required class="{{ $inputClass }}">
-                        </div>
-                        <div>
-                            <label class="{{ $labelClass }}">Selesai</label>
-                            <input type="date" name="selesai" value="{{ old('selesai', now()->addDays(30)->toDateString()) }}" required class="{{ $inputClass }}">
-                        </div>
-                    </div>
+                    <p class="text-[11px] text-gray-400 leading-relaxed">
+                        Tanggal mulai dan selesai tayang ditentukan oleh admin saat memvalidasi iklan Anda.
+                    </p>
 
                     <button type="submit" class="w-full py-2 bg-[#008a24] hover:bg-[#006f1c] text-white font-bold text-xs rounded-lg transition-colors shadow-sm">
                         Kirim untuk Divalidasi
@@ -127,7 +120,7 @@
                                 <th class="px-4 py-3 w-16">Gambar</th>
                                 <th class="px-4 py-3">Judul</th>
                                 <th class="px-4 py-3">Posisi</th>
-                                <th class="px-4 py-3">Periode</th>
+                                <th class="px-4 py-3">Periode Tayang</th>
                             @else
                                 <th class="px-4 py-3">Kategori</th>
                                 <th class="px-4 py-3">Isi</th>
@@ -147,7 +140,11 @@
                                     <td class="px-4 py-3 font-bold text-gray-900 dark:text-white">{{ $iklan->judul }}</td>
                                     <td class="px-4 py-3 text-gray-500">{{ $iklan->posisi }}</td>
                                     <td class="px-4 py-3 text-gray-400 whitespace-nowrap">
-                                        {{ $iklan->mulai?->format('d/m/y') }} s/d {{ $iklan->selesai?->format('d/m/y') }}
+                                        @if($iklan->mulai && $iklan->selesai)
+                                            {{ $iklan->mulai->format('d/m/y') }} s/d {{ $iklan->selesai->format('d/m/y') }}
+                                        @else
+                                            <span class="italic">Belum ditentukan admin</span>
+                                        @endif
                                     </td>
                                 @else
                                     <td class="px-4 py-3 text-gray-700 dark:text-gray-300">{{ $iklan->kategori }}</td>

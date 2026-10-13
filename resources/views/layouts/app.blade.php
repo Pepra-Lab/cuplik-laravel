@@ -8,6 +8,12 @@
     <title>@yield('title', 'CuplikCom — Beritanya Unik dan Menggelitik')</title>
     <meta name="description" content="@yield('meta_description', 'Portal Berita Online CuplikCom — Menyajikan berita unik, politik, sosial, hukum, dan suara rakyat terkini.')">
 
+    <!-- Favicon / Logo Resmi CuplikCom -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
     <!-- Fonts: Single Font DM Sans (URL: https://fonts.google.com/specimen/DM+Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -252,6 +258,14 @@
                 <a href="{{ route('video.index') }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
                     VIDEO
                 </a>
+
+                <a href="{{ route('poll.index') }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('poll.*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
+                    POLLING
+                </a>
+
+                <a href="{{ route('realcount.index') }}" class="py-2.5 px-3 hover:text-[#008a24] transition-colors {{ request()->routeIs('realcount.*') ? 'text-[#008a24] border-b-2 border-[#008a24]' : 'text-gray-900 dark:text-gray-100' }}">
+                    REAL COUNT
+                </a>
             </div>
         </nav>
         <hr class="border-gray-200 dark:border-zinc-800">
@@ -419,6 +433,8 @@
                             </a>
                         @endforeach
                         <a href="{{ route('video.index') }}" class="hover:text-[#008a24] transition-colors">Video</a>
+                        <a href="{{ route('poll.index') }}" class="hover:text-[#008a24] transition-colors">Polling</a>
+                        <a href="{{ route('realcount.index') }}" class="hover:text-[#008a24] transition-colors">Real Count</a>
                     </div>
                 </div>
 

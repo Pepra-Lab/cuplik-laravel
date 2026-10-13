@@ -7,6 +7,12 @@
 
     <title>@yield('title', 'Dashboard') — Cuplik CMS</title>
 
+    <!-- Favicon / Logo Resmi CuplikCom -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -175,6 +181,11 @@
                     $navLink('admin.iklan-posisi.index', 'admin.iklan-posisi.*', 'Posisi Iklan', $isAdmin),
                     $navLink('admin.info-pages.index', 'admin.info-pages.*', 'Halaman Info', $isAdmin),
                 ]],
+                ['title' => 'Akun', 'items' => [
+                    // Profil akun sendiri (nama, email, kata sandi) — tersedia untuk semua peran,
+                    // termasuk Redaktur dan Member yang tidak punya akses ke menu Pengaturan di atas.
+                    $navLink('admin.profile.edit', 'admin.profile.*', 'Profil Saya', true),
+                ]],
             ];
         @endphp
         <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto text-xs font-semibold">
@@ -223,7 +234,7 @@
 
         <!-- Sidebar User Footer -->
         <div class="p-4 border-t border-gray-200 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 text-xs flex items-center justify-between">
-            <div class="flex items-center gap-2 truncate">
+            <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 truncate hover:opacity-80 transition-opacity" title="Profil Saya">
                 <div class="w-7 h-7 rounded-full bg-[#008a24] text-white flex items-center justify-center font-bold text-xs shrink-0">
                     {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
                 </div>
@@ -231,7 +242,7 @@
                     <div class="font-bold text-gray-900 dark:text-white truncate">{{ auth()->user()->name ?? 'Admin' }}</div>
                     <div class="text-[10px] text-gray-400 truncate">{{ auth()->user()->role ?? 'Super Admin' }}</div>
                 </div>
-            </div>
+            </a>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="text-xs text-gray-400 hover:text-red-500 font-semibold px-2 py-1" title="Keluar">
@@ -333,6 +344,22 @@
                     setSidebarState(false);
                 }
             });
+        });
+    </script>
+
+    <!-- Tag Adder Toggle Script (tombol "+ Tambah Tag" di form berita) -->
+    <script>
+        document.addEventListener('click', (event) => {
+            const toggle = event.target.closest('[data-tag-adder-toggle]');
+            if (!toggle) return;
+
+            const panel = toggle.closest('[data-tag-adder-wrapper]')?.querySelector('[data-tag-adder-panel]');
+            if (!panel) return;
+
+            const isHidden = panel.classList.toggle('hidden');
+            if (!isHidden) {
+                panel.querySelector('input[name="new_tags"]')?.focus();
+            }
         });
     </script>
 
