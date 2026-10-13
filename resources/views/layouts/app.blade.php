@@ -139,8 +139,7 @@
             </div>
             <div class="flex items-center gap-4">
                 <span class="hidden md:inline text-gray-500">Legalitas SK Kemenkumham AHU-0039651.AH.01.01.2019</span>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-[#d60000] animate-pulse"></span>
+                <div class="flex items-center">
                     <span class="text-xs font-extrabold text-[#008a24] uppercase">SMSI Terverifikasi</span>
                 </div>
             </div>

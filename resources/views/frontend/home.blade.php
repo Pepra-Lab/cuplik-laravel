@@ -70,12 +70,9 @@
     <section class="w-full bg-[#008a24] rounded-xl p-6 sm:p-8 text-white space-y-6 shadow-sm">
         
         <div class="flex items-center justify-between border-b border-white/20 pb-3">
-            <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#d60000] ring-2 ring-white animate-pulse"></span>
-                <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white uppercase">
-                    Berita Pilihan
-                </h2>
-            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white uppercase">
+                Berita Pilihan
+            </h2>
             <span class="text-xs text-white/90 font-semibold tracking-wide">Kurasi Redaksi Hari Ini</span>
         </div>
 
