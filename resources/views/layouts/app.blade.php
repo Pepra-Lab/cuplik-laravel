@@ -240,42 +240,42 @@
             </div>
         </div>
 
-        <!-- Horizontal Line separating logo/buttons and navigation list -->
-        <hr class="border-gray-200 dark:border-zinc-800">
+        @php
+            $mainNavCategories = [
+                ['nama' => 'POLITIK', 'slug' => 'politik'],
+                ['nama' => 'SOSIAL', 'slug' => 'sosial'],
+                ['nama' => 'HUKUM', 'slug' => 'hukum'],
+                ['nama' => 'EKONOMI', 'slug' => 'ekonomi'],
+                ['nama' => 'RAGAM', 'slug' => 'ragam'],
+                ['nama' => 'LUAR NEGERI', 'slug' => 'luar-negeri'],
+                ['nama' => 'IPTEK', 'slug' => 'iptek'],
+                ['nama' => 'GAYA HIDUP', 'slug' => 'gaya-hidup'],
+                ['nama' => 'BOLA', 'slug' => 'bola'],
+            ];
+        @endphp
 
-        <!-- Horizontal Navigation List: Politik, Sosial, Hukum, Ekonomi, Ragam, Luar Negeri, Iptek, Gaya Hidup, Bola, Video -->
-        <nav class="bg-white dark:bg-[#121212] overflow-x-auto scrollbar-none">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-1 text-xs sm:text-sm font-extrabold tracking-tight whitespace-nowrap py-1">
-                <a href="{{ route('home') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
-                    HOME
-                </a>
-                
-                @php
-                    $mainNavCategories = [
-                        ['nama' => 'POLITIK', 'slug' => 'politik'],
-                        ['nama' => 'SOSIAL', 'slug' => 'sosial'],
-                        ['nama' => 'HUKUM', 'slug' => 'hukum'],
-                        ['nama' => 'EKONOMI', 'slug' => 'ekonomi'],
-                        ['nama' => 'RAGAM', 'slug' => 'ragam'],
-                        ['nama' => 'LUAR NEGERI', 'slug' => 'luar-negeri'],
-                        ['nama' => 'IPTEK', 'slug' => 'iptek'],
-                        ['nama' => 'GAYA HIDUP', 'slug' => 'gaya-hidup'],
-                        ['nama' => 'BOLA', 'slug' => 'bola'],
-                    ];
-                @endphp
-
-                @foreach($mainNavCategories as $cat)
-                    <a href="{{ route('category.show', $cat['slug']) }}" class="py-2.5 px-3 transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
-                        {{ $cat['nama'] }}
+        <!-- Horizontal Desktop Navigation List: Hanya tampil di desktop (hidden md:block), mobile hanya di menu hamburger -->
+        <div class="hidden md:block">
+            <hr class="border-gray-200 dark:border-zinc-800">
+            <nav class="bg-white dark:bg-[#121212]">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-1 text-xs sm:text-sm font-extrabold tracking-tight whitespace-nowrap py-1">
+                    <a href="{{ route('home') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                        HOME
                     </a>
-                @endforeach
-                
-                <a href="{{ route('video.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
-                    VIDEO
-                </a>
-            </div>
-        </nav>
-        <hr class="border-gray-200 dark:border-zinc-800">
+
+                    @foreach($mainNavCategories as $cat)
+                        <a href="{{ route('category.show', $cat['slug']) }}" class="py-2.5 px-3 transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                            {{ $cat['nama'] }}
+                        </a>
+                    @endforeach
+                    
+                    <a href="{{ route('video.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                        VIDEO
+                    </a>
+                </div>
+            </nav>
+            <hr class="border-gray-200 dark:border-zinc-800">
+        </div>
     </header>
 
     <!-- Mobile Responsive Slide-Out Sidebar / Drawer -->
@@ -316,14 +316,14 @@
                 <div>
                     <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Kanal Berita</span>
                     <div class="grid grid-cols-2 gap-1.5 mt-2 text-xs font-bold">
-                        <a href="{{ route('home') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Home</a>
+                        <a href="{{ route('home') }}" class="py-2 px-3 rounded-lg transition-colors {{ request()->routeIs('home') ? 'bg-emerald-50 dark:bg-emerald-950/60 text-[#008a24]' : 'hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200' }}">Home</a>
                         @foreach($mainNavCategories as $cat)
-                            <a href="{{ route('category.show', $cat['slug']) }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">{{ $cat['nama'] }}</a>
+                            <a href="{{ route('category.show', $cat['slug']) }}" class="py-2 px-3 rounded-lg transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'bg-emerald-50 dark:bg-emerald-950/60 text-[#008a24]' : 'hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200' }}">{{ $cat['nama'] }}</a>
                         @endforeach
-                        <a href="{{ route('video.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Video</a>
-                        <a href="{{ route('curhat.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Curhat Rakyat</a>
-                        <a href="{{ route('poll.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Polling</a>
-                        <a href="{{ route('realcount.index') }}" class="py-2 px-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg">Real Count</a>
+                        <a href="{{ route('video.index') }}" class="py-2 px-3 rounded-lg transition-colors {{ request()->routeIs('video.*') ? 'bg-emerald-50 dark:bg-emerald-950/60 text-[#008a24]' : 'hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200' }}">Video</a>
+                        <a href="{{ route('curhat.index') }}" class="py-2 px-3 rounded-lg transition-colors {{ request()->routeIs('curhat.*') ? 'bg-emerald-50 dark:bg-emerald-950/60 text-[#008a24]' : 'hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200' }}">Curhat Rakyat</a>
+                        <a href="{{ route('poll.index') }}" class="py-2 px-3 rounded-lg transition-colors {{ request()->routeIs('poll.*') ? 'bg-emerald-50 dark:bg-emerald-950/60 text-[#008a24]' : 'hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200' }}">Polling</a>
+                        <a href="{{ route('realcount.index') }}" class="py-2 px-3 rounded-lg transition-colors {{ request()->routeIs('realcount.*') ? 'bg-emerald-50 dark:bg-emerald-950/60 text-[#008a24]' : 'hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200' }}">Real Count</a>
                     </div>
                 </div>
             </div>

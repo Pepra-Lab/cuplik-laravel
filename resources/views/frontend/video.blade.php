@@ -8,8 +8,7 @@
     <!-- Video Header -->
     <div class="bg-zinc-950 text-white rounded-xl p-6 sm:p-8 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <div class="flex items-center gap-2 mb-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#d60000] animate-pulse"></span>
+            <div class="mb-2">
                 <span class="text-xs font-bold uppercase tracking-wider text-[#008a24]">Saluran Multimedia</span>
             </div>
             <h1 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
