@@ -45,7 +45,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
-Route::get('/artikel/{slug}/pdf', [ArticleController::class, 'downloadPdf'])->name('article.pdf');
 Route::post('/artikel/{slug}/komentar', [ArticleController::class, 'storeComment'])->middleware('auth')->name('article.comment.store');
 
 Route::get('/kanal/{slug}', [CategoryController::class, 'show'])->name('category.show');
