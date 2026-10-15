@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/newsletter/subscribe', [HomeController::class, 'subscribeNewsletter'])->name('newsletter.subscribe');
 
+Route::get('/artikel/{slug}/pdf', [ArticleController::class, 'downloadPdf'])->name('article.pdf');
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
 Route::post('/artikel/{slug}/komentar', [ArticleController::class, 'storeComment'])->name('article.comment.store');
 
