@@ -20,6 +20,11 @@ class Setting extends Model
         'instagram',
         'youtube',
         'footer_text',
+        'notifikasi_artikel_aktif',
+    ];
+
+    protected $casts = [
+        'notifikasi_artikel_aktif' => 'boolean',
     ];
 
     /**

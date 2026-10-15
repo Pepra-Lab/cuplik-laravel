@@ -31,6 +31,9 @@ class Article extends Model
         'dibaca',
         'status',
         'tanggal',
+        'meta_title',
+        'meta_description',
+        'meta_image',
     ];
 
     protected $casts = [
@@ -62,5 +65,45 @@ class Article extends Model
     {
         if (!$this->tanggal) return 'Baru saja';
         return Carbon::parse($this->tanggal)->locale('id')->diffForHumans();
+    }
+
+    /**
+     * SEO: judul <title> & og:title. Pakai meta_title kalau diisi admin,
+     * kalau tidak jatuh balik ke judul berita.
+     */
+    public function seoTitle(): string
+    {
+        return $this->meta_title ?: $this->judul;
+    }
+
+    /**
+     * SEO: meta description & og:description. Pakai meta_description kalau
+     * diisi, kalau tidak diambil otomatis dari lead/isi berita (dipotong 160 karakter).
+     */
+    public function seoDescription(): string
+    {
+        if ($this->meta_description) {
+            return $this->meta_description;
+        }
+
+        $source = $this->lead ?: $this->isi;
+        return \Illuminate\Support\Str::limit(trim(strip_tags($source)), 160, '');
+    }
+
+    /**
+     * SEO: og:image & twitter:image. Pakai meta_image kalau diisi,
+     * kalau tidak jatuh balik ke foto utama berita.
+     */
+    public function seoImage(): ?string
+    {
+        $image = $this->meta_image ?: $this->foto;
+
+        if (!$image) {
+            return null;
+        }
+
+        return \Illuminate\Support\Str::startsWith($image, ['http://', 'https://'])
+            ? $image
+            : asset($image);
     }
 }

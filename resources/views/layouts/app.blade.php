@@ -5,8 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'CuplikCom — Beritanya Unik dan Menggelitik')</title>
-    <meta name="description" content="@yield('meta_description', 'Portal Berita Online CuplikCom — Menyajikan berita unik, politik, sosial, hukum, dan suara rakyat terkini.')">
+    @php
+        $__seoTitle = trim($__env->yieldContent('title', 'CuplikCom — Beritanya Unik dan Menggelitik'));
+        $__seoDescription = trim($__env->yieldContent('meta_description', 'Portal Berita Online CuplikCom — Menyajikan berita unik, politik, sosial, hukum, dan suara rakyat terkini.'));
+        $__seoImage = trim($__env->yieldContent('meta_image', asset('favicon-32x32.png')));
+        $__seoType = trim($__env->yieldContent('og_type', 'website')) ?: 'website';
+        $__seoCanonical = trim($__env->yieldContent('canonical', url()->current()));
+        $__seoNoIndex = trim($__env->yieldContent('noindex', ''));
+    @endphp
+
+    <title>{{ $__seoTitle }}</title>
+    <meta name="description" content="{{ $__seoDescription }}">
+    <meta name="robots" content="{{ $__seoNoIndex === '1' ? 'noindex, nofollow' : 'index, follow' }}">
+    <link rel="canonical" href="{{ $__seoCanonical }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content="{{ \App\Models\Setting::current()->site_name }}">
+    <meta property="og:type" content="{{ $__seoType }}">
+    <meta property="og:url" content="{{ $__seoCanonical }}">
+    <meta property="og:title" content="{{ $__seoTitle }}">
+    <meta property="og:description" content="{{ $__seoDescription }}">
+    <meta property="og:image" content="{{ $__seoImage }}">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $__seoTitle }}">
+    <meta name="twitter:description" content="{{ $__seoDescription }}">
+    <meta name="twitter:image" content="{{ $__seoImage }}">
+
+    @stack('structured_data')
 
     <!-- Favicon / Logo Resmi CuplikCom -->
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
@@ -110,6 +138,22 @@
         }
     </style>
     @stack('styles')
+    <!-- JSON-LD: Organization (SEO umum, tampil di semua halaman) -->
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'NewsMediaOrganization',
+        'name' => \App\Models\Setting::current()->site_name,
+        'url' => url('/'),
+        'logo' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('favicon-32x32.png'),
+        'sameAs' => array_values(array_filter([
+            \App\Models\Setting::current()->facebook,
+            \App\Models\Setting::current()->twitter,
+            \App\Models\Setting::current()->instagram,
+            \App\Models\Setting::current()->youtube,
+        ])),
+    ], JSON_UNESCAPED_SLASHES) !!}
+    </script>
 </head>
 
 <body class="bg-white dark:bg-[#121212] text-[#111111] dark:text-[#f3f4f6] min-h-screen flex flex-col transition-colors duration-200">

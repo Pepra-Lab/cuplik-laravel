@@ -35,6 +35,8 @@ class AdminSettingController extends Controller
             'footer_text' => 'nullable|string',
         ]);
 
+        $validated['notifikasi_artikel_aktif'] = $request->boolean('notifikasi_artikel_aktif');
+
         Setting::current()->update($validated);
 
         return redirect()->route('admin.settings.profil')->with('success', 'Profil situs berhasil diperbarui!');

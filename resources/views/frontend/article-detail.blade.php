@@ -1,7 +1,39 @@
 @extends('layouts.app')
 
-@section('title', $article->judul . ' — CuplikCom')
-@section('meta_description', $article->lead ?: Str::limit(strip_tags($article->isi), 160))
+@section('title', $article->seoTitle() . ' — CuplikCom')
+@section('meta_description', $article->seoDescription())
+@section('meta_image', $article->seoImage() ?: asset('favicon-32x32.png'))
+@section('og_type', 'article')
+
+@push('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'NewsArticle',
+    'headline' => $article->seoTitle(),
+    'description' => $article->seoDescription(),
+    'image' => $article->seoImage() ? [$article->seoImage()] : [],
+    'datePublished' => optional($article->tanggal)->toIso8601String(),
+    'dateModified' => optional($article->updated_at)->toIso8601String(),
+    'author' => [
+        '@type' => 'Person',
+        'name' => $article->penulis_nama ?: \App\Models\Setting::current()->site_name,
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => \App\Models\Setting::current()->site_name,
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('favicon-32x32.png'),
+        ],
+    ],
+    'mainEntityOfPage' => [
+        '@type' => 'WebPage',
+        '@id' => route('article.show', $article->slug),
+    ],
+], JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endpush
 
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">

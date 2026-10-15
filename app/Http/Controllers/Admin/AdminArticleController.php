@@ -140,6 +140,9 @@ class AdminArticleController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id',
             'new_tags' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:70',
+            'meta_description' => 'nullable|string|max:160',
+            'meta_image' => 'nullable|string|max:255',
         ];
     }
 

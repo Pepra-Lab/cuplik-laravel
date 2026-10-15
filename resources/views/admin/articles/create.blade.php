@@ -131,6 +131,30 @@
                     </div>
                 </div>
 
+                <!-- SEO Box -->
+                <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm space-y-4">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100 dark:border-zinc-800 pb-2">SEO Berita</h3>
+                    <p class="text-[11px] text-gray-400 -mt-2">Opsional. Kosongkan untuk memakai judul/lead berita secara otomatis.</p>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Meta Title</label>
+                        <input type="text" name="meta_title" maxlength="70" value="{{ old('meta_title') }}" placeholder="Judul untuk hasil pencarian Google..." class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
+                        @error('meta_title') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Meta Description</label>
+                        <textarea name="meta_description" rows="3" maxlength="160" placeholder="Ringkasan singkat untuk hasil pencarian & pratinjau media sosial (maks 160 karakter)..." class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">{{ old('meta_description') }}</textarea>
+                        @error('meta_description') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Gambar OG / Share (opsional)</label>
+                        <input type="text" name="meta_image" value="{{ old('meta_image') }}" placeholder="Kosongkan untuk pakai foto utama berita" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-mono text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
+                        @error('meta_image') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
                 <!-- Authorship Box -->
                 <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm space-y-4">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100 dark:border-zinc-800 pb-2">Kepengarangan & Redaksi</h3>

@@ -104,6 +104,17 @@
                 </div>
 
                 <div>
+                    <h3 class="text-xs font-extrabold text-gray-900 dark:text-white mb-2">Notifikasi Email Member</h3>
+                    <label class="flex items-center justify-between gap-3 px-3 py-2.5 bg-gray-50 dark:bg-zinc-800 rounded-lg border border-gray-200 dark:border-zinc-700">
+                        <span class="text-xs text-gray-700 dark:text-gray-300">
+                            <span class="font-bold block">Kirim Email ke Member saat Berita Terbit</span>
+                            <span class="text-[11px] text-gray-400">Semua member dengan status aktif akan menerima email otomatis setiap ada berita baru berstatus "Terbit".</span>
+                        </span>
+                        <input type="checkbox" name="notifikasi_artikel_aktif" value="1" {{ old('notifikasi_artikel_aktif', $setting->notifikasi_artikel_aktif) ? 'checked' : '' }} class="w-4 h-4 accent-[#008a24] shrink-0">
+                    </label>
+                </div>
+
+                <div>
                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Teks Footer</label>
                     <textarea name="footer_text" rows="2"
                         placeholder="&copy; 2026 Cuplik.com. Seluruh hak cipta dilindungi."
