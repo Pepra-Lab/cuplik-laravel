@@ -25,6 +25,21 @@
         <form action="{{ route('register.post') }}" method="POST" class="space-y-4">
             @csrf
             <div>
+                <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Daftar sebagai</label>
+                <div class="grid grid-cols-2 gap-3">
+                    @foreach(['Member' => 'Kirim berita, iklan, curhat, komentar, dan dapat email berita terbaru', 'Redaktur' => 'Mengelola berita dan video milik sendiri'] as $role => $desc)
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="{{ $role }}" class="peer sr-only" {{ old('role', 'Member') === $role ? 'checked' : '' }}>
+                            <div class="h-full p-3 rounded-lg border border-gray-300 dark:border-zinc-700 text-xs peer-checked:border-[#008a24] peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-950/30">
+                                <span class="block font-bold text-gray-900 dark:text-white">{{ $role }}</span>
+                                <span class="block text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{{ $desc }}</span>
+                            </div>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
+            <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Nama Lengkap</label>
                 <input type="text" name="name" value="{{ old('name') }}" required placeholder="Nama Lengkap Anda" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
@@ -36,7 +51,7 @@
 
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Kata Sandi</label>
-                <input type="password" name="password" required placeholder="Minimal 6 karakter" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                <input type="password" name="password" required placeholder="Minimal 8 karakter" minlength="8" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
             <div>

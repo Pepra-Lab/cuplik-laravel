@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\IklanGambar;
+use App\Models\IklanPosisi;
 
 class AdminIklanGambarController extends Controller
 {
     public function index()
     {
-        $iklans = IklanGambar::latest()->paginate(10);
-        return view('admin.iklan.gambar', compact('iklans'));
+        $iklans = IklanGambar::with('user')->latest()->paginate(10);
+        $posisis = IklanPosisi::orderBy('nama')->get();
+        return view('admin.iklan.gambar', compact('iklans', 'posisis'));
     }
 
     public function store(Request $request)
@@ -24,7 +26,7 @@ class AdminIklanGambarController extends Controller
             'gambar' => 'nullable|string',
             'mulai' => 'nullable|date',
             'selesai' => 'nullable|date',
-            'status' => 'required|in:Tayang,Berakhir,Nonaktif',
+            'status' => 'required|in:Tayang,Berakhir,Nonaktif,Menunggu,Ditolak',
         ]);
 
         IklanGambar::create($validated);
@@ -42,12 +44,23 @@ class AdminIklanGambarController extends Controller
             'gambar' => 'nullable|string',
             'mulai' => 'nullable|date',
             'selesai' => 'nullable|date',
-            'status' => 'required|in:Tayang,Berakhir,Nonaktif',
+            'status' => 'required|in:Tayang,Berakhir,Nonaktif,Menunggu,Ditolak',
         ]);
 
         $iklanGambar->update($validated);
 
         return redirect()->route('admin.iklan-gambar.index')->with('success', 'Iklan gambar berhasil diperbarui!');
+    }
+
+    public function updateStatus(Request $request, IklanGambar $iklanGambar)
+    {
+        $request->validate([
+            'status' => 'required|in:Tayang,Ditolak',
+        ]);
+
+        $iklanGambar->update(['status' => $request->status]);
+
+        return back()->with('success', 'Status iklan gambar berhasil diubah menjadi ' . $request->status);
     }
 
     public function destroy(IklanGambar $iklanGambar)

@@ -1,7 +1,39 @@
 @extends('layouts.app')
 
-@section('title', $article->judul . ' — CuplikCom')
-@section('meta_description', $article->lead ?: Str::limit(strip_tags($article->isi), 160))
+@section('title', $article->seoTitle() . ' — CuplikCom')
+@section('meta_description', $article->seoDescription())
+@section('meta_image', $article->seoImage() ?: asset('favicon-32x32.png'))
+@section('og_type', 'article')
+
+@push('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'NewsArticle',
+    'headline' => $article->seoTitle(),
+    'description' => $article->seoDescription(),
+    'image' => $article->seoImage() ? [$article->seoImage()] : [],
+    'datePublished' => optional($article->tanggal)->toIso8601String(),
+    'dateModified' => optional($article->updated_at)->toIso8601String(),
+    'author' => [
+        '@type' => 'Person',
+        'name' => $article->penulis_nama ?: \App\Models\Setting::current()->site_name,
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => \App\Models\Setting::current()->site_name,
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('favicon-32x32.png'),
+        ],
+    ],
+    'mainEntityOfPage' => [
+        '@type' => 'WebPage',
+        '@id' => route('article.show', $article->slug),
+    ],
+], JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endpush
 
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -275,19 +307,28 @@
                 @endforelse
             </div>
 
-            <!-- Add Comment Form -->
-            <form action="{{ route('article.comment.store', $article->slug) }}" method="POST" class="p-5 bg-gray-50 dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 space-y-3">
-                @csrf
-                <h4 class="text-xs font-bold uppercase tracking-wider text-[#d60000]">Tulis Komentar Anda</h4>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input type="text" name="nama" required placeholder="Nama lengkap Anda..." class="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white input-search-hover">
-                    <input type="email" name="email" required placeholder="Email (tidak akan dipublikasikan)..." class="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white input-search-hover">
+            <!-- Add Comment Form (khusus yang sudah masuk) -->
+            @auth
+                <form action="{{ route('article.comment.store', $article->slug) }}" method="POST" class="p-5 bg-gray-50 dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 space-y-3">
+                    @csrf
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-[#008a24]">Tulis Komentar sebagai {{ auth()->user()->name }}</h4>
+                    <textarea name="komentar" rows="3" required placeholder="Tuliskan tanggapan santun dan beretika Anda..." class="w-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg p-3 text-xs text-gray-900 dark:text-white input-search-hover"></textarea>
+                    @error('komentar')
+                        <p class="text-[11px] text-red-500">{{ $message }}</p>
+                    @enderror
+                    <button type="submit" class="px-5 py-2 bg-[#008a24] hover:bg-[#006f1c] text-white rounded-lg text-xs font-bold transition-colors">
+                        Kirim Komentar
+                    </button>
+                </form>
+            @else
+                <div class="p-5 bg-gray-50 dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 text-xs text-gray-600 dark:text-gray-400 flex flex-wrap items-center justify-between gap-3">
+                    <span>Masuk atau daftar sebagai Member untuk ikut berkomentar.</span>
+                    <span class="flex gap-2">
+                        <a href="{{ route('login') }}" class="px-4 py-2 bg-[#008a24] hover:bg-[#006f1c] text-white rounded-lg font-bold">Masuk</a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 border border-[#008a24] text-[#008a24] rounded-lg font-bold">Daftar</a>
+                    </span>
                 </div>
-                <textarea name="komentar" rows="3" required placeholder="Tuliskan tanggapan santun dan beretika Anda..." class="w-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg p-3 text-xs text-gray-900 dark:text-white input-search-hover"></textarea>
-                <button type="submit" class="px-5 py-2 bg-[#008a24] hover:bg-[#d60000] text-white rounded-lg text-xs font-bold transition-colors">
-                    Kirim Komentar
-                </button>
-            </form>
+            @endauth
         </section>
 
     </article>

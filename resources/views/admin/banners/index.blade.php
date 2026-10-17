@@ -3,6 +3,22 @@
 @section('title', 'Banner Beranda')
 
 @section('content')
+<div class="space-y-5">
+
+@include('admin.settings._tabs')
+
+<div class="bg-white dark:bg-[#121914] p-4 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+    <form action="{{ route('admin.settings.banner-jeda.update') }}" method="POST" class="flex flex-wrap items-center gap-3">
+        @csrf
+        @method('PUT')
+        <label class="text-xs font-bold text-gray-700 dark:text-gray-300">Jeda Ganti Slide Otomatis</label>
+        <input type="number" name="banner_jeda" min="3" max="60" value="{{ $setting->banner_jeda }}" class="w-20 px-3 py-1.5 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none">
+        <span class="text-xs text-gray-400">detik</span>
+        <button type="submit" class="px-3 py-1.5 bg-[#008a24] hover:bg-[#006f1c] text-white font-bold text-xs rounded-lg transition-colors">Simpan</button>
+        @error('banner_jeda') <span class="text-[11px] text-red-500">{{ $message }}</span> @enderror
+    </form>
+</div>
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
     <!-- Form Tambah Banner (1 Col) -->
@@ -122,6 +138,8 @@
             </table>
         </div>
     </div>
+
+</div>
 
 </div>
 

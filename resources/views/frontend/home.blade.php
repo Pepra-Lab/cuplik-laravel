@@ -6,22 +6,18 @@
 <div class="space-y-10">
 
     <!-- ========================================================================= -->
-    <!-- 1. HERO CONTAINER / HEADER: BANNER                                        -->
+    <!-- 1. HERO CONTAINER: SLIDER BERITA TERPOPULER                              -->
     <!-- ========================================================================= -->
     <section class="w-full space-y-2.5">
         
-        <!-- Full-width Banner Box Container -->
-        <div id="heroBannerContainer" class="relative w-full aspect-[21/9] sm:aspect-[24/9] md:aspect-[28/9] min-h-[240px] sm:min-h-[320px] md:min-h-[390px] rounded-xl overflow-hidden bg-zinc-950 group shadow-md">
+        <!-- Full-width Hero Slider Container -->
+        <div id="heroSlider" class="relative w-full aspect-[21/9] sm:aspect-[24/9] md:aspect-[28/9] min-h-[240px] sm:min-h-[320px] md:min-h-[390px] rounded-xl overflow-hidden bg-zinc-950 group shadow-md">
             
-            @php
-                $slides = $banners->count() > 0 ? $banners : $popularArticles;
-            @endphp
-
-            @foreach($slides as $index => $slide)
+            @foreach($popularArticles as $index => $slide)
                 @php
-                    $slideTitle = $slide->judul ?? 'Berita Terkini CuplikCom';
-                    $slideLink = $slide->tautan ?? ($slide->slug ? route('article.show', $slide->slug) : '#');
-                    $slideImage = $slide->gambar ?? ($slide->foto ?? null);
+                    $slideTitle = $slide->judul;
+                    $slideLink = route('article.show', $slide->slug);
+                    $slideImage = $slide->foto;
                     $slideCat = $slide->category->nama ?? 'Headline';
                 @endphp
 
@@ -40,7 +36,7 @@
                         <!-- Low-opacity Solid Black Overlay (NO GRADIENT) -->
                         <div class="absolute inset-0 bg-black/55"></div>
 
-                        <!-- Banner Text Overlay (DM Sans Font) -->
+                        <!-- Slide Text Overlay (DM Sans Font) -->
                         <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 z-20 text-white space-y-2.5 max-w-4xl">
                             <span class="px-2.5 py-1 rounded text-[10px] sm:text-xs font-black uppercase tracking-wider bg-[#d60000] text-white inline-block shadow">
                                 {{ $slideCat }}
@@ -55,10 +51,10 @@
 
         </div>
 
-        <!-- Banner Indicator Nodes/Dots (Bottom Right, outside box container) -->
+        <!-- Slide Indicator Dots (Bottom Right, outside box container) -->
         <div class="flex items-center justify-end gap-2 pr-1 pt-1">
-            @foreach($slides as $index => $slide)
-                <button type="button" onclick="goToSlide({{ $index }})" class="banner-dot w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-[#d60000] scale-125' : 'bg-gray-300 dark:bg-zinc-700 hover:bg-[#008a24]' }}" aria-label="Slide {{ $index + 1 }}"></button>
+            @foreach($popularArticles as $index => $slide)
+                <button type="button" onclick="goToSlide({{ $index }})" class="hero-dot w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-[#008a24] scale-125' : 'bg-gray-300 dark:bg-zinc-700 hover:bg-gray-400' }}" aria-label="Slide {{ $index + 1 }}"></button>
             @endforeach
         </div>
 
@@ -413,13 +409,14 @@
 
 </div>
 
-<!-- Banner Carousel Script: 10 Seconds Auto-Slide with Dot Switching -->
+<!-- Hero Slider Script: 10 Seconds Auto-Slide with Dot Switching -->
 <script>
     let currentSlide = 0;
     const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.banner-dot');
+    const dots = document.querySelectorAll('.hero-dot');
     const totalSlides = slides.length;
-    let bannerInterval = null;
+    const slideDelay = 10000;
+    let slideInterval = null;
 
     function showSlide(index) {
         if (totalSlides === 0) return;
@@ -459,13 +456,13 @@
     }
 
     function resetInterval() {
-        clearInterval(bannerInterval);
-        bannerInterval = setInterval(nextSlide, 10000); // 10 Seconds auto slide
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, slideDelay);
     }
 
     // Initialize 10s auto rotation
     if (totalSlides > 1) {
-        bannerInterval = setInterval(nextSlide, 10000);
+        slideInterval = setInterval(nextSlide, slideDelay);
     }
 
     // AJAX Load More Categories

@@ -17,6 +17,10 @@
             </div>
         @endif
 
+        @error('email')
+            <div class="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 p-3 rounded-lg text-xs">{{ $message }}</div>
+        @enderror
+
         <form action="{{ route('password.email') }}" method="POST" class="space-y-4">
             @csrf
             <div>

@@ -16,6 +16,10 @@ class AdminDashboardController extends Controller
 {
     public function index(Request $request)
     {
+        if (! $request->user()->isAdmin()) {
+            return redirect()->route('admin.articles.index');
+        }
+
         $now = Carbon::now();
         $month = $request->query('month', $now->month);
         $year = $request->query('year', $now->year);
@@ -27,8 +31,8 @@ class AdminDashboardController extends Controller
         $totalDibaca = Article::sum('dibaca');
 
         // Productivity matrix by Editor
-        $editors = User::whereIn('role', ['Admin', 'Super Admin', 'Editor', 'Redaksi'])->get();
-        $writers = User::whereIn('role', ['Penulis', 'Reporter', 'Editor', 'Redaksi'])->get();
+        $editors = User::whereIn('role', [...User::MANAGER_ROLES, User::ROLE_REDAKTUR])->get();
+        $writers = User::whereIn('role', User::CONTRIBUTOR_ROLES)->get();
 
         $articlesThisMonth = Article::whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)

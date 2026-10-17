@@ -69,9 +69,13 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="max-w-md">
-                                    <a href="{{ route('admin.articles.edit', $art) }}" class="font-bold text-gray-900 dark:text-white hover:text-[#008a24] line-clamp-2">
-                                        {{ $art->judul }}
-                                    </a>
+                                    @can('update', $art)
+                                        <a href="{{ route('admin.articles.edit', $art) }}" class="font-bold text-gray-900 dark:text-white hover:text-[#008a24] line-clamp-2">
+                                            {{ $art->judul }}
+                                        </a>
+                                    @else
+                                        <span class="font-bold text-gray-900 dark:text-white line-clamp-2">{{ $art->judul }}</span>
+                                    @endcan
                                     @if($art->lead)
                                         <p class="text-[11px] text-gray-400 line-clamp-1 mt-0.5">{{ $art->lead }}</p>
                                     @endif
@@ -113,16 +117,18 @@
                                     <a href="{{ route('article.show', $art->slug) }}" target="_blank" class="px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-blue-600 bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700" title="Lihat di Web">
                                         Lihat
                                     </a>
-                                    <a href="{{ route('admin.articles.edit', $art) }}" class="px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-[#008a24] bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700" title="Edit Berita">
-                                        Edit
-                                    </a>
-                                    <form action="{{ route('admin.articles.destroy', $art) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-red-600 bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700" title="Hapus Berita">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    @can('update', $art)
+                                        <a href="{{ route('admin.articles.edit', $art) }}" class="px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-[#008a24] bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700" title="Edit Berita">
+                                            Edit
+                                        </a>
+                                        <form action="{{ route('admin.articles.destroy', $art) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-red-600 bg-gray-50 dark:bg-zinc-800 rounded border border-gray-200 dark:border-zinc-700" title="Hapus Berita">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

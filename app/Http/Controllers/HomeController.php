@@ -2,27 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
-use App\Models\Banner;
 use App\Models\Poll;
 use App\Models\Curhat;
 use App\Models\Video;
 use App\Models\IklanGambar;
 use App\Models\IklanBaris;
-use App\Models\NewsletterSubscriber;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Hero Banners & Breaking News
-        $banners = Banner::where('tampil', 'Ya')->orderBy('urutan')->get();
+        // 1. Breaking News
         $breakingNews = Article::where('status', 'Terbit')->latest('tanggal')->take(5)->get();
 
-        // 2. Berita Pilihan (3 items for the green container below banner)
+        // 2. Berita Pilihan (3 items for the green container below the hero)
         $curatedNews = Article::where('status', 'Terbit')
             ->latest('tanggal')
             ->take(3)
@@ -86,7 +83,6 @@ class HomeController extends Controller
         }
 
         return view('frontend.home', compact(
-            'banners',
             'breakingNews',
             'curatedNews',
             'popularArticles',
@@ -102,21 +98,4 @@ class HomeController extends Controller
         ));
     }
 
-    public function subscribeNewsletter(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|max:255',
-        ]);
-
-        NewsletterSubscriber::updateOrCreate(
-            ['email' => $request->email],
-            ['tanggal' => now()->toDateString()]
-        );
-
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Terima kasih telah berlangganan newsletter CuplikCom!']);
-        }
-
-        return back()->with('success', 'Terima kasih telah berlangganan newsletter CuplikCom!');
-    }
 }

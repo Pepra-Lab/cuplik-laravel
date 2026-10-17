@@ -150,13 +150,13 @@
                 <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                     Jangan lewatkan isu-isu krusial Pantura, politik, dan suara warga langsung di email Anda setiap pagi tanpa spam.
                 </p>
-                <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md pt-1">
+                {{-- <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md pt-1">
                     @csrf
                     <input type="email" name="email" required placeholder="Masukkan alamat email Anda..." class="flex-1 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
                     <button type="submit" class="px-5 py-2 bg-[#008a24] hover:bg-[#d60000] text-white text-xs font-bold rounded-lg transition-colors shrink-0">
                         Langganan
                     </button>
-                </form>
+                </form> --}}
             </div>
         </div>
     @endif

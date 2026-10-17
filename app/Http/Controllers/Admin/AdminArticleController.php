@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Article;
@@ -19,7 +20,7 @@ class AdminArticleController extends Controller
         $categoryId = $request->query('kategori_id');
         $status = $request->query('status');
 
-        $query = Article::with('category', 'tags');
+        $query = Article::with('category', 'tags')->visibleTo($request->user());
 
         if ($q !== '') {
             $query->where(function ($sub) use ($q) {
@@ -47,33 +48,14 @@ class AdminArticleController extends Controller
     {
         $categories = Category::orderBy('nama')->get();
         $tags = Tag::orderBy('nama')->get();
-        $staff = User::whereIn('role', ['Admin', 'Super Admin', 'Editor', 'Penulis', 'Reporter', 'Redaksi'])->orderBy('name')->get();
+        $staff = User::whereIn('role', User::ROLES)->orderBy('name')->get();
 
         return view('admin.articles.create', compact('categories', 'tags', 'staff'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'editor_nama' => 'nullable|string|max:100',
-            'penulis_nama' => 'nullable|string|max:100',
-            'lokasi' => 'nullable|string|max:100',
-            'isi' => 'required|string',
-            'gambar_1' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
-            'gambar_2' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
-            'foto_posisi' => 'nullable|string|in:header,p1,p2,p3,p4,p5,bottom',
-            'foto_2_posisi' => 'nullable|string|in:header,p1,p2,p3,p4,p5,bottom',
-            'caption_foto' => 'nullable|string|max:255',
-            'caption_foto_2' => 'nullable|string|max:255',
-            'tone' => 'nullable|string|max:20',
-            'status' => 'required|in:Terbit,Review,Draft',
-            'tanggal' => 'required|date',
-            'tags' => 'nullable|array',
-            'custom_tags' => 'nullable',
-        ]);
+        $validated = $request->validate($this->rules($request));
 
         // 1. Slug otomatis / manual ringkas & unik
         $rawSlug = $request->filled('slug')
@@ -103,48 +85,37 @@ class AdminArticleController extends Controller
         $validated['foto_posisi'] = ($validated['foto_posisi'] ?? null) ?: 'header';
         $validated['foto_2_posisi'] = ($validated['foto_2_posisi'] ?? null) ?: 'p2';
         $validated['tone'] = ($validated['tone'] ?? null) ?: '#eaf3ec';
+        $validated['user_id'] = $request->user()->id;
+
+        // Berita dari Member selalu menunggu review admin.
+        if ($request->user()->isMember()) {
+            $validated['status'] = 'Review';
+        }
 
         $article = Article::create($validated);
 
         // 4. Sinkronisasi Tag (termasuk pembuatan tag baru on-the-fly tanpa duplikat case-insensitive)
-        $this->syncTags($article, $request->input('tags', []), $request->input('custom_tags'), $validated['category_id']);
+        $this->syncTags($article, $request->input('tags', []), $request->input('new_tags'), $validated['category_id']);
 
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil dipublikasikan!');
     }
 
     public function edit(Article $article)
     {
+        Gate::authorize('update', $article);
+
         $categories = Category::orderBy('nama')->get();
         $tags = Tag::orderBy('nama')->get();
-        $staff = User::whereIn('role', ['Admin', 'Super Admin', 'Editor', 'Penulis', 'Reporter', 'Redaksi'])->orderBy('name')->get();
+        $staff = User::whereIn('role', User::ROLES)->orderBy('name')->get();
 
         return view('admin.articles.edit', compact('article', 'categories', 'tags', 'staff'));
     }
 
     public function update(Request $request, Article $article)
     {
-        $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'editor_nama' => 'nullable|string|max:100',
-            'penulis_nama' => 'nullable|string|max:100',
-            'lokasi' => 'nullable|string|max:100',
-            'isi' => 'required|string',
-            'gambar_1' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
-            'gambar_2' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
-            'hapus_gambar_1' => 'nullable|boolean',
-            'hapus_gambar_2' => 'nullable|boolean',
-            'foto_posisi' => 'nullable|string|in:header,p1,p2,p3,p4,p5,bottom',
-            'foto_2_posisi' => 'nullable|string|in:header,p1,p2,p3,p4,p5,bottom',
-            'caption_foto' => 'nullable|string|max:255',
-            'caption_foto_2' => 'nullable|string|max:255',
-            'tone' => 'nullable|string|max:20',
-            'status' => 'required|in:Terbit,Review,Draft',
-            'tanggal' => 'required|date',
-            'tags' => 'nullable|array',
-            'custom_tags' => 'nullable',
-        ]);
+        Gate::authorize('update', $article);
+
+        $validated = $request->validate($this->rules($request));
 
         // 1. Slug handling (bisa diedit redaktur, tetap dipastikan ringkas & unik)
         if ($request->filled('slug')) {
@@ -202,13 +173,15 @@ class AdminArticleController extends Controller
         $article->update($validated);
 
         // 4. Sinkronisasi Tag
-        $this->syncTags($article, $request->input('tags', []), $request->input('custom_tags'), $article->category_id);
+        $this->syncTags($article, $request->input('tags', []), $request->input('new_tags'), $article->category_id);
 
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil diperbarui!');
     }
 
     public function destroy(Article $article)
     {
+        Gate::authorize('delete', $article);
+
         $rawFoto = $article->getRawOriginal('foto');
         if ($rawFoto && str_contains($rawFoto, 'storage/')) {
             Storage::disk('public')->delete(str_replace('storage/', '', $rawFoto));
@@ -224,11 +197,43 @@ class AdminArticleController extends Controller
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil dihapus!');
     }
 
+    private function rules(Request $request): array
+    {
+        return [
+            'judul' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'editor_nama' => 'nullable|string|max:100',
+            'penulis_nama' => 'nullable|string|max:100',
+            'lokasi' => 'nullable|string|max:100',
+            'isi' => 'required|string',
+            'gambar_1' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
+            'gambar_2' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
+            'hapus_gambar_1' => 'nullable|boolean',
+            'hapus_gambar_2' => 'nullable|boolean',
+            'foto_posisi' => 'nullable|string|in:header,p1,p2,p3,p4,p5,bottom',
+            'foto_2_posisi' => 'nullable|string|in:header,p1,p2,p3,p4,p5,bottom',
+            'caption_foto' => 'nullable|string|max:255',
+            'caption_foto_2' => 'nullable|string|max:255',
+            'tone' => 'nullable|string|max:20',
+            'status' => $request->user()->isMember() ? 'nullable' : 'required|in:Terbit,Review,Draft',
+            'tanggal' => 'required|date',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
+            'new_tags' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:70',
+            'meta_description' => 'nullable|string|max:160',
+            'meta_image' => 'nullable|string|max:255',
+        ];
+    }
+
     /**
      * Memproses tag yang dipilih & membuat tag baru secara otomatis di master tag jika belum ada.
-     * Mencegah duplikasi secara case-insensitive.
+     * Mencegah duplikasi secara case-insensitive. Hanya Admin, Super Admin, dan Redaktur
+     * (isCmsStaff) yang boleh membuat tag baru dari sini — Member tetap hanya bisa memilih
+     * dari tag yang sudah ada. Maksimal 5 tag baru per submit.
      */
-    private function syncTags(Article $article, array $selectedTags = [], $customTagsInput = null, ?int $categoryId = null): void
+    private function syncTags(Article $article, array $selectedTags = [], $newTagsInput = null, ?int $categoryId = null): void
     {
         $tagIds = [];
 
@@ -244,14 +249,17 @@ class AdminArticleController extends Controller
             }
         }
 
-        // 2. Tag kustom yang diketik baru (bisa berupa array atau string dipisahkan koma)
-        if (!empty($customTagsInput)) {
-            $items = is_array($customTagsInput) ? $customTagsInput : explode(',', (string) $customTagsInput);
-            foreach ($items as $name) {
-                $cleanName = trim($name);
-                if ($cleanName !== '') {
-                    $tagIds[] = $this->findOrCreateTagId($cleanName, $categoryId);
-                }
+        // 2. Tag baru yang diketik manual (dibatasi hanya untuk CMS staff, maks 5 per submit)
+        $rawNewTags = (string) ($newTagsInput ?? '');
+        if ($rawNewTags !== '' && auth()->check() && auth()->user()->isCmsStaff()) {
+            $names = collect(explode(',', $rawNewTags))
+                ->map(fn ($name) => trim($name))
+                ->filter()
+                ->unique(fn ($name) => Str::lower($name))
+                ->take(5);
+
+            foreach ($names as $name) {
+                $tagIds[] = $this->findOrCreateTagId($name, $categoryId);
             }
         }
 

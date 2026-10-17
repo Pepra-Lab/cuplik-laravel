@@ -205,48 +205,38 @@
                     </div>
                 </div>
 
-                <!-- Card Tagging & Pembuatan Tag Baru -->
-                <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm space-y-4">
-                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-2">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Tagging & Topik Terkait</label>
-                            <p class="text-[11px] text-gray-400">Pilih dari master tag atau buat tag baru langsung dari sini.</p>
-                        </div>
+                <!-- Tags Selection -->
+                <div data-tag-adder-wrapper class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">Tagging & Topik Terkait</label>
+
+                        @if(auth()->user()->isCmsStaff())
+                            <button type="button" data-tag-adder-toggle class="flex items-center gap-1 text-[11px] font-bold text-[#008a24] hover:text-[#006f1c]">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Tambah Tag
+                            </button>
+                        @endif
                     </div>
 
-                    <!-- Input Tambah Tag Baru Langsung -->
-                    <div class="flex items-center gap-2">
-                        <div class="relative flex-1">
-                            <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-gray-400 text-xs">#</span>
-                            <input type="text" id="newTagInput" placeholder="Ketik tag baru lalu klik Tambah (contoh: IKN Nusantara)..." class="w-full pl-6 pr-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
-                        </div>
-                        <button type="button" id="btnAddTag" class="px-3 py-2 bg-[#008a24] hover:bg-[#006f1c] text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1 shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                            Tambah Tag
-                        </button>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 dark:bg-zinc-800/50 rounded-lg border border-gray-200 dark:border-zinc-700">
+                        @foreach($tags as $tg)
+                            <label class="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 hover:text-[#008a24] cursor-pointer">
+                                <input type="checkbox" name="tags[]" value="{{ $tg->id }}" {{ is_array(old('tags')) && in_array($tg->id, old('tags')) ? 'checked' : '' }} class="rounded border-gray-300 text-[#008a24] focus:ring-[#008a24]">
+                                <span class="truncate">{{ $tg->nama }}</span>
+                            </label>
+                        @endforeach
                     </div>
 
-                    <!-- Wadah Tag Baru yang Ditambahkan -->
-                    <div id="newTagsContainer" class="flex flex-wrap gap-1.5 empty:hidden pt-1">
-                        <!-- Dynamic new tag chips injected via JS -->
-                    </div>
-
-                    <!-- Filter & Daftar Master Tag -->
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Pilih dari Master Tag:</span>
-                            <input type="text" id="searchMasterTag" placeholder="Cari tag..." class="px-2 py-1 text-[11px] bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-1 focus:ring-[#008a24]">
+                    @if(auth()->user()->isCmsStaff())
+                        <div data-tag-adder-panel class="mt-3 {{ $errors->has('new_tags') ? '' : 'hidden' }}">
+                            <label class="block text-[11px] font-bold text-gray-700 dark:text-gray-300 mb-1">Tag Baru</label>
+                            <input type="text" name="new_tags" value="{{ old('new_tags') }}" placeholder="Contoh: Pilkada 2026, Banjir Indramayu" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
+                            <p class="text-[10px] text-gray-400 mt-1">Pisahkan dengan koma untuk beberapa tag. Cek dulu daftar di atas — jika tag serupa sudah ada, pakai itu saja agar tidak dobel. Tag baru akan langsung bisa dipakai, tapi baru tampil sebagai submenu publik setelah dikurasi Admin di menu Tag & Submenu.</p>
+                            @error('new_tags') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                         </div>
-
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-44 overflow-y-auto p-2.5 bg-gray-50 dark:bg-zinc-800/50 rounded-lg border border-gray-200 dark:border-zinc-700" id="masterTagList">
-                            @foreach($tags as $tg)
-                                <label class="tag-item flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 hover:text-[#008a24] cursor-pointer" data-tag-name="{{ mb_strtolower($tg->nama) }}">
-                                    <input type="checkbox" name="tags[]" value="{{ $tg->id }}" {{ is_array(old('tags')) && in_array($tg->id, old('tags')) ? 'checked' : '' }} class="rounded border-gray-300 text-[#008a24] focus:ring-[#008a24]">
-                                    <span class="truncate">#{{ $tg->nama }}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
+                    @endif
                 </div>
 
             </div>
@@ -258,14 +248,18 @@
                 <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm space-y-4">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100 dark:border-zinc-800 pb-2">Status Publikasi</h3>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Status Publikasi</label>
-                        <select name="status" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
-                            <option value="Terbit" {{ old('status') === 'Terbit' ? 'selected' : '' }}>Terbitkan Langsung</option>
-                            <option value="Review" {{ old('status') === 'Review' ? 'selected' : '' }}>Menunggu Review</option>
-                            <option value="Draft" {{ old('status') === 'Draft' ? 'selected' : '' }}>Simpan Sebagai Draft</option>
-                        </select>
-                    </div>
+                    @if(auth()->user()->isMember())
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Berita yang Anda kirim akan ditinjau admin sebelum diterbitkan.</p>
+                    @else
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Status Publikasi</label>
+                            <select name="status" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
+                                <option value="Terbit" {{ old('status') === 'Terbit' ? 'selected' : '' }}>Terbitkan Langsung</option>
+                                <option value="Review" {{ old('status') === 'Review' ? 'selected' : '' }}>Menunggu Review</option>
+                                <option value="Draft" {{ old('status') === 'Draft' ? 'selected' : '' }}>Simpan Sebagai Draft</option>
+                            </select>
+                        </div>
+                    @endif
 
                     <div>
                         <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Kategori Kanal <span class="text-red-500">*</span></label>
@@ -289,6 +283,30 @@
                             <input type="color" name="tone" value="{{ old('tone', '#eaf3ec') }}" class="w-8 h-8 rounded border border-gray-300 dark:border-zinc-700 cursor-pointer bg-transparent">
                             <span class="text-xs text-gray-400">Warna kartu banner/highlight</span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- SEO Box -->
+                <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm space-y-4">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100 dark:border-zinc-800 pb-2">SEO Berita</h3>
+                    <p class="text-[11px] text-gray-400 -mt-2">Opsional. Kosongkan untuk memakai judul/lead berita secara otomatis.</p>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Meta Title</label>
+                        <input type="text" name="meta_title" maxlength="70" value="{{ old('meta_title') }}" placeholder="Judul untuk hasil pencarian Google..." class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
+                        @error('meta_title') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Meta Description</label>
+                        <textarea name="meta_description" rows="3" maxlength="160" placeholder="Ringkasan singkat untuk hasil pencarian & pratinjau media sosial (maks 160 karakter)..." class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">{{ old('meta_description') }}</textarea>
+                        @error('meta_description') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Gambar OG / Share (opsional)</label>
+                        <input type="text" name="meta_image" value="{{ old('meta_image') }}" placeholder="Kosongkan untuk pakai foto utama berita" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-mono text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-[#008a24]">
+                        @error('meta_image') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
 
@@ -511,85 +529,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setupImageUpload('fileInput1', 'previewBox1', 'previewImg1', 'previewInfo1', 'btnRemoveImg1');
     setupImageUpload('fileInput2', 'previewBox2', 'previewImg2', 'previewInfo2', 'btnRemoveImg2');
-
-    // ==========================================
-    // 4. PEMBUATAN & PENCARIAN TAG BARU
-    // ==========================================
-    const newTagInput = document.getElementById('newTagInput');
-    const btnAddTag = document.getElementById('btnAddTag');
-    const newTagsContainer = document.getElementById('newTagsContainer');
-    const searchMasterTag = document.getElementById('searchMasterTag');
-    const masterTagItems = document.querySelectorAll('.tag-item');
-
-    function addNewTag() {
-        const raw = newTagInput.value.trim();
-        if (!raw) return;
-
-        // Split jika user memasukkan koma
-        const tagsToAdd = raw.split(',').map(t => t.trim()).filter(t => t.length > 0);
-
-        tagsToAdd.forEach(tagName => {
-            const lowerName = tagName.toLowerCase();
-
-            // Cek apakah tag sudah ada di master list (case-insensitive)
-            let foundExisting = false;
-            masterTagItems.forEach(item => {
-                if (item.getAttribute('data-tag-name') === lowerName) {
-                    const chk = item.querySelector('input[type="checkbox"]');
-                    chk.checked = true;
-                    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    item.classList.add('bg-emerald-100', 'dark:bg-emerald-950/50');
-                    setTimeout(() => item.classList.remove('bg-emerald-100', 'dark:bg-emerald-950/50'), 1500);
-                    foundExisting = true;
-                }
-            });
-
-            if (!foundExisting) {
-                // Cek apakah sudah ditambahkan ke custom tag container
-                const existingCustom = newTagsContainer.querySelector(`[data-custom-tag="${lowerName}"]`);
-                if (existingCustom) {
-                    alert('Tag #' + tagName + ' sudah ada dalam pilihan.');
-                    return;
-                }
-
-                // Buat chip tag baru
-                const chip = document.createElement('div');
-                chip.setAttribute('data-custom-tag', lowerName);
-                chip.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-[#008a24] dark:text-emerald-400 rounded-lg text-xs font-bold shadow-sm';
-                chip.innerHTML = `
-                    <span>#${tagName} <span class="text-[10px] text-emerald-600 dark:text-emerald-500 font-normal">(Baru)</span></span>
-                    <input type="hidden" name="custom_tags[]" value="${tagName}">
-                    <button type="button" class="text-emerald-600 hover:text-red-500 font-bold text-xs" title="Hapus tag">&times;</button>
-                `;
-
-                chip.querySelector('button').addEventListener('click', () => chip.remove());
-                newTagsContainer.appendChild(chip);
-            }
-        });
-
-        newTagInput.value = '';
-    }
-
-    btnAddTag.addEventListener('click', addNewTag);
-    newTagInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addNewTag();
-        }
-    });
-
-    // Filter master tags live search
-    searchMasterTag.addEventListener('input', function () {
-        const query = this.value.toLowerCase().trim();
-        masterTagItems.forEach(item => {
-            const name = item.getAttribute('data-tag-name') || '';
-            if (name.includes(query)) {
-                item.classList.remove('hidden');
-            } else {
-                item.classList.add('hidden');
-            }
-        });
-    });
 });
 </script>
 @endpush

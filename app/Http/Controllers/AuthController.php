@@ -2,101 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    private const INACTIVE_MESSAGES = [
+        User::STATUS_PENDING => 'Akun Anda belum diverifikasi admin. Mohon tunggu persetujuan.',
+        User::STATUS_REJECTED => 'Pendaftaran akun Anda ditolak oleh admin.',
+        'Nonaktif' => 'Akun Anda sedang dinonaktifkan.',
+        'Diblokir' => 'Akun Anda diblokir.',
+    ];
+
+    public function showLogin(): View|RedirectResponse
     {
         if (Auth::check()) {
-            $user = Auth::user();
-            if ($user->isAdmin() || $user->isStaff()) {
-                return redirect()->route('admin.dashboard');
-            }
-            return redirect()->route('home');
+            return redirect()->route(Auth::user()->cmsHomeRoute());
         }
+
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        $remember = $request->boolean('remember');
-
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-
-            if ($user->status === 'Diblokir' || $user->status === 'Nonaktif') {
-                Auth::logout();
-                return back()->withErrors(['email' => 'Akun Anda sedang dinonaktifkan atau diblokir.']);
-            }
-
-            if ($request->has('next') && $request->query('next') === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-
-            if ($user->isAdmin() || $user->isStaff()) {
-                return redirect()->intended(route('admin.dashboard'));
-            }
-
-            return redirect()->intended(route('home'));
+        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+            return back()
+                ->withErrors(['email' => 'Email atau kata sandi tidak cocok dengan data kami.'])
+                ->onlyInput('email');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau kata sandi tidak cocok dengan data kami.',
-        ])->onlyInput('email');
+        $user = Auth::user();
+
+        if (! $user->isActive()) {
+            Auth::logout();
+
+            return back()
+                ->withErrors(['email' => self::INACTIVE_MESSAGES[$user->status] ?? 'Akun Anda tidak aktif.'])
+                ->onlyInput('email');
+        }
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route($user->cmsHomeRoute()));
     }
 
-    public function showRegister()
+    public function showRegister(): View|RedirectResponse
     {
-        if (Auth::check()) return redirect()->route('home');
+        if (Auth::check()) {
+            return redirect()->route(Auth::user()->cmsHomeRoute());
+        }
+
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    public function register(Request $request): RedirectResponse
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => ['required', Rule::in(User::CONTRIBUTOR_ROLES)],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'Member',
-            'status' => 'Aktif',
+        User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'role' => $data['role'],
+            'status' => User::STATUS_PENDING,
         ]);
 
-        Auth::login($user);
-
-        return redirect()->route('home')->with('success', 'Pendaftaran akun berhasil! Selamat datang di CuplikCom.');
+        return redirect()->route('login')
+            ->with('status', 'Pendaftaran berhasil. Akun Anda bisa dipakai setelah diverifikasi admin.');
     }
 
-    public function showForgotPassword()
-    {
-        return view('auth.forgot-password');
-    }
-
-    public function sendResetLink(Request $request)
-    {
-        $request->validate(['email' => 'required|email']);
-        // Mock / notice
-        return back()->with('status', 'Tautan untuk mereset kata sandi telah dikirimkan ke email Anda (mode demo).');
-    }
-
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

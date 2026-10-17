@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /masuk
+Disallow: /daftar
+Disallow: /lupa-sandi
+
+Sitemap: /sitemap.xml

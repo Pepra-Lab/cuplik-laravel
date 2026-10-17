@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class IklanBaris extends Model
 {
+    use BelongsToUser;
+
     protected $table = 'iklan_baris';
 
     protected $fillable = [
+        'user_id',
         'pemasang',
         'kategori',
         'isi',

@@ -65,15 +65,16 @@ class ArticleController extends Controller
         $article = Article::where('slug', $slug)->firstOrFail();
 
         $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'nullable|email|max:150',
             'komentar' => 'required|string|max:1000',
         ]);
 
+        $user = $request->user();
+
         Comment::create([
             'article_id' => $article->id,
-            'nama' => $request->nama,
-            'email' => $request->email,
+            'user_id' => $user->id,
+            'nama' => $user->name,
+            'email' => $user->email,
             'komentar' => $request->komentar,
             'status' => 'Disetujui',
         ]);

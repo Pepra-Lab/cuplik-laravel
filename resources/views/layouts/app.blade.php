@@ -5,8 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'CuplikCom — Beritanya Unik dan Menggelitik')</title>
-    <meta name="description" content="@yield('meta_description', 'Portal Berita Online CuplikCom — Menyajikan berita unik, politik, sosial, hukum, dan suara rakyat terkini.')">
+    @php
+        $__seoTitle = trim($__env->yieldContent('title', 'CuplikCom — Beritanya Unik dan Menggelitik'));
+        $__seoDescription = trim($__env->yieldContent('meta_description', 'Portal Berita Online CuplikCom — Menyajikan berita unik, politik, sosial, hukum, dan suara rakyat terkini.'));
+        $__seoImage = trim($__env->yieldContent('meta_image', asset('favicon-32x32.png')));
+        $__seoType = trim($__env->yieldContent('og_type', 'website')) ?: 'website';
+        $__seoCanonical = trim($__env->yieldContent('canonical', url()->current()));
+        $__seoNoIndex = trim($__env->yieldContent('noindex', ''));
+    @endphp
+
+    <title>{{ $__seoTitle }}</title>
+    <meta name="description" content="{{ $__seoDescription }}">
+    <meta name="robots" content="{{ $__seoNoIndex === '1' ? 'noindex, nofollow' : 'index, follow' }}">
+    <link rel="canonical" href="{{ $__seoCanonical }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content="{{ \App\Models\Setting::current()->site_name }}">
+    <meta property="og:type" content="{{ $__seoType }}">
+    <meta property="og:url" content="{{ $__seoCanonical }}">
+    <meta property="og:title" content="{{ $__seoTitle }}">
+    <meta property="og:description" content="{{ $__seoDescription }}">
+    <meta property="og:image" content="{{ $__seoImage }}">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $__seoTitle }}">
+    <meta name="twitter:description" content="{{ $__seoDescription }}">
+    <meta name="twitter:image" content="{{ $__seoImage }}">
+
+    @stack('structured_data')
+
+    <!-- Favicon / Logo Resmi CuplikCom -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
 
     <!-- Fonts: Single Font DM Sans (URL: https://fonts.google.com/specimen/DM+Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,6 +151,22 @@
         }
     </style>
     @stack('styles')
+    <!-- JSON-LD: Organization (SEO umum, tampil di semua halaman) -->
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'NewsMediaOrganization',
+        'name' => \App\Models\Setting::current()->site_name,
+        'url' => url('/'),
+        'logo' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('favicon-32x32.png'),
+        'sameAs' => array_values(array_filter([
+            \App\Models\Setting::current()->facebook,
+            \App\Models\Setting::current()->twitter,
+            \App\Models\Setting::current()->instagram,
+            \App\Models\Setting::current()->youtube,
+        ])),
+    ], JSON_UNESCAPED_SLASHES) !!}
+    </script>
 </head>
 
 <body class="bg-white dark:bg-[#121212] text-[#111111] dark:text-[#f3f4f6] min-h-screen flex flex-col transition-colors duration-200">
@@ -209,7 +259,7 @@
                 <!-- 3. Button Masuk with Icon -->
                 @auth
                     <div class="flex items-center gap-2">
-                        @if(auth()->user()->isStaff())
+                        @if(auth()->user()->canAccessCms())
                             <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 bg-gray-900 dark:bg-zinc-700 hover:bg-black text-white rounded-lg text-xs font-bold transition-colors">
                                 CMS
                             </a>
@@ -271,6 +321,14 @@
                     
                     <a href="{{ route('video.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                         VIDEO
+                    </a>
+
+                    <a href="{{ route('poll.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('poll.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                        POLLING
+                    </a>
+
+                    <a href="{{ route('realcount.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('realcount.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                        REAL COUNT
                     </a>
                 </div>
             </nav>
@@ -343,6 +401,12 @@
                     </a>
                 @endauth
 
+                @guest
+                    <a href="{{ route('register') }}" class="w-full py-2.5 border border-[#008a24] text-[#008a24] rounded-lg text-xs font-bold text-center block">
+                        Daftar Member
+                    </a>
+                @endguest
+
                 <a href="#newsletterSection" onclick="document.getElementById('mobileSidebarDrawer').classList.add('hidden')" class="w-full py-2.5 border border-[#008a24] text-[#008a24] hover:bg-[#008a24] hover:text-white rounded-lg text-xs font-bold text-center block transition-colors">
                     Langganan Berita
                 </a>
@@ -381,7 +445,8 @@
     </div>
 
     <!-- Footer: Black with slight green tint (#0e1711), 3 cols on row 1, 1 col on row 2, No Gradients -->
-    <footer class="bg-[#0e1711] text-gray-300 border-t border-zinc-800 pt-12 pb-8">
+    @php($siteSetting = \App\Models\Setting::current())
+    <footer class="bg-[#0e1711] text-gray-300 border-t border-zinc-800 mt-14 pt-12 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Row 1: 3 Grid Columns (Col 1: Logo, Col 2: Navigation menus, Col 3: Additional / Langganan) -->
@@ -393,16 +458,40 @@
                         <div class="w-8 h-8 rounded bg-[#d60000] text-white font-extrabold text-xl flex items-center justify-center">
                             C
                         </div>
-                        <span class="text-xl font-black tracking-tight leading-none"><span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">.com</span></span>
+                        <span class="text-xl font-bold text-white tracking-tight">{{ $siteSetting->site_name ?? 'Cuplik.com' }}</span>
                     </div>
                     <p class="text-xs text-gray-400 leading-relaxed">
-                        PT. Cuplik Media Center (CMC)<br>
-                        Legalitas SK Kepmenkumham RI: <strong>AHU-0039651.AH.01.01.2019</strong><br>
-                        Anggota Resmi <strong>Serikat Media Siber Indonesia (SMSI)</strong>.
+                        {{ $siteSetting->deskripsi ?? 'PT. Cuplik Media Center (CMC), Anggota Resmi Serikat Media Siber Indonesia (SMSI).' }}
                     </p>
                     <div class="text-xs text-gray-400">
-                        <p>Jl. Samsu No. 42 Margadadi, Indramayu, Jawa Barat 45211</p>
-                        <p class="mt-1 font-medium text-gray-300">Hotline Redaksi: 087727030115</p>
+                        <p>{{ $siteSetting->alamat ?? 'Jl. Samsu No. 42 Margadadi, Indramayu, Jawa Barat 45211' }}</p>
+                        @if($siteSetting->telepon)
+                            <p class="mt-1 font-medium text-gray-300">Hotline Redaksi: {{ $siteSetting->telepon }}</p>
+                        @endif
+                        @if($siteSetting->facebook || $siteSetting->twitter || $siteSetting->instagram || $siteSetting->youtube)
+                            <div class="flex items-center gap-2.5 pt-3">
+                                @if($siteSetting->facebook)
+                                    <a href="{{ $siteSetting->facebook }}" target="_blank" rel="noopener" aria-label="Facebook" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M22 12.06C22 6.49 17.52 2 12 2S2 6.49 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg>
+                                    </a>
+                                @endif
+                                @if($siteSetting->twitter)
+                                    <a href="{{ $siteSetting->twitter }}" target="_blank" rel="noopener" aria-label="Twitter / X" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M18.9 2H22l-7.53 8.6L23.3 22h-6.93l-5.43-7.1L4.7 22H1.58l8.06-9.2L1 2h7.1l4.9 6.49L18.9 2Zm-1.22 18.17h1.7L6.4 3.73H4.57l13.11 16.44Z"/></svg>
+                                    </a>
+                                @endif
+                                @if($siteSetting->instagram)
+                                    <a href="{{ $siteSetting->instagram }}" target="_blank" rel="noopener" aria-label="Instagram" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.22.6 1.77 1.15.55.55.9 1.11 1.15 1.77.25.64.42 1.37.47 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.64.25-1.37.42-2.43.47-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.22 1.15-1.77A4.9 4.9 0 0 1 5.45.53C6.09.28 6.82.11 7.88.06 8.94.01 9.28 0 12 0Zm0 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm7.25-.75a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Z"/></svg>
+                                    </a>
+                                @endif
+                                @if($siteSetting->youtube)
+                                    <a href="{{ $siteSetting->youtube }}" target="_blank" rel="noopener" aria-label="YouTube" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-300 hover:bg-[#008a24] hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.51 3.5 12 3.5 12 3.5s-7.51 0-9.38.55A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14C4.49 20.5 12 20.5 12 20.5s7.51 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81ZM9.6 15.5V8.5L15.8 12 9.6 15.5Z"/></svg>
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -419,31 +508,38 @@
                             </a>
                         @endforeach
                         <a href="{{ route('video.index') }}" class="hover:text-[#d60000] transition-colors">Video</a>
+                        <a href="{{ route('poll.index') }}" class="hover:text-[#d60000] transition-colors">Polling</a>
+                        <a href="{{ route('realcount.index') }}" class="hover:text-[#d60000] transition-colors">Real Count</a>
                     </div>
                 </div>
 
-                <!-- Col 3: Additional (Button Langganan / Form Newsletter) -->
-                <div id="newsletterSection" class="space-y-3">
+                <!-- Col 3: Ajakan menjadi Member -->
+                <div class="space-y-3">
                     <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3.5 border-b border-zinc-800 pb-1.5">
-                        Langganan Berita
+                        Ayo Jadi Member Cuplik.com
                     </h4>
                     <p class="text-xs text-gray-400 leading-relaxed">
-                        Dapatkan kurasi berita terkini dan investigasi eksklusif setiap pagi langsung di kotak masuk email Anda.
+                        Manfaat menjadi <b>Member</b> di Cuplik.com yaitu : <br> 1. Mendapat email setiap ada berita terbaru <br> 2. Bisa berkomentar <br> 3. Mengirim curhat rakyat <br> 4. Memasang iklan
                     </p>
-                    <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-2">
+                    @guest
+                        <a href="{{ route('register') }}" class="block w-full bg-[#008a24] hover:bg-[#006f1c] text-white py-2 rounded-lg text-xs font-bold text-center transition-colors">
+                            Daftar Sekarang
+                        </a>
+                    @endguest
+                    {{-- <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-2 mt-2">
                         @csrf
                         <input type="email" name="email" required placeholder="Alamat email Anda..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#008a24]">
                         <button type="submit" class="w-full bg-[#008a24] hover:bg-[#d60000] text-white py-2 rounded-lg text-xs font-bold transition-colors">
                             Langganan Sekarang
                         </button>
-                    </form>
+                    </form> --}}
                 </div>
 
             </div>
 
             <!-- Row 2: 1 Full-width Column (Privacy Policy, Pedoman, Disclaimer, Hak Cipta) -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-3">
-                <p>&copy; {{ date('Y') }} PT. Cuplik Media Center. Seluruh hak cipta dilindungi undang-undang.</p>
+                <p>{!! $siteSetting->footer_text ?? '&copy; '.date('Y').' PT. Cuplik Media Center. Seluruh hak cipta dilindungi undang-undang.' !!}</p>
                 <div class="flex flex-wrap items-center gap-4 text-xs">
                     <a href="{{ route('info.pedoman') }}" class="hover:text-white transition-colors">Pedoman Media Siber</a>
                     <span>·</span>

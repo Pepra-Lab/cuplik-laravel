@@ -16,12 +16,13 @@ use App\Models\PollOption;
 use App\Models\Curhat;
 use App\Models\IklanGambar;
 use App\Models\IklanBaris;
-use App\Models\Banner;
-use App\Models\NewsletterSubscriber;
 use App\Models\Pilbup;
 use App\Models\Paslon;
 use App\Models\Dpt;
 use App\Models\SuaraPilbup;
+use App\Models\IklanPosisi;
+use App\Models\Setting;
+use App\Models\InfoPage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,6 +34,13 @@ class DatabaseSeeder extends Seeder
         // 1. Users / Editorial Team
         $users = [
             [
+                'name' => 'Admin Cuplik',
+                'email' => 'admin@cuplik.com',
+                'password' => Hash::make('password'),
+                'role' => 'Admin',
+                'status' => 'Aktif',
+            ],
+            [
                 'name' => 'Ali Ma\'nawi',
                 'email' => 'redaksi@cuplik.com',
                 'password' => Hash::make('password'),
@@ -43,35 +51,35 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Farhan Maksudi',
                 'email' => 'farhan@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Editor',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Dalani',
                 'email' => 'dalani@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Editor',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Baebudin',
                 'email' => 'baebudin@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Reporter',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Daman',
                 'email' => 'daman@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Reporter',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
             [
                 'name' => 'Ato Susanto',
                 'email' => 'atosusanto@cuplik.com',
                 'password' => Hash::make('password'),
-                'role' => 'Reporter',
+                'role' => 'Redaktur',
                 'status' => 'Aktif',
             ],
         ];
@@ -79,6 +87,8 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $u) {
             User::updateOrCreate(['email' => $u['email']], $u);
         }
+
+        $userIds = User::pluck('id', 'name');
 
         // 2. Categories
         $categoriesData = [
@@ -698,6 +708,7 @@ class DatabaseSeeder extends Seeder
             if (!$cat) continue;
 
             $art = Article::updateOrCreate(['slug' => $ad['slug']], [
+                'user_id' => $userIds[$ad['penulis']] ?? null,
                 'judul' => $ad['judul'],
                 'category_id' => $cat->id,
                 'editor_nama' => $ad['editor'],
@@ -844,6 +855,14 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        // Akun demo Member dibuat setelah berita agar seeding tidak mengirim email notifikasi.
+        User::updateOrCreate(['email' => 'member@cuplik.com'], [
+            'name' => 'Member Cuplik',
+            'password' => Hash::make('password'),
+            'role' => 'Member',
+            'status' => 'Aktif',
+        ]);
+
         // 8. Curhat Rakyat / Keluh Kesah Warga
         $curhatsData = [
             [
@@ -885,42 +904,6 @@ class DatabaseSeeder extends Seeder
 
         foreach ($curhatsData as $cd) {
             Curhat::create($cd);
-        }
-
-        // 9. Banners with Real Editorial News Photos
-        $bannersData = [
-            [
-                'judul' => 'Kritik Muktamar Diancam Sanksi, Kang Eep: Jangan Sampai Partai Jadi Alat Membungkam Nurani Warga NU',
-                'gambar' => 'https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=1600&q=80',
-                'tautan' => '/artikel/kritik-muktamar-diancam-sanksi-kang-eep-jangan-sampai-partai-jadi-alat-membungkam-nurani-warga-nu',
-                'urutan' => 1,
-                'tampil' => 'Ya',
-            ],
-            [
-                'judul' => 'Ada 17 Kursi Kepala Dinas Masih Kosong, Lucky Hakim-Syaefudin Siapkan Lelang Jabatan Terbuka',
-                'gambar' => 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=1600&q=80',
-                'tautan' => '/artikel/ada-17-kursi-kepala-dinas-masih-kosong-lucky-hakim-syaefudin-siapkan-lelang-jabatan-terbuka',
-                'urutan' => 2,
-                'tampil' => 'Ya',
-            ],
-            [
-                'judul' => 'Dosen Polindra Ciptakan Alat Smart Farming IoT Bertenaga Surya untuk Optimalkan Irigasi Mangga',
-                'gambar' => 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1600&q=80',
-                'tautan' => '/artikel/dosen-polindra-ciptakan-alat-smart-farming-iot-bertenaga-surya-untuk-optimalkan-irigasi-mangga',
-                'urutan' => 3,
-                'tampil' => 'Ya',
-            ],
-            [
-                'judul' => 'Shin Tae-yong Siapkan Formasi Kejutan, Timnas Indonesia Bidik Kemenangan Krusial Kualifikasi Piala Dunia',
-                'gambar' => 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1600&q=80',
-                'tautan' => '/artikel/shin-tae-yong-siapkan-formasi-kejutan-timnas-indonesia-bidik-kemenangan-krusial-kualifikasi-piala-dunia',
-                'urutan' => 4,
-                'tampil' => 'Ya',
-            ],
-        ];
-
-        foreach ($bannersData as $bd) {
-            Banner::updateOrCreate(['judul' => $bd['judul']], $bd);
         }
 
         // 10. Real Count Pilbup Indramayu
@@ -994,10 +977,64 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // 11. Newsletter Subscribers
-        $newsletterEmails = ['wongdermayu@gmail.com', 'kabar.cirebon@yahoo.com', 'pembaca.setia@gmail.com'];
-        foreach ($newsletterEmails as $em) {
-            NewsletterSubscriber::updateOrCreate(['email' => $em], ['tanggal' => '2026-10-01']);
+        // 12. Posisi Iklan (master data slot iklan gambar)
+        $posisiData = [
+            ['nama' => 'Header Top', 'ukuran' => '728x90', 'keterangan' => 'Slot di bagian atas header'],
+            ['nama' => 'Sidebar Right', 'ukuran' => '300x250', 'keterangan' => 'Slot sidebar kanan konten'],
+            ['nama' => 'Sidebar Sticky', 'ukuran' => '300x600', 'keterangan' => 'Slot sidebar menempel saat scroll'],
+            ['nama' => 'Article In-Read', 'ukuran' => '728x90', 'keterangan' => 'Slot di tengah isi artikel'],
+            ['nama' => 'Footer Banner', 'ukuran' => '970x90', 'keterangan' => 'Slot banner bagian footer'],
+            ['nama' => 'Popup Overlay', 'ukuran' => null, 'keterangan' => 'Slot popup saat halaman dibuka'],
+        ];
+        foreach ($posisiData as $pos) {
+            IklanPosisi::updateOrCreate(['nama' => $pos['nama']], $pos);
+        }
+
+        // 13. Pengaturan Situs (Profil Situs)
+        Setting::updateOrCreate(['id' => 1], [
+            'site_name' => 'Cuplik.com',
+            'tagline' => 'Kabar Terkini Wong Pantura',
+            'deskripsi' => 'Portal berita lokal Indramayu, Cirebon, dan sekitarnya.',
+            'alamat' => 'Jl. Pahlawan No. 1, Indramayu, Jawa Barat',
+            'email' => 'redaksi@cuplik.com',
+            'telepon' => '0234-123456',
+            'footer_text' => '&copy; ' . date('Y') . ' Cuplik.com. Seluruh hak cipta dilindungi.',
+        ]);
+
+        // 14. Halaman Info (Disclaimer, Pedoman Media, Susunan Redaksi, Info Iklan)
+        $infoPagesData = [
+            [
+                'slug' => 'redaksi',
+                'badge' => 'Informasi Redaksi',
+                'judul' => 'Susunan Redaksi & Manajemen CuplikCom',
+                'subjudul' => null,
+                'konten' => "<div><p><strong>PT. Cuplik Media Center (CMC)</strong><br>Berdiri sejak 2009 &middot; Legalitas SK Kepmenkumham RI Nomor: <strong>AHU-0039651.AH.01.01.Tahun 2019</strong><br>Anggota Resmi <strong>Serikat Media Siber Indonesia (SMSI)</strong></p></div><hr><div><p><strong>Pemimpin Redaksi / Penanggung Jawab:</strong> Ali Ma'nawi</p><p><strong>Dewan Redaksi:</strong> Khusni Mubarok, Farhan Maksudi, Dewo, Ade Lukman, Mundirun, Rando Gunter, Anan Felicio</p><p><strong>Reporter / Kontributor:</strong> Baebudin, Daman, Farhan Maksudi, Lina Maulidiyah, Bakrodin, Winanto, Maulana Yusuf Rismawan, Gustiawan, Dalani, Hasan Ayih, Ato Susanto, Karina JM, Haris Afandi, Papoh Gupron, Fitriyah Jewellery Farsi, Ahmad Hanafi</p></div><hr><table><thead><tr><th>Biro</th><th>Nama</th></tr></thead><tbody><tr><td>Indramayu</td><td>Daman, Baebudin, Dulhalil, Adeng Widayah, Marsan, Nurdi, Ato Tolok</td></tr><tr><td>Majalengka</td><td>Sunarto Aryodinoto, Fatkhul Amin</td></tr><tr><td>Cirebon Raya</td><td>Ade Hamdani</td></tr><tr><td>Bandung Raya & Sumedang</td><td>Tb Chep Zulfikar Natanegara</td></tr><tr><td>Jabodetabek</td><td>Ade Lukman, Muhamad Riko Indrianto, Fanny Nurul Hotimah, Deny Sardika, Nabila Ebivalia</td></tr><tr><td>Tegal Raya</td><td>Wurdiyanto</td></tr><tr><td>D.I. Yogyakarta</td><td>Abdan Ghifari Atsqo</td></tr><tr><td>Lampung</td><td>Ismail, M Ali Alnavian, Zul Halim</td></tr></tbody></table><hr><div><p><strong>Penasehat Hukum:</strong> Kantor Hukum Adi Iwan Mulyawan, SH. dan Rekan</p><p><strong>Programmer & Designer:</strong> A Lubis Ghozali, M Ali Fikri</p><p><strong>Iklan & Promosi:</strong> Pudin, Ahmad Hasan A</p><p><strong>Administrasi & Keuangan:</strong> Fitriyani, Desi Amaliani</p></div><div><p><strong>Alamat Kantor Redaksi & Tata Usaha</strong><br>Jl. Samsu No. 42 Kelurahan Margadadi, Kabupaten Indramayu, Jawa Barat 45211<br><strong>Telp:</strong> (0234) 7126806 &middot; <strong>WhatsApp:</strong> 087727030115<br><strong>Email Redaksi:</strong> cuplikcom@gmail.com | info@cuplik.com<br><strong>Situs Web Resmi:</strong> <a href=\"https://www.cuplik.com\" target=\"_blank\">www.cuplik.com</a> | <a href=\"https://www.cuplik.id\" target=\"_blank\">www.cuplik.id</a></p></div>",
+            ],
+            [
+                'slug' => 'pedoman',
+                'badge' => 'Kode Etik',
+                'judul' => 'Pedoman Pemberitaan Media Siber',
+                'subjudul' => null,
+                'konten' => '<p>Kemerdekaan berpendapat, kemerdekaan berekspresi, dan kemerdekaan pers adalah hak asasi manusia yang dilindungi Pancasila, Undang-Undang Dasar 1945, dan Deklarasi Universal Hak Asasi Manusia PBB. Keberadaan media siber di Indonesia juga merupakan bagian dari kemerdekaan berpendapat, berekspresi, dan pers.</p><p>Media siber memiliki karakter khusus sehingga memerlukan pedoman agar pengelolaannya dapat dilaksanakan secara profesional, memenuhi fungsi, hak, dan kewajibannya sesuai <strong>Undang-Undang Nomor 40 Tahun 1999 tentang Pers</strong> dan Kode Etik Jurnalistik. Untuk itu Dewan Pers bersama organisasi pers dan masyarakat menyusun Pedoman Pemberitaan Media Siber.</p><h3>1. Ruang Lingkup</h3><p>Media Siber adalah segala bentuk media yang menggunakan wahana internet dan melaksanakan kegiatan jurnalistik, serta memenuhi persyaratan Undang-Undang Pers dan Standar Perusahaan Pers yang ditetapkan Dewan Pers.</p><h3>2. Verifikasi dan Keberimbangan Berita</h3><p>Pada prinsipnya setiap berita harus melalui verifikasi. Berita yang dapat merugikan pihak lain memerlukan verifikasi pada berita yang sama untuk memenuhi prinsip akurasi dan keberimbangan.</p><h3>3. Ralat, Koreksi, dan Hak Jawab</h3><p>Ralat, koreksi, dan hak jawab mengacu pada Undang-Undang Pers, Kode Etik Jurnalistik, dan Pedoman Hak Jawab yang ditetapkan Dewan Pers.</p>',
+            ],
+            [
+                'slug' => 'disclaimer',
+                'badge' => 'Legalitas',
+                'judul' => 'Pasal Sanggahan (Disclaimer)',
+                'subjudul' => null,
+                'konten' => '<p>Seluruh layanan dan sajian informasi yang diberikan oleh <strong>cuplikcom</strong> mengikuti aturan main yang berlaku serta tunduk pada ketentuan hukum pers Republik Indonesia.</p><ul><li><strong>cuplikcom</strong> tidak bertanggung jawab atas tidak tersampaikannya data/informasi yang dikirimkan oleh pembaca melalui saluran komunikasi karena kendala teknis tak terduga.</li><li><strong>cuplikcom</strong> berhak untuk memuat, tidak memuat, mengedit, mengklarifikasi, dan/atau menghapus data maupun informasi yang disampaikan pembaca demi etika, hukum, dan akurasi jurnalistik.</li><li>Data dan/atau analisis yang disajikan di <strong>cuplikcom</strong> ditujukan sebagai rujukan informasi publik yang objektif dan edukatif, bukan merupakan nasehat investasi atau hukum langsung tanpa konfirmasi ahli.</li><li>Seluruh materi grafis, teks, dan foto berita yang diproduksi oleh tim redaksi dilindungi undang-undang hak cipta. Pengutipan diperkenankan dengan mencantumkan tautan aktif sumber berita cuplik.com.</li></ul>',
+            ],
+            [
+                'slug' => 'iklan',
+                'badge' => 'Kerjasama Media',
+                'judul' => 'Info Pemasangan Iklan & Advertorial',
+                'subjudul' => 'Jangkau ratusan ribu pembaca loyal, pengambil kebijakan, dan pelaku usaha di seluruh Indonesia.',
+                'konten' => '<p>CuplikCom (PT Cuplik Media Center) melayani kemitraan strategis periklanan digital, advertorial institusi pemerintah/swasta, publikasi siaran pers (press release), dan pemasangan banner promosi dengan penempatan strategis berkinerja tinggi.</p><h3>Tarif Publikasi Artikel & Banner</h3><table><thead><tr><th>Jenis Publikasi</th><th>Penempatan / Posisi</th><th>Periode</th><th>Tarif</th></tr></thead><tbody><tr><td>Headline Utama Hero</td><td>Banner Slider Beranda</td><td>Per Bulan</td><td>Rp 2.500.000</td></tr><tr><td>Banner Header 728&times;90</td><td>Semua Halaman (Header)</td><td>Per Bulan</td><td>Rp 2.000.000</td></tr><tr><td>Banner Sidebar 300&times;250</td><td>Kolom Kanan Beranda & Artikel</td><td>Per Bulan</td><td>Rp 1.500.000</td></tr><tr><td>Advertorial / Rilis Pers</td><td>Kanal Kategori & Terindeks Google</td><td>Selamanya (Tayang)</td><td>Rp 1.000.000</td></tr></tbody></table><p><strong>Kontak Hotline Pemasaran & Pengiriman Materi</strong><br><strong>WhatsApp / Hotline:</strong> 087727030115 (Bagian Iklan & Kerjasama)<br><strong>Email:</strong> cuplikcom@gmail.com / iklan@cuplik.com<br>Kantor Redaksi: Jl. Samsu No. 42 Kelurahan Margadadi, Kabupaten Indramayu 45211</p>',
+            ],
+        ];
+
+        foreach ($infoPagesData as $ip) {
+            InfoPage::updateOrCreate(['slug' => $ip['slug']], $ip);
         }
     }
 }
