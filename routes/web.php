@@ -58,7 +58,7 @@ Route::get('/cari', [SearchController::class, 'index'])->name('search');
 Route::get('/api/search-live', [SearchController::class, 'liveSearch'])->name('api.search.live');
 
 Route::get('/polling', [PollController::class, 'index'])->name('poll.index');
-Route::post('/polling/vote', [PollController::class, 'vote'])->name('poll.vote');
+Route::post('/polling/vote', [PollController::class, 'vote'])->middleware('throttle:6,1')->name('poll.vote');
 
 Route::get('/curhat', [CurhatController::class, 'index'])->name('curhat.index');
 Route::post('/curhat', [CurhatController::class, 'store'])->middleware('auth')->name('curhat.store');

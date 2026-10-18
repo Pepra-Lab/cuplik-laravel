@@ -115,4 +115,24 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown Mail Settings
+    |--------------------------------------------------------------------------
+    |
+    | Mengarahkan Laravel ke tema markdown-mail custom di
+    | resources/views/vendor/mail, supaya notifikasi email (reset password,
+    | artikel terbit, dsb) pakai desain bermerek Cuplik.com, bukan tema
+    | bawaan framework yang polos. Komponen yang tidak di-override di sini
+    | (mis. table, subcopy) otomatis jatuh kembali ke tema bawaan Laravel.
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'default',
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
 ];

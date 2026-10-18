@@ -24,9 +24,16 @@ class ArticlePublished extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
+        // $notifiable->name tidak selalu ada: kalau notifikasi dikirim lewat
+        // Notification::route() ke alamat anonim (bukan model User), objeknya
+        // adalah AnonymousNotifiable yang tidak punya properti name sama
+        // sekali. Fallback ke sapaan generik supaya tidak ada warning/notice.
+        $nama = $notifiable->name ?? null;
+        $sapaan = $nama ? "Halo, {$nama}!" : 'Halo!';
+
         return (new MailMessage)
             ->subject("Berita Terbaru: {$this->article->judul}")
-            ->greeting("Halo, {$notifiable->name}!")
+            ->greeting($sapaan)
             ->line(Str::limit(strip_tags($this->article->lead ?: $this->article->isi), 200))
             ->action('Baca Selengkapnya', route('article.show', $this->article->slug))
             ->line('Anda menerima email ini karena terdaftar sebagai Member CuplikCom.');

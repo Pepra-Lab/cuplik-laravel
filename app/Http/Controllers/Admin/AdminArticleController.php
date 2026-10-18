@@ -55,7 +55,7 @@ class AdminArticleController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate($this->rules($request));
+        $validated = $request->validate($this->rules($request), $this->messages());
 
         // 1. Slug otomatis / manual ringkas & unik
         $rawSlug = $request->filled('slug')
@@ -115,7 +115,7 @@ class AdminArticleController extends Controller
     {
         Gate::authorize('update', $article);
 
-        $validated = $request->validate($this->rules($request));
+        $validated = $request->validate($this->rules($request), $this->messages());
 
         // 1. Slug handling (bisa diedit redaktur, tetap dipastikan ringkas & unik)
         if ($request->filled('slug')) {
@@ -218,12 +218,23 @@ class AdminArticleController extends Controller
             'tone' => 'nullable|string|max:20',
             'status' => $request->user()->isMember() ? 'nullable' : 'required|in:Terbit,Review,Draft',
             'tanggal' => 'required|date',
-            'tags' => 'nullable|array',
+            // Minimal satu tag harus dipilih ATAU diisi lewat "Tag Baru" — checkbox
+            // yang tidak dicentang tidak ikut terkirim sama sekali di request, jadi
+            // required_without:new_tags di sini akan menangkap kasus "tidak pilih
+            // tag sama sekali" dan menolaknya dengan pesan error yang jelas.
+            'tags' => 'required_without:new_tags|array',
             'tags.*' => 'exists:tags,id',
             'new_tags' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:70',
             'meta_description' => 'nullable|string|max:160',
             'meta_image' => 'nullable|string|max:255',
+        ];
+    }
+
+    private function messages(): array
+    {
+        return [
+            'tags.required_without' => 'Pilih minimal satu tag di atas, atau isi kolom "Tag Baru".',
         ];
     }
 

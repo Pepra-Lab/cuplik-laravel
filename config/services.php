@@ -35,4 +35,20 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google reCAPTCHA v2 (Checkbox "Saya bukan robot")
+    |--------------------------------------------------------------------------
+    |
+    | Daftar dulu di https://www.google.com/recaptcha/admin untuk dapat
+    | site_key & secret. Kalau secret kosong (belum diisi di .env), validasi
+    | reCAPTCHA otomatis dilewati (dianggap nonaktif) supaya environment lokal
+    | tanpa key tetap bisa dipakai untuk development — lihat App\Rules\Recaptcha.
+    |
+    */
+    'recaptcha' => [
+        'site_key' => env('RECAPTCHA_SITE_KEY'),
+        'secret' => env('RECAPTCHA_SECRET_KEY'),
+    ],
+
 ];

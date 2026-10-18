@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Rules\Recaptcha;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,10 +30,13 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+            'g-recaptcha-response' => [new Recaptcha],
         ]);
+
+        $credentials = $request->only('email', 'password');
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
             return back()
@@ -71,6 +75,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => ['required', Rule::in(User::CONTRIBUTOR_ROLES)],
+            'g-recaptcha-response' => [new Recaptcha],
         ]);
 
         User::create([

@@ -59,6 +59,10 @@
                 <input type="password" name="password_confirmation" required placeholder="Ulangi kata sandi" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
+            @if(config('services.recaptcha.site_key'))
+                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+            @endif
+
             <button type="submit" class="w-full bg-[#008a24] hover:bg-[#d60000] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
                 Daftar Akun Baru
             </button>
@@ -70,4 +74,10 @@
 
     </div>
 </div>
+
+@if(config('services.recaptcha.site_key'))
+    @push('scripts')
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endpush
+@endif
 @endsection

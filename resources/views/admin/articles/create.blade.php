@@ -58,8 +58,8 @@
                         <div class="relative">
                             <input type="text" name="slug" id="slugInput" value="{{ old('slug') }}" placeholder="pemerintah-umumkan-kenaikan-harga-bbm" class="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#008a24]">
                         </div>
-                        <div class="mt-1 flex items-center gap-1 text-[11px] text-gray-400">
-                            <span>Tautan Portal:</span>
+                        <div class="mt-1 flex flex-wrap items-center gap-1 text-[11px] text-gray-400 break-all [overflow-wrap:anywhere]">
+                            <span class="shrink-0">Tautan Portal:</span>
                             <span class="text-gray-500 dark:text-gray-400 font-mono">{{ url('/artikel') }}/</span><strong id="slugPreview" class="text-[#008a24] font-mono">{{ old('slug', 'slug-berita') }}</strong>
                         </div>
                         @error('slug') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
@@ -77,8 +77,9 @@
                         <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
                             Isi Berita Lengkap <span class="text-red-500">*</span>
                         </label>
-                        <textarea name="isi" id="editorIsi" rows="12" required placeholder="Tulis isi berita lengkap di sini (paragraf pertama akan otomatis dijadikan Lead/Ringkasan)..." class="w-full p-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white font-sans focus:outline-none focus:ring-2 focus:ring-[#008a24] leading-relaxed">{{ old('isi') }}</textarea>
+                        <textarea name="isi" id="editorIsi" rows="12" placeholder="Tulis isi berita lengkap di sini (paragraf pertama akan otomatis dijadikan Lead/Ringkasan)..." class="w-full p-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-xs text-gray-900 dark:text-white font-sans focus:outline-none focus:ring-2 focus:ring-[#008a24] leading-relaxed">{{ old('isi') }}</textarea>
                         @error('isi') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                        <p id="isiWarning" class="hidden text-[11px] text-red-500 mt-1">Isi berita wajib diisi.</p>
                     </div>
 
                     <!-- Lead Otomatis Info Box -->
@@ -90,7 +91,7 @@
                             </span>
                             <span id="leadCount" class="text-gray-400">0 / 500 karakter</span>
                         </div>
-                        <p class="text-[11px] text-gray-600 dark:text-gray-300 italic" id="leadPreviewText">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-300 italic break-words [overflow-wrap:anywhere]" id="leadPreviewText">
                             Lead tidak diinput manual. Sistem akan otomatis mengambil paragraf pertama isi berita (maksimal 500 karakter) sebagai meta description dan ringkasan berita.
                         </p>
                     </div>
@@ -220,14 +221,18 @@
                         @endif
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 dark:bg-zinc-800/50 rounded-lg border border-gray-200 dark:border-zinc-700">
+                    <div id="tagCheckboxGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 dark:bg-zinc-800/50 rounded-lg border {{ $errors->has('tags') ? 'border-red-400 dark:border-red-700' : 'border-gray-200 dark:border-zinc-700' }}">
                         @foreach($tags as $tg)
                             <label class="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 hover:text-[#008a24] cursor-pointer">
-                                <input type="checkbox" name="tags[]" value="{{ $tg->id }}" {{ is_array(old('tags')) && in_array($tg->id, old('tags')) ? 'checked' : '' }} class="rounded border-gray-300 text-[#008a24] focus:ring-[#008a24]">
+                                <input type="checkbox" name="tags[]" value="{{ $tg->id }}" {{ is_array(old('tags')) && in_array($tg->id, old('tags')) ? 'checked' : '' }} class="tag-checkbox rounded border-gray-300 text-[#008a24] focus:ring-[#008a24]">
                                 <span class="truncate">{{ $tg->nama }}</span>
                             </label>
                         @endforeach
                     </div>
+                    @error('tags')
+                        <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span>
+                    @enderror
+                    <p id="tagWarning" class="hidden text-[11px] text-red-500 mt-1">Pilih minimal satu tag di atas, atau isi kolom "Tag Baru".</p>
 
                     @if(auth()->user()->isCmsStaff())
                         <div data-tag-adder-panel class="mt-3 {{ $errors->has('new_tags') ? '' : 'hidden' }}">
@@ -346,6 +351,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
@@ -480,6 +486,45 @@ document.addEventListener('DOMContentLoaded', function () {
     updateLeadPreview();
 
     // ==========================================
+    // 2b. RICH TEXT EDITOR (CKEditor) UNTUK ISI BERITA
+    // ==========================================
+    // CKEditor "mengganti tampilan" <textarea id="editorIsi"> dengan UI-nya
+    // sendiri, tapi textarea aslinya tetap ada (disembunyikan) dan tetap
+    // menjadi field yang ikut ter-submit lewat form. Supaya logic Lead
+    // Otomatis & validasi tag/isi yang sudah ada tidak perlu ditulis ulang,
+    // kita sinkronkan isi CKEditor ke textarea itu setiap kali berubah.
+    let isiEditorInstance = null;
+    ClassicEditor
+        .create(editorIsi, {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'underline', 'link', '|',
+                'bulletedList', 'numberedList', 'blockQuote', 'insertTable', '|',
+                'undo', 'redo',
+            ],
+        })
+        .then(function (editor) {
+            isiEditorInstance = editor;
+
+            // Isi awal (kalau ada, misal dari old('isi') saat validasi gagal)
+            // sudah otomatis terbaca karena CKEditor membaca value textarea
+            // saat .create() dipanggil.
+            editor.model.document.on('change:data', function () {
+                editorIsi.value = editor.getData();
+                updateLeadPreview();
+                if (editor.getData().trim() !== '') {
+                    isiWarning.classList.add('hidden');
+                }
+            });
+        })
+        .catch(function (error) {
+            // Kalau CDN CKEditor gagal dimuat (mis. koneksi internet admin
+            // bermasalah), jangan sampai form jadi tidak bisa dipakai sama
+            // sekali — biarkan textarea biasa tetap berfungsi sebagai fallback.
+            console.error('Gagal memuat CKEditor, memakai textarea biasa sebagai cadangan:', error);
+        });
+
+    // ==========================================
     // 3. PREVIEW & VALIDASI UPLOAD GAMBAR 1 & 2
     // ==========================================
     function setupImageUpload(fileInputId, previewBoxId, previewImgId, previewInfoId, removeBtnId) {
@@ -529,6 +574,68 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setupImageUpload('fileInput1', 'previewBox1', 'previewImg1', 'previewInfo1', 'btnRemoveImg1');
     setupImageUpload('fileInput2', 'previewBox2', 'previewImg2', 'previewInfo2', 'btnRemoveImg2');
+
+    // ==========================================
+    // 4. VALIDASI TAG WAJIB DIISI SEBELUM SUBMIT
+    // ==========================================
+    const articleForm = document.getElementById('articleForm');
+    const tagCheckboxGrid = document.getElementById('tagCheckboxGrid');
+    const tagWarning = document.getElementById('tagWarning');
+    const newTagsInput = document.querySelector('input[name="new_tags"]');
+    const isiWarning = document.getElementById('isiWarning');
+
+    function hasAtLeastOneTag() {
+        const anyChecked = !!tagCheckboxGrid.querySelector('.tag-checkbox:checked');
+        const hasNewTag = newTagsInput && newTagsInput.value.trim() !== '';
+        return anyChecked || hasNewTag;
+    }
+
+    function clearTagWarning() {
+        tagWarning.classList.add('hidden');
+        tagCheckboxGrid.classList.remove('border-red-400', 'dark:border-red-700');
+        tagCheckboxGrid.classList.add('border-gray-200', 'dark:border-zinc-700');
+    }
+
+    tagCheckboxGrid.addEventListener('change', () => {
+        if (hasAtLeastOneTag()) clearTagWarning();
+    });
+    if (newTagsInput) {
+        newTagsInput.addEventListener('input', () => {
+            if (hasAtLeastOneTag()) clearTagWarning();
+        });
+    }
+
+    function isiIsEmpty() {
+        // Textarea sudah disinkronkan dari CKEditor (lihat bagian 2b), jadi
+        // cukup cek textarea-nya saja, tidak peduli CKEditor berhasil
+        // dimuat atau tidak (fallback textarea biasa tetap tervalidasi).
+        return editorIsi.value.replace(/<[^>]+>/g, '').trim() === '';
+    }
+
+    articleForm.addEventListener('submit', function (e) {
+        let blocked = false;
+        let scrollTarget = null;
+
+        if (isiIsEmpty()) {
+            isiWarning.classList.remove('hidden');
+            scrollTarget = editorIsi;
+            blocked = true;
+        }
+
+        if (!hasAtLeastOneTag()) {
+            tagWarning.classList.remove('hidden');
+            tagCheckboxGrid.classList.remove('border-gray-200', 'dark:border-zinc-700');
+            tagCheckboxGrid.classList.add('border-red-400', 'dark:border-red-700');
+            scrollTarget = scrollTarget || tagCheckboxGrid;
+            blocked = true;
+        }
+
+        if (blocked) {
+            e.preventDefault();
+            scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
+    });
 });
 </script>
 @endpush

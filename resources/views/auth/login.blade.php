@@ -48,6 +48,10 @@
                 <label for="remember" class="text-xs text-gray-600 dark:text-gray-400">Ingat saya di perangkat ini</label>
             </div>
 
+            @if(config('services.recaptcha.site_key'))
+                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+            @endif
+
             <button type="submit" class="w-full bg-[#008a24] hover:bg-[#d60000] text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
                 Masuk Sekarang
             </button>
@@ -59,4 +63,10 @@
 
     </div>
 </div>
+
+@if(config('services.recaptcha.site_key'))
+    @push('scripts')
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endpush
+@endif
 @endsection

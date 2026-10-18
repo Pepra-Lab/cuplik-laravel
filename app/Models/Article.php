@@ -47,6 +47,17 @@ class Article extends Model
         'dibaca' => 'integer',
     ];
 
+    /**
+     * Mutator: bersihkan HTML isi berita sebelum disimpan, supaya tag/atribut
+     * berbahaya (script, onclick=, javascript:, dsb) dari editor rich-text
+     * tidak pernah sampai tersimpan — ini mencegah stored XSS saat konten
+     * dirender raw lewat {!! renderContentWithImages() !!} di view.
+     */
+    public function setIsiAttribute(?string $value): void
+    {
+        $this->attributes['isi'] = \App\Support\HtmlSanitizer::clean($value);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

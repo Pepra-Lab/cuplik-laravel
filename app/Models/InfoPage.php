@@ -27,6 +27,16 @@ class InfoPage extends Model
     ];
 
     /**
+     * Bersihkan HTML konten halaman info sebelum disimpan (defense-in-depth;
+     * hanya staff/admin yang bisa isi halaman ini, tapi tetap dirender raw
+     * lewat {!! !!} di view, jadi tetap disaring).
+     */
+    public function setKontenAttribute(?string $value): void
+    {
+        $this->attributes['konten'] = \App\Support\HtmlSanitizer::clean($value);
+    }
+
+    /**
      * Ambil satu halaman berdasarkan slug. Dibuatkan baris kosong bila
      * belum pernah diisi sama sekali, supaya form edit tidak pernah 404.
      */
