@@ -20,7 +20,7 @@
             @endif
         </div>
 
-        <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm space-y-6 text-sm text-gray-800 dark:text-gray-200 leading-relaxed [&_table]:w-full [&_table]:text-xs [&_table]:text-left [&_th]:p-3 [&_td]:p-3 [&_thead]:bg-gray-100 dark:[&_thead]:bg-zinc-800 [&_thead]:font-bold [&_tbody]:divide-y [&_tbody]:divide-gray-100 dark:[&_tbody]:divide-zinc-800 [&_table]:border [&_table]:border-gray-200 dark:[&_table]:border-zinc-700 [&_table]:rounded-lg [&_table]:overflow-hidden">
+        <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm space-y-6 text-sm text-gray-800 dark:text-gray-200 leading-relaxed article-content [&_table]:w-full [&_table]:text-xs [&_table]:text-left [&_th]:p-3 [&_td]:p-3 [&_thead]:bg-gray-100 dark:[&_thead]:bg-zinc-800 [&_thead]:font-bold [&_tbody]:divide-y [&_tbody]:divide-gray-100 dark:[&_tbody]:divide-zinc-800 [&_table]:border [&_table]:border-gray-200 dark:[&_table]:border-zinc-700 [&_table]:rounded-lg [&_table]:overflow-hidden">
             {!! $page->konten !!}
         </div>
     </div>

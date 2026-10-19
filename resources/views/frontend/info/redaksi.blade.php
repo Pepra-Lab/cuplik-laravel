@@ -18,7 +18,7 @@
             @endif
         </div>
 
-        <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm space-y-5 text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
+        <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm space-y-5 text-sm text-gray-800 dark:text-gray-200 leading-relaxed article-content">
             {!! $page->konten !!}
         </div>
     </div>

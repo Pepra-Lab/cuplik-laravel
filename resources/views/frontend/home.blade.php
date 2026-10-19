@@ -72,8 +72,8 @@
             <span class="text-xs text-white/90 font-semibold tracking-wide">Kurasi Redaksi Hari Ini</span>
         </div>
 
-        <!-- 3 Columns Grid from Left to Right using Card Image 1 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 3 Columns Grid from Left to Right using Card Image 1 (1 col mobile, 3 cols tablet & desktop) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @foreach($curatedNews->take(3) as $art)
                 <!-- Card Image 1 in Green Box (White Text & White Badge with Red Font) -->
                 <article class="group flex flex-col space-y-3">

@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <div class="text-right text-gray-500 dark:text-gray-400">
+            <div class="text-left sm:text-right text-gray-500 dark:text-gray-400">
                 <span class="font-bold block text-gray-800 dark:text-gray-200">{{ $article->formatted_date }}</span>
                 <span class="text-[11px] font-medium">{{ $article->time_ago }} · {{ number_format($article->dibaca) }} kali dibaca</span>
             </div>
@@ -135,7 +135,7 @@
         @endif
 
         <!-- 4. Detail Teks Berita (dengan gambar inline sesuai posisi penempatan) -->
-        <div class="text-base leading-relaxed text-gray-800 dark:text-gray-200 space-y-4 pt-2">
+        <div class="text-base leading-relaxed text-gray-800 dark:text-gray-200 space-y-4 pt-2 article-content">
             {!! $article->renderContentWithImages() !!}
             <p class="text-xs text-gray-400 italic pt-2"><strong>(cpl/red)</strong></p>
         </div>

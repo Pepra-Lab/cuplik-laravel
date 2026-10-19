@@ -149,6 +149,43 @@
             border-color: #008a24 !important;
             outline: none;
         }
+
+        /* Mobile & Tablet Responsiveness Enforcements */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Hide scrollbars while allowing smooth scroll on tablets/mobile */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Responsive styling for article rich-text content */
+        .article-content img {
+            max-width: 100% !important;
+            height: auto !important;
+            border-radius: 0.5rem;
+        }
+        .article-content table {
+            display: block;
+            width: 100% !important;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-collapse: collapse;
+        }
+        .article-content iframe {
+            max-width: 100% !important;
+        }
+        .article-content {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
     </style>
     @stack('styles')
     <!-- JSON-LD: Organization (SEO umum, tampil di semua halaman) -->
@@ -200,25 +237,25 @@
     <header class="bg-white dark:bg-[#121212] sticky top-0 z-40 shadow-sm border-b border-gray-100 dark:border-zinc-800">
         
         <!-- Main Top Bar: Logo & Right Controls with space-between -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
             
             <!-- Left: Logo Cuplik -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0 group">
-                <div class="w-10 h-10 rounded-lg bg-[#d60000] text-white flex items-center justify-center font-black text-2xl shadow-sm tracking-tighter">
+            <a href="{{ route('home') }}" class="flex items-center gap-2 sm:gap-3 shrink-0 group">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#d60000] text-white flex items-center justify-center font-black text-xl sm:text-2xl shadow-sm tracking-tighter">
                     C
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-2xl sm:text-3xl font-black tracking-tight leading-none">
+                    <span class="text-xl sm:text-3xl font-black tracking-tight leading-none">
                         <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">.com</span>
                     </span>
-                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-semibold tracking-wide">
+                    <span class="hidden sm:inline text-[10px] text-gray-500 dark:text-gray-400 font-semibold tracking-wide">
                         Beritanya Unik &amp; Menggelitik
                     </span>
                 </div>
             </a>
 
-            <!-- Center Search Bar (Desktop) with Live Search Dropdown -->
-            <div class="hidden md:flex flex-1 max-w-md mx-4 relative" id="searchContainerDesktop">
+            <!-- Center Search Bar (Desktop & Tablet) with Live Search Dropdown -->
+            <div class="hidden md:flex flex-1 max-w-xs lg:max-w-md mx-2 lg:mx-4 relative" id="searchContainerDesktop">
                 <form action="{{ route('search') }}" method="GET" class="w-full relative">
                     <input type="text" id="liveSearchInput" name="q" value="{{ request('q') }}" autocomplete="off" placeholder="Cari berita terkini, topik, tokoh..." class="w-full bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 rounded-lg py-2 pl-9 pr-16 text-xs text-gray-900 dark:text-white input-search-hover">
                     
@@ -241,7 +278,7 @@
             </div>
 
             <!-- Right: Div containing Language, Theme mode, and Masuk button (with Login icon) -->
-            <div class="flex items-center gap-3 shrink-0">
+            <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
                 
                 <!-- 1. Localization Bahasa (Default: Indonesia) -->
                 <div class="relative hidden sm:block">
@@ -251,28 +288,34 @@
                     </select>
                 </div>
 
-                <!-- 2. Theme Mode Toggle -->
-                <button id="themeToggleBtn" type="button" class="px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:border-[#008a24] text-xs font-bold transition-colors flex items-center gap-1.5" title="Ganti Mode Tampilan">
-                    <span id="themeToggleText">Gelap</span>
+                <!-- 2. Theme Mode Toggle with Icon and Responsive Text -->
+                <button id="themeToggleBtn" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:border-[#008a24] text-xs font-bold transition-colors flex items-center gap-1.5" title="Ganti Mode Tampilan">
+                    <svg id="themeIconSun" class="w-3.5 h-3.5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg id="themeIconMoon" class="w-3.5 h-3.5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <span id="themeToggleText" class="hidden sm:inline">Gelap</span>
                 </button>
 
                 <!-- 3. Button Masuk with Icon -->
                 @auth
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5 sm:gap-2">
                         @if(auth()->user()->canAccessCms())
-                            <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 bg-gray-900 dark:bg-zinc-700 hover:bg-black text-white rounded-lg text-xs font-bold transition-colors">
+                            <a href="{{ route('admin.dashboard') }}" class="px-2.5 sm:px-3 py-1.5 bg-gray-900 dark:bg-zinc-700 hover:bg-black text-white rounded-lg text-xs font-bold transition-colors">
                                 CMS
                             </a>
                         @endif
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="px-3 py-1.5 bg-[#d60000] hover:bg-[#b50000] text-white rounded-lg text-xs font-bold transition-colors">
+                            <button type="submit" class="px-2.5 sm:px-3 py-1.5 bg-[#d60000] hover:bg-[#b50000] text-white rounded-lg text-xs font-bold transition-colors">
                                 Keluar
                             </button>
                         </form>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="px-3.5 py-1.5 bg-[#d60000] hover:bg-[#b50000] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm">
+                    <a href="{{ route('login') }}" class="px-2.5 sm:px-3.5 py-1.5 bg-[#d60000] hover:bg-[#b50000] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm">
                         <!-- Login Icon -->
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
@@ -282,7 +325,7 @@
                 @endauth
 
                 <!-- Mobile Hamburger Button -->
-                <button id="mobileSidebarOpenBtn" type="button" class="md:hidden p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:text-[#008a24]" aria-label="Buka Menu">
+                <button id="mobileSidebarOpenBtn" type="button" class="md:hidden p-1.5 sm:p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:text-[#008a24]" aria-label="Buka Menu">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -304,30 +347,30 @@
             ];
         @endphp
 
-        <!-- Horizontal Desktop Navigation List: Hanya tampil di desktop (hidden md:block), mobile hanya di menu hamburger -->
+        <!-- Horizontal Desktop & Tablet Navigation List: overflow-x-auto scrollbar-none to prevent tablet overflow -->
         <div class="hidden md:block">
             <hr class="border-gray-200 dark:border-zinc-800">
-            <nav class="bg-white dark:bg-[#121212]">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-1 text-xs sm:text-sm font-extrabold tracking-tight whitespace-nowrap py-1">
-                    <a href="{{ route('home') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+            <nav class="bg-white dark:bg-[#121212] overflow-x-auto scrollbar-none">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center md:justify-start xl:justify-between gap-1 text-xs sm:text-sm font-extrabold tracking-tight whitespace-nowrap py-1">
+                    <a href="{{ route('home') }}" class="py-2.5 px-3 transition-colors shrink-0 {{ request()->routeIs('home') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                         HOME
                     </a>
 
                     @foreach($mainNavCategories as $cat)
-                        <a href="{{ route('category.show', $cat['slug']) }}" class="py-2.5 px-3 transition-colors {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                        <a href="{{ route('category.show', $cat['slug']) }}" class="py-2.5 px-3 transition-colors shrink-0 {{ request()->is('kanal/'.$cat['slug'].'*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                             {{ $cat['nama'] }}
                         </a>
                     @endforeach
                     
-                    <a href="{{ route('video.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                    <a href="{{ route('video.index') }}" class="py-2.5 px-3 transition-colors shrink-0 {{ request()->routeIs('video.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                         VIDEO
                     </a>
 
-                    <a href="{{ route('poll.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('poll.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                    <a href="{{ route('poll.index') }}" class="py-2.5 px-3 transition-colors shrink-0 {{ request()->routeIs('poll.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                         POLLING
                     </a>
 
-                    <a href="{{ route('realcount.index') }}" class="py-2.5 px-3 transition-colors {{ request()->routeIs('realcount.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
+                    <a href="{{ route('realcount.index') }}" class="py-2.5 px-3 transition-colors shrink-0 {{ request()->routeIs('realcount.*') ? 'text-[#008a24] border-b-2 border-[#d60000]' : 'text-gray-900 dark:text-gray-100 hover:text-[#d60000]' }}">
                         REAL COUNT
                     </a>
                 </div>
@@ -539,8 +582,8 @@
 
             <!-- Row 2: 1 Full-width Column (Privacy Policy, Pedoman, Disclaimer, Hak Cipta) -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-3">
-                <p>{!! $siteSetting->footer_text ?? '&copy; '.date('Y').' PT. Cuplik Media Center. Seluruh hak cipta dilindungi undang-undang.' !!}</p>
-                <div class="flex flex-wrap items-center gap-4 text-xs">
+                <p class="text-center sm:text-left">{!! $siteSetting->footer_text ?? '&copy; '.date('Y').' PT. Cuplik Media Center. Seluruh hak cipta dilindungi undang-undang.' !!}</p>
+                <div class="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-4 text-xs">
                     <a href="{{ route('info.pedoman') }}" class="hover:text-white transition-colors">Pedoman Media Siber</a>
                     <span>·</span>
                     <a href="{{ route('info.disclaimer') }}" class="hover:text-white transition-colors">Disclaimer</a>

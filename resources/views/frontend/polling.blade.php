@@ -41,12 +41,12 @@
                             $pct = $activePoll->total_votes > 0 ? round(($opt->suara / $activePoll->total_votes) * 100) : 0;
                         @endphp
                         <label class="block relative border border-gray-200 dark:border-zinc-700 rounded-xl p-4 cursor-pointer hover:border-[#008a24] transition-all">
-                            <div class="flex items-center justify-between relative z-10 text-xs sm:text-sm font-bold text-gray-900 dark:text-gray-100">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="poll_option_id" value="{{ $opt->id }}" required class="text-[#008a24] focus:ring-[#008a24]">
-                                    <span>{{ $opt->opsi }}</span>
+                            <div class="flex items-center justify-between relative z-10 text-xs sm:text-sm font-bold text-gray-900 dark:text-gray-100 gap-2">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <input type="radio" name="poll_option_id" value="{{ $opt->id }}" required class="text-[#008a24] focus:ring-[#008a24] shrink-0">
+                                    <span class="break-words">{{ $opt->opsi }}</span>
                                 </div>
-                                <span class="font-extrabold text-[#008a24]">{{ $pct }}% <span class="text-[11px] font-normal text-gray-400">({{ $opt->suara }})</span></span>
+                                <span class="font-extrabold text-[#008a24] shrink-0 ml-2 whitespace-nowrap">{{ $pct }}% <span class="text-[11px] font-normal text-gray-400">({{ $opt->suara }})</span></span>
                             </div>
                             <div class="absolute inset-y-0 left-0 bg-emerald-100/70 dark:bg-emerald-950/50 rounded-xl pointer-events-none transition-all duration-700" style="width: {{ $pct }}%"></div>
                         </label>

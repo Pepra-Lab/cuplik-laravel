@@ -116,20 +116,20 @@
         <div class="overflow-x-auto">
             <table class="w-full text-xs text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 font-bold border-b border-gray-200 dark:border-zinc-700">
+                    <tr class="bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 font-bold border-b border-gray-200 dark:border-zinc-700 whitespace-nowrap">
                         <th class="p-3">No</th>
                         <th class="p-3">Kecamatan</th>
                         <th class="p-3 text-center">TPS</th>
                         @foreach($paslons as $p)
-                            <th class="p-3 text-right">
+                            <th class="p-3 text-right whitespace-nowrap">
                                 <span class="inline-block w-2.5 h-2.5 rounded-full mr-1" style="background-color: {{ $p->warna }}"></span>
                                 {{ $p->no_urut }}. {{ $p->nama }}
                             </th>
                         @endforeach
-                        <th class="p-3 text-right">Total Sah</th>
+                        <th class="p-3 text-right whitespace-nowrap">Total Sah</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
+                <tbody class="divide-y divide-gray-100 dark:divide-zinc-800 whitespace-nowrap">
                     @foreach($rekapKecamatan as $idx => $r)
                         <tr class="hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors">
                             <td class="p-3 text-gray-400 font-medium">{{ $idx + 1 }}</td>
