@@ -28,7 +28,7 @@ class TagController extends Controller
             ->take(8)
             ->get();
 
-        $iklanSidebar = IklanGambar::where('posisi', 'like', '%Sidebar%')->where('status', 'Tayang')->first();
+        $iklanSidebar = IklanGambar::active()->where('posisi', 'like', '%Sidebar%')->first();
 
         return view('frontend.tag', compact(
             'tag',

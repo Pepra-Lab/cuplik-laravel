@@ -14,7 +14,7 @@ class AdminNewsletterController extends Controller
         $query = NewsletterSubscriber::latest('tanggal');
 
         if ($request->filled('q')) {
-            $query->where('email', 'like', '%' . $request->q . '%');
+            $query->where('email', 'ilike', '%' . $request->q . '%');
         }
 
         $subscribers = $query->paginate(15)->withQueryString();

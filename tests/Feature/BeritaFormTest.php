@@ -7,12 +7,19 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class BeritaFormTest extends TestCase
 {
+    use DatabaseTransactions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Article::where('slug', 'like', 'pemerintah-umumkan-kenaikan-harga-bbm%')->delete();
+    }
     public function test_concise_slug_generation_removes_stopwords_and_limits_words(): void
     {
         $title = "Pemerintah Resmi Umumkan Kenaikan Harga BBM Mulai Besok";
@@ -111,7 +118,9 @@ class BeritaFormTest extends TestCase
             'name' => 'Admin Tester',
             'password' => bcrypt('secret123'),
             'role' => 'Super Admin',
+            'status' => 'Aktif',
         ]);
+        $user->update(['status' => 'Aktif', 'role' => 'Super Admin']);
 
         $category = Category::firstOrCreate(['nama' => 'Politik'], ['slug' => 'politik']);
         $existingTag = Tag::firstOrCreate(['nama' => 'Pemilu'], ['slug' => 'pemilu', 'category_id' => $category->id]);

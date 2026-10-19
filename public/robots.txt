@@ -4,4 +4,4 @@ Disallow: /masuk
 Disallow: /daftar
 Disallow: /lupa-sandi
 
-Sitemap: /sitemap.xml
+Sitemap: https://cuplik.com/sitemap.xml

@@ -29,8 +29,8 @@ class AdminRealCountController extends Controller
 
         if ($cari !== '') {
             $dptQuery->where(function ($q) use ($cari) {
-                $q->where('kecamatan', 'like', "%{$cari}%")
-                    ->orWhere('desa', 'like', "%{$cari}%");
+                $q->where('kecamatan', 'ilike', "%{$cari}%")
+                    ->orWhere('desa', 'ilike', "%{$cari}%");
             });
         }
 
@@ -70,8 +70,8 @@ class AdminRealCountController extends Controller
 
         if ($cari !== '') {
             $dptQuery->where(function ($q) use ($cari) {
-                $q->where('kecamatan', 'like', "%{$cari}%")
-                    ->orWhere('desa', 'like', "%{$cari}%");
+                $q->where('kecamatan', 'ilike', "%{$cari}%")
+                    ->orWhere('desa', 'ilike', "%{$cari}%");
             });
         }
 

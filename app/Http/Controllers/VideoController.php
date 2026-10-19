@@ -38,6 +38,16 @@ class VideoController extends Controller
     public function show(string $slug)
     {
         $video = Video::where('slug', $slug)->firstOrFail();
+
+        // Lindungi video yang belum tayang
+        if ($video->status !== 'Tayang') {
+            $user = auth()->user();
+            $canPreview = $user && ($user->isCmsStaff() || $user->id === $video->user_id);
+            if (! $canPreview) {
+                abort(404);
+            }
+        }
+
         $video->increment('dibaca');
 
         $relatedVideos = Video::where('status', 'Tayang')

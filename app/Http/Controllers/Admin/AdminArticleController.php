@@ -95,7 +95,8 @@ class AdminArticleController extends Controller
         $article = Article::create($validated);
 
         // 4. Sinkronisasi Tag (termasuk pembuatan tag baru on-the-fly tanpa duplikat case-insensitive)
-        $this->syncTags($article, $request->input('tags', []), $request->input('new_tags'), $validated['category_id']);
+        $newTags = $request->input('new_tags') ?? $request->input('custom_tags');
+        $this->syncTags($article, $request->input('tags', []), $newTags, $validated['category_id']);
 
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil dipublikasikan!');
     }
@@ -173,7 +174,8 @@ class AdminArticleController extends Controller
         $article->update($validated);
 
         // 4. Sinkronisasi Tag
-        $this->syncTags($article, $request->input('tags', []), $request->input('new_tags'), $article->category_id);
+        $newTags = $request->input('new_tags') ?? $request->input('custom_tags');
+        $this->syncTags($article, $request->input('tags', []), $newTags, $article->category_id);
 
         return redirect()->route('admin.articles.index')->with('success', 'Berita berhasil diperbarui!');
     }
@@ -261,7 +263,7 @@ class AdminArticleController extends Controller
         }
 
         // 2. Tag baru yang diketik manual (dibatasi hanya untuk CMS staff, maks 5 per submit)
-        $rawNewTags = (string) ($newTagsInput ?? '');
+        $rawNewTags = is_array($newTagsInput) ? implode(',', $newTagsInput) : (string) ($newTagsInput ?? '');
         if ($rawNewTags !== '' && auth()->check() && auth()->user()->isCmsStaff()) {
             $names = collect(explode(',', $rawNewTags))
                 ->map(fn ($name) => trim($name))

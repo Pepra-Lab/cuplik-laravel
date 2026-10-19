@@ -64,10 +64,15 @@ class HomeController extends Controller
             ->get();
 
         // 9. Advertisements
-        $iklanHeader = IklanGambar::where('posisi', 'like', '%Header%')->where('status', 'Tayang')->first();
-        $iklanSidebar = IklanGambar::where('posisi', 'like', '%Sidebar%')->where('status', 'Tayang')->first();
-        $iklanBetweenCategory = IklanGambar::where('posisi', 'like', '%Article%')->orWhere('posisi', 'like', '%Header%')->where('status', 'Tayang')->first();
-        $iklanBaris = IklanBaris::where('status', 'Disetujui')->latest('tanggal')->take(6)->get();
+        $iklanHeader = IklanGambar::active()->where('posisi', 'like', '%Header%')->first();
+        $iklanSidebar = IklanGambar::active()->where('posisi', 'like', '%Sidebar%')->first();
+        $iklanBetweenCategory = IklanGambar::active()
+            ->where(function ($q) {
+                $q->where('posisi', 'like', '%Article%')
+                  ->orWhere('posisi', 'like', '%Header%');
+            })
+            ->first();
+        $iklanBaris = IklanBaris::active()->latest('tanggal')->take(6)->get();
 
         // Handle AJAX request for "Lihat Kategori Lainnya"
         if ($request->ajax() || $request->wantsJson()) {

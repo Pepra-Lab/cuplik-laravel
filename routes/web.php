@@ -43,10 +43,14 @@ use App\Models\InfoPage;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', function () {
+    $content = "User-agent: *\nDisallow: /admin\nDisallow: /masuk\nDisallow: /daftar\nDisallow: /lupa-sandi\n\nSitemap: " . url('/sitemap.xml') . "\n";
+    return response($content, 200)->header('Content-Type', 'text/plain');
+});
 
 Route::get('/artikel/{slug}/pdf', [ArticleController::class, 'downloadPdf'])->name('article.pdf');
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
-Route::post('/artikel/{slug}/komentar', [ArticleController::class, 'storeComment'])->middleware('auth')->name('article.comment.store');
+Route::post('/artikel/{slug}/komentar', [ArticleController::class, 'storeComment'])->middleware(['auth', 'throttle:10,1'])->name('article.comment.store');
 
 Route::get('/kanal/{slug}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/tag/{slug}', [TagController::class, 'show'])->name('tag.show');
@@ -55,13 +59,13 @@ Route::get('/video', [VideoController::class, 'index'])->name('video.index');
 Route::get('/video/{slug}', [VideoController::class, 'show'])->name('video.show');
 
 Route::get('/cari', [SearchController::class, 'index'])->name('search');
-Route::get('/api/search-live', [SearchController::class, 'liveSearch'])->name('api.search.live');
+Route::get('/api/search-live', [SearchController::class, 'liveSearch'])->middleware('throttle:60,1')->name('api.search.live');
 
 Route::get('/polling', [PollController::class, 'index'])->name('poll.index');
 Route::post('/polling/vote', [PollController::class, 'vote'])->middleware('throttle:6,1')->name('poll.vote');
 
 Route::get('/curhat', [CurhatController::class, 'index'])->name('curhat.index');
-Route::post('/curhat', [CurhatController::class, 'store'])->middleware('auth')->name('curhat.store');
+Route::post('/curhat', [CurhatController::class, 'store'])->middleware(['auth', 'throttle:6,1'])->name('curhat.store');
 
 Route::get('/real-count', [RealCountController::class, 'index'])->name('realcount.index');
 
