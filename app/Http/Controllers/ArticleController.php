@@ -23,15 +23,6 @@ class ArticleController extends Controller
         ->where('slug', $slug)
         ->firstOrFail();
 
-        // Lindungi berita yang masih Draft atau Review agar tidak bocor ke publik
-        if ($article->status !== 'Terbit') {
-            $user = auth()->user();
-            $canPreview = $user && ($user->isCmsStaff() || $user->id === $article->user_id);
-            if (! $canPreview) {
-                abort(404);
-            }
-        }
-
         // Increment views count
         $article->increment('dibaca');
 
@@ -55,9 +46,9 @@ class ArticleController extends Controller
             ->take(8)
             ->get();
 
-        // Banner Ads (hanya yang aktif tayang sesuai rentang tanggal)
-        $iklanSidebar = IklanGambar::active()->where('posisi', 'like', '%Sidebar%')->first();
-        $iklanArtikel = IklanGambar::active()->where('posisi', 'like', '%Artikel%')->first();
+        // Banner Ads
+        $iklanSidebar = IklanGambar::where('posisi', 'like', '%Sidebar%')->where('status', 'Tayang')->first();
+        $iklanArtikel = IklanGambar::where('posisi', 'like', '%Artikel%')->where('status', 'Tayang')->first();
 
         return view('frontend.article-detail', compact(
             'article',
@@ -96,15 +87,6 @@ class ArticleController extends Controller
         $article = Article::with(['category', 'tags'])
             ->where('slug', $slug)
             ->firstOrFail();
-
-        // Lindungi berita yang belum terbit agar tidak dapat diunduh
-        if ($article->status !== 'Terbit') {
-            $user = auth()->user();
-            $canPreview = $user && ($user->isCmsStaff() || $user->id === $article->user_id);
-            if (! $canPreview) {
-                abort(404);
-            }
-        }
 
         // Resolusi gambar header menjadi base64 agar Dompdf dapat merender tanpa kendala jaringan
         $headerImage = null;
@@ -167,47 +149,47 @@ class ArticleController extends Controller
         }
 
         $cleanPath = ltrim(parse_url($path, PHP_URL_PATH) ?? '', '/');
-        
-        // Proteksi Path Traversal
-        if (str_contains($cleanPath, '..')) {
-            return null;
-        }
-
         $candidates = [
             public_path($cleanPath),
             storage_path('app/public/' . preg_replace('#^storage/#', '', $cleanPath)),
             public_path('storage/' . preg_replace('#^storage/#', '', $cleanPath)),
+            base_path($cleanPath),
         ];
 
         foreach ($candidates as $filePath) {
             if ($filePath && file_exists($filePath) && is_file($filePath)) {
-                $mime = mime_content_type($filePath);
-                // Hanya izinkan file yang benar-benar bertipe gambar (mencegah pembacaan .env atau file kode)
-                if ($mime && str_starts_with($mime, 'image/')) {
-                    $data = base64_encode(file_get_contents($filePath));
-                    return 'data:' . $mime . ';base64,' . $data;
-                }
+                $mime = mime_content_type($filePath) ?: 'image/jpeg';
+                $data = base64_encode(file_get_contents($filePath));
+                return 'data:' . $mime . ';base64,' . $data;
             }
         }
 
         if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
-            $host = parse_url($path, PHP_URL_HOST);
-            // Proteksi SSRF: Jangan izinkan request ke IP private/internal/localhost
-            $ip = $host ? gethostbyname($host) : null;
-            if (!$ip || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-                return null;
-            }
-
             try {
-                $response = Http::timeout(5)->get($path);
+                $response = Http::withoutVerifying()->timeout(8)->get($path);
                 if ($response->successful()) {
                     $mime = $response->header('Content-Type') ?: 'image/jpeg';
-                    if (str_starts_with($mime, 'image/')) {
-                        return 'data:' . $mime . ';base64,' . base64_encode($response->body());
-                    }
+                    return 'data:' . $mime . ';base64,' . base64_encode($response->body());
                 }
             } catch (\Throwable $e) {
-                // Abaikan jika eksternal gagal
+                // Fallback jika Http Client terkendala
+                try {
+                    $ctx = stream_context_create([
+                        'ssl' => [
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                        ],
+                        'http' => [
+                            'timeout' => 8,
+                        ],
+                    ]);
+                    $content = @file_get_contents($path, false, $ctx);
+                    if ($content !== false && !empty($content)) {
+                        return 'data:image/jpeg;base64,' . base64_encode($content);
+                    }
+                } catch (\Throwable $e2) {
+                    // Abaikan
+                }
             }
         }
 

@@ -22,7 +22,7 @@ class InfoController extends Controller
             ->take(8)
             ->get();
 
-        $iklanSidebar = IklanGambar::active()->where('posisi', 'like', '%Sidebar%')->first();
+        $iklanSidebar = IklanGambar::where('posisi', 'like', '%Sidebar%')->where('status', 'Tayang')->first();
 
         return compact('popularArticles', 'trendingTags', 'iklanSidebar');
     }

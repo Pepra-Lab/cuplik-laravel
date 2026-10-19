@@ -25,21 +25,4 @@ class IklanGambar extends Model
         'mulai' => 'date',
         'selesai' => 'date',
     ];
-
-    /**
-     * Scope untuk hanya mengambil iklan gambar yang aktif tayang:
-     * Status 'Tayang' dan berada dalam rentang tanggal mulai & selesai.
-     */
-    public function scopeActive($query)
-    {
-        $today = now()->toDateString();
-
-        return $query->where('status', 'Tayang')
-            ->where(function ($q) use ($today) {
-                $q->whereNull('mulai')->orWhereDate('mulai', '<=', $today);
-            })
-            ->where(function ($q) use ($today) {
-                $q->whereNull('selesai')->orWhereDate('selesai', '>=', $today);
-            });
-    }
 }
