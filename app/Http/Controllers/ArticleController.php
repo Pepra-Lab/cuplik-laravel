@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Models\ArticleView;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Comment;
@@ -11,11 +12,76 @@ use App\Models\IklanGambar;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 
 class ArticleController extends Controller
 {
-    public function show(string $slug)
+    /** Cookie penanda perangkat pembaca (token acak, bukan data pribadi). */
+    private const DEVICE_COOKIE = 'cuplik_device';
+    private const DEVICE_COOKIE_MINUTES = 60 * 24 * 365;
+
+    /**
+     * Tambah jumlah "dibaca" per perangkat pembaca, dihitung ulang hanya jika
+     * sudah lewat 24 jam sejak terakhir dihitung.
+     *
+     * Perangkat dikenali dari token acak di cookie, bukan dari IP: server hanya
+     * melihat IP publik wifi, sehingga dua hp di wifi yang sama tidak bisa
+     * dibedakan lewat IP. Dengan token, dua hp tersebut dihitung 2 pembaca.
+     * Yang disimpan hanya hash dari token, tanpa IP.
+     */
+    private function recordUniqueView(Article $article, Request $request): void
+    {
+        if (!$request->isMethod('POST') || $article->status !== 'Terbit') {
+            return;
+        }
+
+        $userAgent = (string) $request->userAgent();
+
+        // Abaikan bot / crawler / prefetch agar angka tidak terdongkrak.
+        if ($userAgent === '' || preg_match('/bot|crawl|spider|slurp|preview|fetch|facebookexternalhit|whatsapp|telegram|curl|wget|python|httpclient/i', $userAgent)) {
+            return;
+        }
+
+        // Ambil token perangkat; jika belum ada / tidak valid, buat baru dan simpan di cookie.
+        $token = (string) $request->cookie(self::DEVICE_COOKIE);
+        if (!preg_match('/^[A-Za-z0-9]{40}$/', $token)) {
+            $token = Str::random(40);
+        }
+        Cookie::queue(cookie(self::DEVICE_COOKIE, $token, self::DEVICE_COOKIE_MINUTES, null, null, null, true, false, 'lax'));
+
+        $deviceHash = hash_hmac('sha256', 'device|' . $token, (string) config('app.key'));
+        $now = now();
+
+        // 1) Perangkat lama yang sudah lewat 24 jam: perbarui waktunya dan hitung lagi.
+        //    UPDATE bersifat atomik, jadi dua request bersamaan tidak terhitung ganda.
+        $renewed = ArticleView::query()
+            ->where('article_id', $article->id)
+            ->where('device_hash', $deviceHash)
+            ->where('viewed_at', '<=', $now->copy()->subHours(ArticleView::WINDOW_HOURS))
+            ->update(['viewed_at' => $now]);
+
+        if ($renewed) {
+            $article->increment('dibaca');
+            return;
+        }
+
+        // 2) Perangkat baru: insertOrIgnore + unique index (article_id, device_hash).
+        //    Jika barisnya sudah ada dan masih dalam 24 jam, tidak ada yang ditambah.
+        $inserted = ArticleView::query()->insertOrIgnore([
+            'article_id'  => $article->id,
+            'device_hash' => $deviceHash,
+            'viewed_at'   => $now,
+            'created_at'  => $now,
+        ]);
+
+        if ($inserted) {
+            $article->increment('dibaca');
+        }
+    }
+
+    public function show(Request $request, string $slug)
     {
         $article = Article::with(['category', 'tags', 'comments' => function ($q) {
             $q->where('status', 'Disetujui')->latest();
@@ -23,28 +89,29 @@ class ArticleController extends Controller
         ->where('slug', $slug)
         ->firstOrFail();
 
-        // Increment views count
-        $article->increment('dibaca');
+        // Penghitungan "dibaca" TIDAK dilakukan di sini: halaman ini tidak menulis ke
+        // database. Hitungan masuk lewat countView() setelah JavaScript di halaman
+        // mengirim sinyal (bot sederhana yang tidak menjalankan JS tidak terhitung).
 
         // Related articles in same category
-        $relatedArticles = Article::where('status', 'Terbit')
+        $relatedArticles = Cache::remember("article.related.{$article->id}", 300, fn () => Article::where('status', 'Terbit')
             ->where('category_id', $article->category_id)
             ->where('id', '!=', $article->id)
             ->latest('tanggal')
             ->take(4)
-            ->get();
+            ->get());
 
         // Popular articles
-        $popularArticles = Article::where('status', 'Terbit')
+        $popularArticles = Cache::remember('article.popular', 300, fn () => Article::where('status', 'Terbit')
             ->orderByDesc('dibaca')
             ->take(5)
-            ->get();
+            ->get());
 
         // Trending tags
-        $trendingTags = Tag::withCount('articles')
+        $trendingTags = Cache::remember('article.trending_tags', 300, fn () => Tag::withCount('articles')
             ->orderByDesc('articles_count')
             ->take(8)
-            ->get();
+            ->get());
 
         // Banner Ads
         $iklanSidebar = IklanGambar::where('posisi', 'like', '%Sidebar%')->where('status', 'Tayang')->first();
@@ -58,6 +125,19 @@ class ArticleController extends Controller
             'iklanSidebar',
             'iklanArtikel'
         ));
+    }
+
+    /**
+     * Endpoint penghitung "dibaca". Dipanggil JavaScript di halaman berita setelah
+     * halaman terbuka beberapa detik. Sengaja ringan: tanpa render view.
+     */
+    public function countView(Request $request, string $slug)
+    {
+        $article = Article::where('slug', $slug)->firstOrFail();
+
+        $this->recordUniqueView($article, $request);
+
+        return response()->noContent();
     }
 
     public function storeComment(Request $request, string $slug)

@@ -285,13 +285,7 @@
                 <table style="border-collapse: collapse;">
                     <tr>
                         <td style="vertical-align: middle;">
-                            <div class="logo-box">C</div>
-                        </td>
-                        <td style="vertical-align: middle;">
-                            <div class="logo-text-title">
-                                <span class="brand-cuplik">Cuplik</span><span class="brand-com">.com</span>
-                            </div>
-                            <div class="logo-tagline">Beritanya Unik &amp; Menggelitik · Portal Berita Terkini</div>
+                            <img src="{{ public_path('assets/logo-solid.png') }}" alt="Cuplik.com" style="height: 40px; width: auto;">
                         </td>
                     </tr>
                 </table>

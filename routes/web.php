@@ -45,7 +45,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/artikel/{slug}/pdf', [ArticleController::class, 'downloadPdf'])->name('article.pdf');
-Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
+Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->middleware('throttle:120,1')->name('article.show');
+// Penghitung pembaca: dipanggil JS di halaman berita, dengan batas lebih ketat.
+Route::post('/artikel/{slug}/dibaca', [ArticleController::class, 'countView'])->middleware('throttle:30,1')->name('article.view');
 Route::post('/artikel/{slug}/komentar', [ArticleController::class, 'storeComment'])->middleware('auth')->name('article.comment.store');
 
 Route::get('/kanal/{slug}', [CategoryController::class, 'show'])->name('category.show');

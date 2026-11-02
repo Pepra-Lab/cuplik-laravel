@@ -104,13 +104,9 @@
         <!-- Sidebar Brand -->
         <div class="p-5 border-b border-gray-200 dark:border-zinc-800 flex items-center justify-between gap-2">
             <a href="{{ route(auth()->user()->cmsHomeRoute()) }}" class="flex items-center gap-2 min-w-0">
-                <div class="w-8 h-8 rounded bg-[#008a24] text-white font-black text-xl flex items-center justify-center shrink-0">
-                    C
-                </div>
-                <div class="flex flex-col min-w-0">
-                    <span class="font-extrabold text-lg text-gray-900 dark:text-white leading-none truncate">Cuplik <span class="text-[#008a24]">CMS</span></span>
+                <div class="flex flex-col min-w-0 gap-1">
+                    <img src="{{ asset('assets/logo.png') }}" alt="Cuplik CMS" class="h-9 w-auto self-start dark:brightness-125">
                     <span class="text-[10px] text-gray-400 truncate">Content Management System</span>
-
                 </div>
             </a>
             <button id="cmsSidebarClose" type="button" class="md:hidden shrink-0 p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Tutup Menu">

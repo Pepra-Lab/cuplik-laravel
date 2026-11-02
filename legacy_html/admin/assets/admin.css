@@ -973,3 +973,4 @@ td small {
         grid-template-columns: 1fr
     }
 }
+[data-theme="dark"] .sb .lg,[data-theme="dark"] .tb .tlg{filter:brightness(1.25)}

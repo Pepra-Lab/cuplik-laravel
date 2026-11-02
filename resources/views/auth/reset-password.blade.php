@@ -7,6 +7,7 @@
     <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-8 shadow-xl space-y-6">
 
         <div class="text-center space-y-2">
+            <img src="{{ asset('assets/logo.png') }}" alt="Cuplik.com - Unik dan Menggelitik" class="h-14 w-auto mx-auto dark:brightness-125">
             <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Atur Ulang Kata Sandi</h1>
             <p class="text-xs text-gray-500 dark:text-gray-400">Buat kata sandi baru untuk akun Anda.</p>
         </div>

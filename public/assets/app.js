@@ -146,7 +146,7 @@ const navigationComponent = () => {
         <aside class="mobile-drawer" id="mobileDrawer">
             <div class="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-zinc-800">
                 <a href="index.html" class="flex items-center">
-                    <img src="assets/logo.svg" alt="CuplikCom" class="h-8">
+                    <img src="assets/logo.png" alt="CuplikCom" class="h-8 dark:brightness-125">
                 </a>
                 <button id="closeDrawer" class="text-2xl text-gray-500 hover:text-black dark:hover:text-white">&times;</button>
             </div>
@@ -176,7 +176,7 @@ const navigationComponent = () => {
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
                     <a href="index.html" class="block">
-                        <img src="assets/logo.svg" alt="CuplikCom" class="h-10 sm:h-12">
+                        <img src="assets/logo.png" alt="CuplikCom" class="h-10 sm:h-12 dark:brightness-125">
                     </a>
                 </div>
 
@@ -238,7 +238,7 @@ const footerComponent = () => `
                 <!-- Col 1: Logo Cuplik -->
                 <div>
                     <a href="index.html" class="inline-block mb-3">
-                        <img src="assets/logo.svg" alt="CuplikCom" class="h-10">
+                        <img src="assets/logo.png" alt="CuplikCom" class="h-10 dark:brightness-125">
                     </a>
                     <p class="text-sm text-gray-400 leading-relaxed">
                         <strong>CuplikCom</strong> adalah portal yang menyediakan sumber-sumber berita unik, tajam, dan menggelitik di kawasan Pantura dan Nasional.

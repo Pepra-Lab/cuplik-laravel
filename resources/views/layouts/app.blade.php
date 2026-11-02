@@ -8,7 +8,7 @@
     @php
         $__seoTitle = trim($__env->yieldContent('title', 'CuplikCom — Beritanya Unik dan Menggelitik'));
         $__seoDescription = trim($__env->yieldContent('meta_description', 'Portal Berita Online CuplikCom — Menyajikan berita unik, politik, sosial, hukum, dan suara rakyat terkini.'));
-        $__seoImage = trim($__env->yieldContent('meta_image', asset('favicon-32x32.png')));
+        $__seoImage = trim($__env->yieldContent('meta_image', asset('assets/logo-solid.png')));
         $__seoType = trim($__env->yieldContent('og_type', 'website')) ?: 'website';
         $__seoCanonical = trim($__env->yieldContent('canonical', url()->current()));
         $__seoNoIndex = trim($__env->yieldContent('noindex', ''));
@@ -195,7 +195,7 @@
         '@type' => 'NewsMediaOrganization',
         'name' => \App\Models\Setting::current()->site_name,
         'url' => url('/'),
-        'logo' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('favicon-32x32.png'),
+        'logo' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('assets/logo-solid.png'),
         'sameAs' => array_values(array_filter([
             \App\Models\Setting::current()->facebook,
             \App\Models\Setting::current()->twitter,
@@ -241,17 +241,7 @@
             
             <!-- Left: Logo Cuplik -->
             <a href="{{ route('home') }}" class="flex items-center gap-2 sm:gap-3 shrink-0 group">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#d60000] text-white flex items-center justify-center font-black text-xl sm:text-2xl shadow-sm tracking-tighter">
-                    C
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-xl sm:text-3xl font-black tracking-tight leading-none">
-                        <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">.com</span>
-                    </span>
-                    <span class="hidden sm:inline text-[10px] text-gray-500 dark:text-gray-400 font-semibold tracking-wide">
-                        Beritanya Unik &amp; Menggelitik
-                    </span>
-                </div>
+                <img src="{{ asset('assets/logo.png') }}" alt="Cuplik.com - Unik dan Menggelitik" class="h-10 sm:h-12 w-auto dark:brightness-125">
             </a>
 
             <!-- Center Search Bar (Desktop & Tablet) with Live Search Dropdown -->
@@ -391,12 +381,7 @@
                 <!-- Header with Logo and Close Button -->
                 <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-zinc-800">
                     <a href="{{ route('home') }}" class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded bg-[#d60000] text-white flex items-center justify-center font-black text-xl">
-                            C
-                        </div>
-                        <span class="text-xl font-black leading-none">
-                            <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">.com</span>
-                        </span>
+                        <img src="{{ asset('assets/logo.png') }}" alt="Cuplik.com" class="h-9 w-auto dark:brightness-125">
                     </a>
                     <button id="mobileSidebarCloseBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-white p-1 text-lg font-bold">
                         &times;
@@ -497,11 +482,8 @@
                 
                 <!-- Col 1: Logo Cuplik & Description -->
                 <div class="space-y-3">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded bg-[#d60000] text-white font-extrabold text-xl flex items-center justify-center">
-                            C
-                        </div>
-                        <span class="text-xl font-bold text-white tracking-tight">{{ $siteSetting->site_name ?? 'Cuplik.com' }}</span>
+                    <div class="flex items-center">
+                        <img src="{{ asset('assets/logo.png') }}" alt="{{ $siteSetting->site_name ?? 'Cuplik.com' }}" class="h-12 w-auto brightness-125">
                     </div>
                     <p class="text-xs text-gray-400 leading-relaxed">
                         {{ $siteSetting->deskripsi ?? 'PT. Cuplik Media Center (CMC), Anggota Resmi Serikat Media Siber Indonesia (SMSI).' }}

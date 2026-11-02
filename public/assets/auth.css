@@ -548,3 +548,4 @@ h1,h2,h3{font-family:'DM Sans',sans-serif;font-weight:800;line-height:1.15;margi
         transition: none !important
     }
 }
+.au-logo img{height:52px;width:auto;background:#fff;border-radius:8px;padding:4px 10px;display:block}

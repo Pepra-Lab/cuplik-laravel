@@ -2,7 +2,7 @@
 
 @section('title', $article->seoTitle() . ' — CuplikCom')
 @section('meta_description', $article->seoDescription())
-@section('meta_image', $article->seoImage() ?: asset('favicon-32x32.png'))
+@section('meta_image', $article->seoImage() ?: asset('assets/logo-solid.png'))
 @section('og_type', 'article')
 
 @push('structured_data')
@@ -24,7 +24,7 @@
         'name' => \App\Models\Setting::current()->site_name,
         'logo' => [
             '@type' => 'ImageObject',
-            'url' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('favicon-32x32.png'),
+            'url' => \App\Models\Setting::current()->logo ? asset(\App\Models\Setting::current()->logo) : asset('assets/logo-solid.png'),
         ],
     ],
     'mainEntityOfPage' => [
@@ -444,3 +444,39 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    // Hitung "dibaca" hanya jika halaman benar-benar terbuka dan terlihat >= 1 detik.
+    // Bot sederhana yang tidak menjalankan JavaScript tidak akan memicu ini.
+    var url = @json(route('article.view', $article->slug));
+    var tokenEl = document.querySelector('meta[name="csrf-token"]');
+    var timer = null, sent = false;
+
+    function send() {
+        if (sent) return;
+        sent = true;
+        try {
+            fetch(url, {
+                method: 'POST',
+                credentials: 'same-origin',
+                keepalive: true,
+                headers: {
+                    'X-CSRF-TOKEN': tokenEl ? tokenEl.content : '',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).catch(function () {});
+        } catch (e) {}
+    }
+
+    function start() { if (!sent && !timer) timer = setTimeout(send, 1000); }
+    function stop()  { if (timer) { clearTimeout(timer); timer = null; } }
+
+    document.addEventListener('visibilitychange', function () {
+        document.hidden ? stop() : start();
+    });
+    if (!document.hidden) start();
+})();
+</script>
+@endpush
