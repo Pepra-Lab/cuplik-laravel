@@ -42,6 +42,8 @@ class ProfileController extends Controller
 
         if (! empty($data['password'])) {
             $user->password = $data['password'];
+            // Password sudah diganti: hitung ulang status "password bawaan" di sesi ini.
+            $request->session()->forget(['default_pw_state', 'default_pw_alert_shown']);
         }
 
         $user->save();

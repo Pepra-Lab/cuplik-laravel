@@ -21,9 +21,9 @@ class AdminCurhatController extends Controller
 
         if ($q !== '') {
             $query->where(function ($sub) use ($q) {
-                $sub->where('pesan', 'ilike', "%{$q}%")
-                    ->orWhere('pengirim', 'ilike', "%{$q}%")
-                    ->orWhere('lokasi', 'ilike', "%{$q}%");
+                $sub->where('pesan', 'like', "%{$q}%")
+                    ->orWhere('pengirim', 'like', "%{$q}%")
+                    ->orWhere('lokasi', 'like', "%{$q}%");
             });
         }
 

@@ -47,8 +47,8 @@ class AdminUserController extends Controller
 
         if ($q !== '') {
             $query->where(fn ($sub) => $sub
-                ->where('name', 'ilike', "%{$q}%")
-                ->orWhere('email', 'ilike', "%{$q}%"));
+                ->where('name', 'like', "%{$q}%")
+                ->orWhere('email', 'like', "%{$q}%"));
         }
 
         $users = $query->orderBy($sort, $dir)->paginate($perPage)->withQueryString();

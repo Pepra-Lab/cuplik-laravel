@@ -6,6 +6,7 @@ use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -70,6 +71,21 @@ class User extends Authenticatable
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * True kalau akun ini masih memakai password bawaan hasil migrasi
+     * (config cuplik.default_password) dan belum menggantinya.
+     */
+    public function usesDefaultPassword(): bool
+    {
+        $default = (string) config('cuplik.default_password');
+
+        if ($default === '' || empty($this->password)) {
+            return false;
+        }
+
+        return Hash::check($default, $this->password);
     }
 
     public function canAccessCms(): bool

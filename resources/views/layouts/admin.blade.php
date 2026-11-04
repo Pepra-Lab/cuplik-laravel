@@ -394,6 +394,7 @@
             }
         });
     </script>
+    @include('admin.partials.default-password-alert')
     @stack('scripts')
 </body>
 </html>

@@ -24,9 +24,9 @@ class AdminArticleController extends Controller
 
         if ($q !== '') {
             $query->where(function ($sub) use ($q) {
-                $sub->where('judul', 'ilike', "%{$q}%")
-                    ->orWhere('penulis_nama', 'ilike', "%{$q}%")
-                    ->orWhere('editor_nama', 'ilike', "%{$q}%");
+                $sub->where('judul', 'like', "%{$q}%")
+                    ->orWhere('penulis_nama', 'like', "%{$q}%")
+                    ->orWhere('editor_nama', 'like', "%{$q}%");
             });
         }
 

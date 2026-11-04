@@ -19,12 +19,12 @@ class SearchController extends Controller
 
         if ($q !== '') {
             $query->where(function ($sub) use ($q) {
-                $sub->where('judul', 'ilike', "%{$q}%")
-                    ->orWhere('lead', 'ilike', "%{$q}%")
-                    ->orWhere('isi', 'ilike', "%{$q}%")
-                    ->orWhere('editor_nama', 'ilike', "%{$q}%")
-                    ->orWhere('penulis_nama', 'ilike', "%{$q}%")
-                    ->orWhere('lokasi', 'ilike', "%{$q}%");
+                $sub->where('judul', 'like', "%{$q}%")
+                    ->orWhere('lead', 'like', "%{$q}%")
+                    ->orWhere('isi', 'like', "%{$q}%")
+                    ->orWhere('editor_nama', 'like', "%{$q}%")
+                    ->orWhere('penulis_nama', 'like', "%{$q}%")
+                    ->orWhere('lokasi', 'like', "%{$q}%");
             });
         }
 
@@ -70,8 +70,8 @@ class SearchController extends Controller
 
         $articles = Article::where('status', 'Terbit')
             ->where(function ($sub) use ($q) {
-                $sub->where('judul', 'ilike', "%{$q}%")
-                    ->orWhere('lead', 'ilike', "%{$q}%");
+                $sub->where('judul', 'like', "%{$q}%")
+                    ->orWhere('lead', 'like', "%{$q}%");
             })
             ->with('category:id,nama,slug')
             ->latest('tanggal')

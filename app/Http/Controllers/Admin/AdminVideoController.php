@@ -20,7 +20,7 @@ class AdminVideoController extends Controller
         $query = Video::visibleTo($request->user());
 
         if ($q !== '') {
-            $query->where('judul', 'ilike', "%{$q}%");
+            $query->where('judul', 'like', "%{$q}%");
         }
 
         if ($status) {
