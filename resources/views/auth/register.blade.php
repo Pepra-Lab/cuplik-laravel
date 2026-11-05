@@ -8,7 +8,7 @@
         
         <div class="text-center space-y-2">
             <img src="{{ asset('assets/logo.png') }}" alt="Cuplik.com - Unik dan Menggelitik" class="h-14 w-auto mx-auto dark:brightness-125">
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Daftar Akun <span class="text-[#d60000]">Cuplik</span><span class="text-[#008a24]">Com</span></h1>
+            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Daftar Akun</h1>
             <p class="text-xs text-gray-500 dark:text-gray-400">Dapatkan akses penuh ke diskusi pembaca dan kirim aspirasi daerah</p>
         </div>
 
@@ -25,7 +25,7 @@
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Daftar sebagai</label>
                 <div class="grid grid-cols-2 gap-3">
-                    @foreach(['Member' => 'Kirim berita, iklan, curhat, komentar, dan dapat email berita terbaru', 'Redaktur' => 'Mengelola berita dan video milik sendiri'] as $role => $desc)
+                    @foreach(['Member' => 'Pasang iklan (ditinjau admin dulu), kirim curhat, dan beri komentar', 'Redaktur' => 'Mengelola berita dan video milik sendiri'] as $role => $desc)
                         <label class="cursor-pointer">
                             <input type="radio" name="role" value="{{ $role }}" class="peer sr-only" {{ old('role', 'Member') === $role ? 'checked' : '' }}>
                             <div class="h-full p-3 rounded-lg border border-gray-300 dark:border-zinc-700 text-xs peer-checked:border-[#008a24] peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-950/30">
@@ -76,12 +76,24 @@
 
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Kata Sandi</label>
-                <input type="password" name="password" required placeholder="Minimal 8 karakter" minlength="8" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                <div class="relative">
+                    <input type="password" name="password" required placeholder="Minimal 8 karakter" minlength="8" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg pl-4 pr-10 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                    <button type="button" tabindex="-1" aria-label="Tampilkan atau sembunyikan kata sandi" onclick="var i=this.parentElement.querySelector('input');var s=i.type==='password';i.type=s?'text':'password';this.querySelector('.eye-on').classList.toggle('hidden',s);this.querySelector('.eye-off').classList.toggle('hidden',!s);" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                        <svg class="eye-on w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.04 12.32a1 1 0 010-.64C3.42 8.2 7.36 5 12 5s8.58 3.2 9.96 6.68a1 1 0 010 .64C20.58 15.8 16.64 19 12 19s-8.58-3.2-9.96-6.68z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="eye-off hidden w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M10.58 10.58a2 2 0 002.84 2.84M9.88 5.09A9.8 9.8 0 0112 5c4.64 0 8.58 3.2 9.96 6.68a1 1 0 010 .64 10.5 10.5 0 01-3.2 4.2M6.6 6.6A10.5 10.5 0 002.04 11.68a1 1 0 000 .64C3.42 15.8 7.36 19 12 19c1.7 0 3.3-.4 4.7-1.1"/></svg>
+                    </button>
+                </div>
             </div>
 
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Konfirmasi Kata Sandi</label>
-                <input type="password" name="password_confirmation" required placeholder="Ulangi kata sandi" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                <div class="relative">
+                    <input type="password" name="password_confirmation" required placeholder="Ulangi kata sandi" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg pl-4 pr-10 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                    <button type="button" tabindex="-1" aria-label="Tampilkan atau sembunyikan kata sandi" onclick="var i=this.parentElement.querySelector('input');var s=i.type==='password';i.type=s?'text':'password';this.querySelector('.eye-on').classList.toggle('hidden',s);this.querySelector('.eye-off').classList.toggle('hidden',!s);" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                        <svg class="eye-on w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.04 12.32a1 1 0 010-.64C3.42 8.2 7.36 5 12 5s8.58 3.2 9.96 6.68a1 1 0 010 .64C20.58 15.8 16.64 19 12 19s-8.58-3.2-9.96-6.68z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="eye-off hidden w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M10.58 10.58a2 2 0 002.84 2.84M9.88 5.09A9.8 9.8 0 0112 5c4.64 0 8.58 3.2 9.96 6.68a1 1 0 010 .64 10.5 10.5 0 01-3.2 4.2M6.6 6.6A10.5 10.5 0 002.04 11.68a1 1 0 000 .64C3.42 15.8 7.36 19 12 19c1.7 0 3.3-.4 4.7-1.1"/></svg>
+                    </button>
+                </div>
             </div>
 
             @if(config('services.recaptcha.site_key'))

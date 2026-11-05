@@ -31,13 +31,31 @@ class ProfileController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'nm_inisial' => 'nullable|string|max:10',
+            'tempat_lahir' => 'nullable|string|max:50',
+            'tgl_lahir' => 'nullable|date',
+            'telp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:300',
             'password' => 'nullable|string|min:8|confirmed',
-            'current_password' => 'required_with:password|current_password',
+            // Kata sandi saat ini hanya dicek kalau user memang mengisi kata sandi baru.
+            // (Jangan pakai required_with: aturan "required*" membuat rule current_password
+            // ikut jalan walau field kosong, sehingga profil tanpa ganti sandi selalu gagal.)
+            'current_password' => $request->filled('password')
+                ? ['required', 'current_password']
+                : ['nullable'],
+        ], [
+            'current_password.required' => 'Kata sandi saat ini wajib diisi untuk mengganti kata sandi.',
+            'current_password.current_password' => 'Kata sandi saat ini tidak sesuai.',
         ]);
 
         $user->fill([
             'name' => $data['name'],
             'email' => $data['email'],
+            'nm_inisial' => $data['nm_inisial'] ?? null,
+            'tempat_lahir' => $data['tempat_lahir'] ?? null,
+            'tgl_lahir' => $data['tgl_lahir'] ?? null,
+            'telp' => $data['telp'] ?? null,
+            'alamat' => $data['alamat'] ?? null,
         ]);
 
         if (! empty($data['password'])) {

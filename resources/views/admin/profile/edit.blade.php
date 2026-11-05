@@ -40,6 +40,35 @@
                 @error('email') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="{{ $labelClass }}">Nama Inisial</label>
+                    <input type="text" name="nm_inisial" value="{{ old('nm_inisial', $user->nm_inisial) }}" maxlength="10" placeholder="Opsional" class="{{ $inputClass }}">
+                    @error('nm_inisial') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">No. Telp/HP</label>
+                    <input type="text" name="telp" value="{{ old('telp', $user->telp) }}" maxlength="20" placeholder="08xxxxxxxxxx" class="{{ $inputClass }}">
+                    @error('telp') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">Tempat Lahir</label>
+                    <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir', $user->tempat_lahir) }}" maxlength="50" placeholder="Opsional" class="{{ $inputClass }}">
+                    @error('tempat_lahir') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">Tanggal Lahir</label>
+                    <input type="date" name="tgl_lahir" value="{{ old('tgl_lahir', optional($user->tgl_lahir)->format('Y-m-d')) }}" class="{{ $inputClass }}">
+                    @error('tgl_lahir') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                </div>
+            </div>
+
+            <div>
+                <label class="{{ $labelClass }}">Alamat</label>
+                <textarea name="alamat" rows="2" maxlength="300" placeholder="Opsional" class="{{ $inputClass }}">{{ old('alamat', $user->alamat) }}</textarea>
+                @error('alamat') <span class="text-[11px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+            </div>
+
             <div class="pt-2 border-t border-gray-100 dark:border-zinc-800">
                 <p class="text-[11px] text-gray-400 mb-3">Kosongkan bagian kata sandi di bawah ini jika tidak ingin menggantinya.</p>
 
