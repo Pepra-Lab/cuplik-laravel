@@ -106,7 +106,7 @@
                 <div class="bg-white dark:bg-[#121914] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm space-y-4">
                     <div class="border-b border-gray-100 dark:border-zinc-800 pb-2">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-white">Foto & Gambar Berita</h3>
-                        <p class="text-[11px] text-gray-400">Upload file JPG, PNG, atau WEBP (Maksimal 2 MB per file). Bisa isi salah satu atau keduanya.</p>
+                        <p class="text-[11px] text-gray-400">Upload file JPG, PNG, atau WEBP (Maksimal 5 MB per file). Bisa isi salah satu atau keduanya.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -557,8 +557,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const file = this.files[0];
             if (!file) return;
 
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran file ' + file.name + ' melebihi batas 2 MB (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB). Silakan pilih gambar yang lebih kecil.');
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran file ' + file.name + ' melebihi batas 5 MB (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB). Silakan pilih gambar yang lebih kecil.');
                 this.value = '';
                 previewBox.classList.add('hidden');
                 return;

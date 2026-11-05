@@ -11,6 +11,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
+use App\Support\ImageOptimizer;
 
 class AdminArticleController extends Controller
 {
@@ -69,14 +70,14 @@ class AdminArticleController extends Controller
 
         // 3. Upload Gambar 1 & Gambar 2
         if ($request->hasFile('gambar_1')) {
-            $path1 = $request->file('gambar_1')->store('berita', 'public');
+            $path1 = ImageOptimizer::storeAsWebp($request->file('gambar_1'));
             $validated['foto'] = 'storage/' . $path1;
         } else {
             $validated['foto'] = null;
         }
 
         if ($request->hasFile('gambar_2')) {
-            $path2 = $request->file('gambar_2')->store('berita', 'public');
+            $path2 = ImageOptimizer::storeAsWebp($request->file('gambar_2'));
             $validated['foto_2'] = 'storage/' . $path2;
         } else {
             $validated['foto_2'] = null;
@@ -137,7 +138,7 @@ class AdminArticleController extends Controller
             if ($rawFoto && str_contains($rawFoto, 'storage/')) {
                 Storage::disk('public')->delete(str_replace('storage/', '', $rawFoto));
             }
-            $path1 = $request->file('gambar_1')->store('berita', 'public');
+            $path1 = ImageOptimizer::storeAsWebp($request->file('gambar_1'));
             $validated['foto'] = 'storage/' . $path1;
         } elseif ($request->boolean('hapus_gambar_1')) {
             $rawFoto = $article->getRawOriginal('foto');
@@ -155,7 +156,7 @@ class AdminArticleController extends Controller
             if ($rawFoto2 && str_contains($rawFoto2, 'storage/')) {
                 Storage::disk('public')->delete(str_replace('storage/', '', $rawFoto2));
             }
-            $path2 = $request->file('gambar_2')->store('berita', 'public');
+            $path2 = ImageOptimizer::storeAsWebp($request->file('gambar_2'));
             $validated['foto_2'] = 'storage/' . $path2;
         } elseif ($request->boolean('hapus_gambar_2')) {
             $rawFoto2 = $article->getRawOriginal('foto_2');
@@ -207,8 +208,8 @@ class AdminArticleController extends Controller
             'penulis_nama' => 'nullable|string|max:100',
             'lokasi' => 'nullable|string|max:100',
             'isi' => 'required|string',
-            'gambar_1' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
-            'gambar_2' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
+            'gambar_1' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
+            'gambar_2' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
             'hapus_gambar_1' => 'nullable|boolean',
             'hapus_gambar_2' => 'nullable|boolean',
             'foto_posisi' => 'nullable|string|in:header,p1,p2,p3,p4,p5,bottom',
