@@ -75,6 +75,11 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => ['required', Rule::in(User::CONTRIBUTOR_ROLES)],
+            'nm_inisial' => 'nullable|string|max:10',
+            'tempat_lahir' => 'nullable|string|max:50',
+            'tgl_lahir' => 'nullable|date',
+            'telp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:300',
             'g-recaptcha-response' => [new Recaptcha],
         ]);
 
@@ -84,6 +89,11 @@ class AuthController extends Controller
             'password' => $data['password'],
             'role' => $data['role'],
             'status' => User::STATUS_PENDING,
+            'nm_inisial' => $data['nm_inisial'] ?? null,
+            'tempat_lahir' => $data['tempat_lahir'] ?? null,
+            'tgl_lahir' => $data['tgl_lahir'] ?? null,
+            'telp' => $data['telp'] ?? null,
+            'alamat' => $data['alamat'] ?? null,
         ]);
 
         return redirect()->route('login')

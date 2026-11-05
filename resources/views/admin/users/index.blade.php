@@ -45,6 +45,11 @@
         'email' => old('email'),
         'role' => old('role'),
         'status' => old('status'),
+        'nm_inisial' => old('nm_inisial'),
+        'tempat_lahir' => old('tempat_lahir'),
+        'tgl_lahir' => old('tgl_lahir'),
+        'telp' => old('telp'),
+        'alamat' => old('alamat'),
     ];
 @endphp
 
@@ -134,7 +139,11 @@
                             @php
                                 $isSelf = $u->is($actor);
                                 $manageable = $u->canBeManagedBy($actor);
-                                $payload = ['id' => $u->id, 'name' => $u->name, 'email' => $u->email, 'role' => $u->role, 'status' => $u->status, 'self' => $isSelf];
+                                $payload = [
+                                    'id' => $u->id, 'name' => $u->name, 'email' => $u->email, 'role' => $u->role, 'status' => $u->status, 'self' => $isSelf,
+                                    'nm_inisial' => $u->nm_inisial, 'tempat_lahir' => $u->tempat_lahir,
+                                    'tgl_lahir' => $u->tgl_lahir?->format('Y-m-d'), 'telp' => $u->telp, 'alamat' => $u->alamat,
+                                ];
                             @endphp
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
                                 <td class="px-4 py-3 font-bold text-gray-900 dark:text-white">
@@ -250,6 +259,33 @@
                     <input type="email" name="email" id="userEmail" required class="{{ $inputClass }}">
                 </div>
 
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Nama Inisial</label>
+                        <input type="text" name="nm_inisial" id="userNmInisial" maxlength="10" class="{{ $inputClass }}">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">No. Telp/HP</label>
+                        <input type="text" name="telp" id="userTelp" maxlength="20" class="{{ $inputClass }}">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Tempat Lahir</label>
+                        <input type="text" name="tempat_lahir" id="userTempatLahir" maxlength="50" class="{{ $inputClass }}">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Tanggal Lahir</label>
+                        <input type="date" name="tgl_lahir" id="userTglLahir" class="{{ $inputClass }}">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Alamat</label>
+                    <textarea name="alamat" id="userAlamat" rows="2" maxlength="300" class="{{ $inputClass }}"></textarea>
+                </div>
+
                 <div>
                     <label id="userPasswordLabel"
                         class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1"></label>
@@ -308,6 +344,11 @@
 
                 document.getElementById('userName').value = user?.name ?? '';
                 document.getElementById('userEmail').value = user?.email ?? '';
+                document.getElementById('userNmInisial').value = user?.nm_inisial ?? '';
+                document.getElementById('userTelp').value = user?.telp ?? '';
+                document.getElementById('userTempatLahir').value = user?.tempat_lahir ?? '';
+                document.getElementById('userTglLahir').value = user?.tgl_lahir ?? '';
+                document.getElementById('userAlamat').value = user?.alamat ?? '';
                 document.getElementById('userPassword').value = '';
                 document.getElementById('userRole').value = user?.role ?? defaultRole;
                 document.getElementById('userStatus').value = user?.status ?? 'Aktif';

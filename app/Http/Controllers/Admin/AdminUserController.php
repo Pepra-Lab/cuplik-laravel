@@ -76,6 +76,11 @@ class AdminUserController extends Controller
             'password' => 'required|string|min:8',
             'role' => ['required', Rule::in(User::ROLES)],
             'status' => ['required', Rule::in(User::ACCOUNT_STATUSES)],
+            'nm_inisial' => 'nullable|string|max:10',
+            'tempat_lahir' => 'nullable|string|max:50',
+            'tgl_lahir' => 'nullable|date',
+            'telp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:300',
         ]);
 
         $this->ensureCanAssign($request->user(), $data['role']);
@@ -96,6 +101,11 @@ class AdminUserController extends Controller
             'password' => 'nullable|string|min:8',
             'role' => ['required', Rule::in(User::ROLES)],
             'status' => ['required', Rule::in(User::ACCOUNT_STATUSES)],
+            'nm_inisial' => 'nullable|string|max:10',
+            'tempat_lahir' => 'nullable|string|max:50',
+            'tgl_lahir' => 'nullable|date',
+            'telp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:300',
         ]);
 
         $this->ensureCanAssign($actor, $data['role']);

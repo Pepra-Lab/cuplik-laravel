@@ -47,6 +47,33 @@
                 <input type="email" name="email" value="{{ old('email') }}" required placeholder="email@example.com" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
             </div>
 
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Nama Inisial</label>
+                    <input type="text" name="nm_inisial" value="{{ old('nm_inisial') }}" maxlength="10" placeholder="Opsional" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">No. Telp/HP</label>
+                    <input type="text" name="telp" value="{{ old('telp') }}" maxlength="20" placeholder="08xxxxxxxxxx" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Tempat Lahir</label>
+                    <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" maxlength="50" placeholder="Opsional" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Tanggal Lahir</label>
+                    <input type="date" name="tgl_lahir" value="{{ old('tgl_lahir') }}" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Alamat</label>
+                <textarea name="alamat" rows="2" maxlength="300" placeholder="Opsional" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">{{ old('alamat') }}</textarea>
+            </div>
+
             <div>
                 <label class="text-xs font-semibold text-gray-700 dark:text-gray-300 block mb-1">Kata Sandi</label>
                 <input type="password" name="password" required placeholder="Minimal 8 karakter" minlength="8" class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#008a24] input-search-hover">
